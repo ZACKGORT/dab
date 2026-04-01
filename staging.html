@@ -2022,7 +2022,7 @@ function focusEra(era) {
   // Screen-right at theta=0.6π is (cos θ, 0, -sin θ) in world XZ.
   // Moving pivot by +screenRight shifts node leftward in the frame.
   const THETA = preset.theta;
-  const panelShift = window.innerWidth > 768 ? 6.5 : 0;
+  const panelShift = window.innerWidth > 768 ? 3.5 : 0;
   const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
   const targetPivot = era._pos.clone().addScaledVector(screenRight, panelShift);
   scenePivotTgt.copy(targetPivot);
