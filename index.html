@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>dab.cx · design · architect · build · client experience</title>
+<title>Wolfgang & Co. · Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -364,13 +364,13 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
 
 <div id="brand">
   <div id="brand-name">Wolfgang &amp; Co.</div>
-  <div id="brand-sub">Career Spiral · 2005 — Present</div>
+  <div id="brand-sub">Roadmap · Sentence as Primitive</div>
 </div>
 <button id="theme-toggle">Light</button>
 
 <div id="era-label">
-  <div id="era-year">2026</div>
-  <div id="era-name">Present</div>
+  <div id="era-year">★</div>
+  <div id="era-name">The Sentence</div>
 </div>
 
 <div id="spine-indicator"></div>
@@ -378,6 +378,7 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
 <div id="hud">
   <button class="hud-btn active" data-view="spiral">SPIRAL</button>
   <button class="hud-btn" data-view="arc">TIMELINE</button>
+  <button class="hud-btn" data-view="galaxy">GALAXY</button>
   <div class="hud-sep"></div>
   <button class="hud-btn hud-zoom" id="hud-zoom-out">−</button>
   <button class="hud-btn hud-zoom" id="hud-zoom-in">+</button>
@@ -391,7 +392,7 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
   <button id="tl-next" title="Next era">&#8594;</button>
 </div>
 
-<div id="hint">drag to orbit · scroll to zoom · click any node · ← → navigate · space pauses</div>
+<div id="hint">drag to orbit · scroll to zoom · click a node · galaxy zooms out · ← → navigate</div>
 
 <div id="tooltip"><div id="tt-inner">
   <div class="tt-era" id="tt-era"></div>
@@ -456,7 +457,7 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
   <div id="toc-inner">
     <div id="toc-header">
       <div>
-        <div id="toc-title">Career Spiral · 2005 — Present</div>
+        <div id="toc-title">Wolfgang & Co. · Roadmap</div>
         <div id="toc-sub">Wolfgang &amp; Co. · Table of Contents</div>
       </div>
       <button id="toc-close" onclick="closeTOC()">✕</button>
@@ -471,462 +472,233 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
 // ─────────────────────────────────────────────────────────
 // CAREER DATA
 // ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// ROADMAP NODES — narrative-as-nodes
+// The sentence as primitive: wolfie.love → ecosystem
+// ─────────────────────────────────────────────────────────
 const ERAS = [
   {
     id: 'origin',
-    year: '2005',
-    title: 'The Autodidact Origin',
-    role: 'Self-taught · Suburban Philadelphia',
-    era: '2005 — 2008',
-    domain: 'roots',
-    body: 'Built my first computer circa 2005. Installed pirated copies of Photoshop and Illustrator. Didn\'t graduate from university — stopped out, not dropped out. I studied what I saw. Read books, flipped through magazines, took on early client work. Observed, amalgamated, and carried my craft through conviction — not credentials.',
+    year: '∅',
+    title: 'The Sentence',
+    role: 'Origin · Impetus · Thesis',
+    era: 'The Beginning',
+    domain: 'thesis',
+    url: null,
+    body: 'Every system has a seed. Mine is a conviction about language — that the sentence, not the page, not the interface, not the flow, is the irreducible unit of thought. This is not a product feature. It is a philosophy. Everything that follows is an expression of it.',
     sentences: [
-      'I built my first computer circa 2005.',
-      'I immediately installed pirated copies of Adobe Photoshop and Illustrator — the learning was real, even if the license wasn\'t.',
-      'I didn\'t graduate from university. I stopped out — that\'s different from dropping out.',
-      'I studied what I saw: books, magazines, client work, anything with a grid and a purpose.',
-      'I created faux website concepts just to understand designing for the medium — nobody asked me to.',
-      'All this culminated in responding to a Craigslist post that changed everything.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1593640408182-31c228bc6ddb?w=240&h=180&fit=crop', caption: 'First build' },
-      { src: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=240&h=180&fit=crop', caption: 'Design study' },
+      'Every system has a seed.',
+      'Mine is a conviction: the sentence is the irreducible unit of thought.',
+      'Not the page. Not the interface. Not the flow.',
+      'The sentence.',
+      'This is not a product feature. It is a philosophy.',
+      'Everything that follows is an expression of it.',
     ],
     moons: [
-      { label: 'Photoshop', desc: 'Pirated — but the learning was real.' },
-      { label: 'Illustrator', desc: 'Vector logic from day one.' },
-      { label: 'Craigslist gig', desc: 'First paid design work.' },
-      { label: 'Stopped out', desc: 'Not dropped out — a meaningful distinction.' },
-    ],
-    color: 0xb87333, hex: '#b87333'
-  },
-  {
-    id: 'turn5',
-    year: '2008',
-    title: 'Turn5 Inc.',
-    role: 'Designer · Product Photographer · Suburbia',
-    era: '2008 — 2011',
-    domain: 'product',
-    body: 'A garage startup in the suburbs of Philadelphia that became my formal education. The kind of place where you wear the hat you want — and then wear three more. Charged with designing web properties, product packaging, printed catalogues, emails, and ads across multiple brand systems. Also handed a Canon Rebel DSLR and told to build a photo studio. We grew from ten to forty million in revenue during my time there.',
-    sentences: [
-      'A turning point at Turn5 Inc. — a garage startup that became my university.',
-      'The kind of place where you wear the hat you want — and then wear three more.',
-      'I was handed a brand new PC and a Canon Rebel DSLR and told to figure it out.',
-      'Charged with designing web properties, product packaging, printed catalogues, emails, and ads.',
-      'I built a product photography studio from scratch — OEM color-match accuracy, zero prior experience.',
-      'We built a lifestyle brand that grew from ten to forty million dollars per year during my time at Turn5.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?w=240&h=180&fit=crop', caption: 'Studio work' },
-      { src: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=240&h=180&fit=crop', caption: 'Product photography' },
-      { src: 'https://images.unsplash.com/photo-1545665277-5937489579f2?w=240&h=180&fit=crop', caption: 'Catalogue design' },
-    ],
-    moons: [
-      { label: 'Photography', desc: 'Canon Rebel DSLR, built studio from scratch.' },
-      { label: 'Web Design', desc: 'HTML/CSS e-commerce properties.' },
-      { label: 'Print', desc: 'Catalogues, packaging, ads — full print cycle.' },
-      { label: 'Email', desc: 'Multi-brand campaign systems at scale.' },
-      { label: '$10M → $40M', desc: 'Revenue growth during tenure.' },
+      { label: 'Primitive', desc: 'The sentence as the atom of all meaning.' },
+      { label: 'Conviction', desc: 'Not a feature — a belief system.' },
+      { label: 'Format shapes attention', desc: 'The medium is the message, sentence-by-sentence.' },
+      { label: 'dab.cx', desc: 'Design. Architect. Build. — the method in three words.' },
     ],
     color: 0xdaa520, hex: '#daa520'
   },
   {
-    id: 'leadnomics',
-    year: '2011',
-    title: 'Leadnomics',
-    role: 'Conversion Designer · Philadelphia',
-    era: '2011 — 2013',
-    domain: 'conversion',
-    body: 'Paradigm shifty. Lead generation across multiple verticals — the cash cow was payday loans. My job was to make it easy for users to make catastrophic financial decisions. I achieved a 95.8% conversion rate using responsive design and rigorous A/B testing — mobile-first before it was a mandate. Business bides by imperative, not by idealism. I learned both sides of that equation here.',
+    id: 'wolfie-love',
+    year: '★',
+    title: 'wolfie.love',
+    role: 'Origin Platform · Sanctuary · Soul',
+    era: 'The Heart',
+    domain: 'sanctuary',
+    url: 'https://wolfie.love',
+    body: 'Built entirely from scratch. No derivative parts. wolfie.love is a memorial for Wolfgang — my late blind rescue poodle — and the origin point of everything. It established the sentence-progressive reading engine, the dark interstitial "now we go sleepy" moment, Flow Mode with authored timing markup, and the four-theme system. Wolfgang & Co. lives here first.',
     sentences: [
-      'Leadnomics was shifty — paradigm shifty.',
-      'We focused on lead generation across multiple verticals. The cash cow was payday loans.',
-      'Said bluntly: my job was to make it easy for our users to make catastrophic financial decisions.',
-      'I achieved a 95.8% conversion rate using responsive design and rigorous A/B testing.',
-      'Mobile-first before it was a mandate — I saw what was coming and built for it.',
-      'Business bides by imperative, not by idealism. I learned both sides of that equation here.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=240&h=180&fit=crop', caption: 'Conversion data' },
-      { src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=240&h=180&fit=crop', caption: 'A/B results' },
+      'Built entirely from scratch. No derivative parts.',
+      'wolfie.love is a memorial for Wolfgang — my late blind rescue poodle.',
+      'This is where the sentence-progressive reading engine was born.',
+      'Flow Mode. Authored timing markup. The dark "now we go sleepy" interstitial.',
+      'A four-theme system that proved the interface could disappear and leave only understanding.',
+      'Wolfgang & Co. lives here first. Everything else is downstream.',
     ],
     moons: [
-      { label: '95.8% CVR', desc: 'Highest conversion rate in vertical.' },
-      { label: 'Responsive', desc: 'Mobile-first before it was standard.' },
-      { label: 'A/B Testing', desc: 'Rigorous, data-driven iteration.' },
-      { label: 'FinLead UX', desc: 'High-stakes persuasive interface design.' },
+      { label: 'Flow Mode', desc: 'Authored timing markup — reading at the speed of thought.' },
+      { label: 'Now we go sleepy', desc: 'The dark interstitial. A ritual, not a page.' },
+      { label: 'Four themes', desc: 'Proof that format shapes attention.' },
+      { label: 'Wolfgang', desc: 'Blind. Rescue. Poodle. The reason for all of it.' },
     ],
-    color: 0x8b6914, hex: '#8b6914'
+    color: 0xf5c842, hex: '#f5c842'
   },
   {
-    id: '160over90',
-    year: '2013',
-    title: 'One Sixty Over Ninety',
-    role: 'Interaction Designer · Center City Philadelphia',
-    era: '2013 — 2016',
-    domain: 'agency',
-    body: 'One Sixty Over Ninety — my heartrate when offered the job. I took a pay cut to join their new Interactive Department because the culture demanded we dare. Full-service interaction design for .EDU clients: Comcast, Kent State, the Philadelphia Eagles. Information architecture, prototyping, ADA compliance, client-facing creative lead. Long days, longer nights. This is where I learned what design culture could be.',
+    id: 'wolfie-life',
+    year: 'wl',
+    title: 'wolfie.life',
+    role: 'Active Business Presence · Ecosystem Hub',
+    era: 'The Platform',
+    domain: 'platform',
+    url: 'https://wolfie.life',
+    body: 'wolfie.life is the active business face of Wolfgang & Co. — where the sanctuary becomes commerce, service, and community. Four verticals in orbit: /shop, /real, /food, /job. The same sentence-as-primitive engine, now doing real work in the world.',
     sentences: [
-      'One Sixty Over Ninety — my heartrate when offered a job as an Interaction Designer.',
-      'I took a pay cut to join their new Interactive Department. I was there to learn, not to earn.',
-      'Full-service interaction design for .EDU clients — Comcast, Kent State, the Philadelphia Eagles.',
-      'I owned information architecture, prototyping, ADA compliance, and client-facing creative lead.',
-      'Long days, longer nights. Short weekends.',
-      'The work wasn\'t scientific. It was expressive. It was novel. It was considered.',
-      'This is where I learned what design culture could — and should — be.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=240&h=180&fit=crop', caption: 'Agency life' },
-      { src: 'https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=240&h=180&fit=crop', caption: 'Interactive work' },
+      'wolfie.life is where the sanctuary becomes service.',
+      'It is the active business face of Wolfgang & Co.',
+      'Four verticals orbit the center: /shop, /real, /food, /job.',
+      'The sentence-as-primitive engine, now doing real work in the world.',
+      'Same philosophy. Different surface. Expanded scope.',
     ],
     moons: [
-      { label: 'Comcast', desc: 'Cable + digital ecosystem design.' },
-      { label: 'Philly Eagles', desc: 'Sports brand interaction design.' },
-      { label: 'Kent State', desc: 'Higher-ed digital presence.' },
-      { label: 'ADA Compliance', desc: 'Accessibility as a design standard.' },
-      { label: 'IA', desc: 'Information architecture at agency scale.' },
-    ],
-    color: 0xdaa520, hex: '#daa520'
-  },
-  {
-    id: 'o3world',
-    year: '2016',
-    title: 'O3 World',
-    role: 'UX Designer · Fishtown Philadelphia',
-    era: '2016 — 2017',
-    domain: 'product',
-    body: 'A digital product shop in the heart of Fishtown, Philly. Certified Scrum Master. Agile in nature and sprint-led. Daily standups, whiteboards, wireframes — real Lean UX, not the powerpoint version. Clients included La Colombe, Vertex, and SEIC. This was where process and practice converged.',
-    sentences: [
-      'O3 World was a digital product shop in the heart of Fishtown — a neighborhood that takes itself seriously.',
-      'Certified Scrum Master. Agile in nature and sprint-led.',
-      'Daily standups. Whiteboards. Wireframes. We practiced true Lean UX methodologies.',
-      'Not the PowerPoint version of Lean UX — the whiteboard version.',
-      'Clients included La Colombe, Vertex, and SEIC.',
-      'This was where process and practice finally converged for me.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=240&h=180&fit=crop', caption: 'UX workshop' },
-    ],
-    moons: [
-      { label: 'La Colombe', desc: 'Coffee brand digital experience.' },
-      { label: 'Lean UX', desc: 'Hypothesis-driven design in practice.' },
-      { label: 'Scrum', desc: 'Certified Scrum Master — daily standups, sprint cycles.' },
-      { label: 'Vertex', desc: 'Enterprise SaaS product design.' },
+      { label: '/shop', desc: 'wolfie.life/shop — commerce surface.' },
+      { label: '/real', desc: 'wolfie.life/real — real estate vertical.' },
+      { label: '/food', desc: 'wolfie.life/food — culinary vertical.' },
+      { label: '/job', desc: 'wolfie.life/job — employment vertical.' },
     ],
     color: 0xc49a2e, hex: '#c49a2e'
   },
   {
-    id: 'workarea',
-    year: '2017',
-    title: 'Workarea',
-    role: 'Senior UX Designer · Downtown Philadelphia',
-    era: '2017 — 2018',
-    domain: 'saas',
-    body: 'A proprietary SaaS e-commerce platform shaped through direct client relationships and data-informed iteration. No mockup theater — napkin sketches and real conversations with engineers until the thing was right. We skipped high-fidelity for high-velocity. I shaped the platform through direct client feedback loops until the company sold.',
+    id: 'intoview',
+    year: 'iv',
+    title: 'intoview.pro',
+    role: 'Professional Presence · Case Study Engine',
+    era: 'The Portfolio',
+    domain: 'portfolio',
+    url: 'https://intoview.pro',
+    body: 'My professional presence, built on the same engine. intoview.pro is where the narrative-as-nodes architecture meets the job market — a pedigree panel covering 14 organizations across 20 years with filter pills and deepdive inlets. Two planets carry rings: GNC (global health & nutrition, Shopify redesign in 12 weeks) and BNY Mellon (digital transformation embed, interim Product Owner).',
     sentences: [
-      'Downtown from Fishtown was Workarea — a proprietary SaaS e-commerce platform.',
-      'We skipped high-fidelity mockups for napkin sketches and direct collaboration with developers.',
-      'No mockup theater. Real conversations with engineers until the thing was right.',
-      'I shaped the platform through direct client relationships and data-informed iteration.',
-      'We built things better, faster, smarter — because we had to.',
-      'The company sold. That required me to reframe my approach — and I did.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=240&h=180&fit=crop', caption: 'SaaS product' },
+      'intoview.pro is my professional presence — built on the same engine as everything else.',
+      'A pedigree panel: 14 organizations, 20 years, filter pills, deepdive inlets.',
+      'The narrative-as-nodes architecture applied to the job market.',
+      'Two case studies carry rings: GNC and BNY Mellon.',
+      'GNC: global health & nutrition Shopify redesign, discovery to delivery in 12 weeks.',
+      'BNY Mellon: a year-long digital transformation embed where I became interim Product Owner.',
     ],
     moons: [
-      { label: 'e-Commerce SaaS', desc: 'Proprietary platform for enterprise retail.' },
-      { label: 'Dev Pairing', desc: 'Napkin to PR — no mockup wall.' },
-      { label: 'Client loops', desc: 'Direct feedback-to-iteration cycles.' },
+      { label: 'GNC', desc: 'Shopify redesign. Mobile-first. 12 weeks. Discovery to delivery.' },
+      { label: 'BNY Mellon', desc: 'Digital transformation embed. Interim Product Owner.' },
+      { label: 'Pedigree panel', desc: '14 orgs · 20 years · filter pills · deepdive inlets.' },
+      { label: '20 years', desc: 'The full arc, navigable, sentence by sentence.' },
+    ],
+    color: 0xdaa520, hex: '#daa520'
+  },
+  {
+    id: 'emdash',
+    year: '—',
+    title: 'emdash.click',
+    role: 'Editorial Surface · Pause Made Visible',
+    era: 'The Pause',
+    domain: 'editorial',
+    url: 'https://emdash.click',
+    body: 'The em dash is a pause with intention — a breath between clauses, a moment before the thing you actually mean. emdash.click is an editorial surface built around that beat. The punctuation mark as interface metaphor. Presence through absence.',
+    sentences: [
+      'The em dash: a pause with intention.',
+      'A breath between clauses — before the thing you actually mean.',
+      'emdash.click is an editorial surface built around that beat.',
+      'The punctuation mark as interface metaphor.',
+      'Presence through absence.',
+      'Every interface has a rhythm. The em dash names the rest.',
+    ],
+    moons: [
+      { label: 'Pause', desc: 'The intentional breath before meaning arrives.' },
+      { label: 'Editorial', desc: 'Writing as interface design.' },
+      { label: 'Punctuation', desc: 'The em dash as navigation primitive.' },
     ],
     color: 0x9a7820, hex: '#9a7820'
   },
   {
-    id: 'flightpath',
-    year: '2018',
-    title: 'FlightPath',
-    role: 'Senior UX Designer · Midtown Manhattan',
-    era: '2018 — 2020',
-    domain: 'pharma',
-    body: 'Hello, New York City. Emerging from bankruptcy, the agency served the pharmaceutical sector — Merck, Goya, Charter. This was my foot-in-the-door to the NYC scene. Commuting from Philly to Manhattan and back, every business day, for a full year. Up and out by five. Home by ten — maybe. Two skylines, three hours apart.',
+    id: 'rsp',
+    year: 'RSP',
+    title: 'reasonandresolution.com/rsp',
+    role: 'Policy as Narrative · RSP 3.0',
+    era: 'The Document',
+    domain: 'document',
+    url: 'https://reasonandresolution.com/rsp',
+    body: 'Anthropic\'s Responsible Scaling Policy 3.0, rendered as narrative nodes. anthropic.html — hosted at reasonandresolution.com — brought live behavioral telemetry, a three-theme system, and a dispatch analytics panel to a policy document. The argument: even governance can benefit from the sentence-as-primitive approach. Complex thought deserves a considered container.',
     sentences: [
-      'Enter FlightPath. Hello, New York City.',
-      'The agency was emerging from bankruptcy — but they needed my help, and this was my entry to the NYC scene.',
-      'Clients included Merck, Goya, and Charter — Pharmaceutical, E-commerce, and Media.',
-      'I ran UX strategy and design across the full project lifecycle.',
-      'Commuting from Philly to Manhattan — and back — every business day for a full year.',
-      'Up and out by five o\'clock; home by ten o\'clock — maybe.',
-      'I saw both Sunrise and Sunset every day away from home. Two skylines, three hours apart.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=240&h=180&fit=crop', caption: 'NYC commute' },
-      { src: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=240&h=180&fit=crop', caption: 'Two skylines' },
+      'Anthropic\'s Responsible Scaling Policy 3.0 — rendered as narrative nodes.',
+      'Live behavioral telemetry. Three-theme system. Dispatch analytics panel.',
+      'A policy document made navigable at the sentence level.',
+      'The argument: even governance benefits from the sentence-as-primitive approach.',
+      'Complex thought deserves a considered container.',
+      'This was not a redesign. It was a translation.',
     ],
     moons: [
-      { label: 'Merck', desc: 'Pharma HCP & patient portal UX.' },
-      { label: 'Goya', desc: 'E-commerce design for iconic brand.' },
-      { label: 'Charter', desc: 'Media & telecom digital experience.' },
-      { label: 'NYC entry', desc: 'Foot-in-the-door to the Manhattan scene.' },
-      { label: 'Commuter life', desc: 'Amtrak, both ways, every business day.' },
+      { label: 'RSP 3.0', desc: 'Anthropic\'s Responsible Scaling Policy as narrative nodes.' },
+      { label: 'Telemetry', desc: 'Live behavioral data inside the reading experience.' },
+      { label: 'Three themes', desc: 'Dark · LinkedIn · Raw — the system applied to policy.' },
     ],
-    color: 0xdaa520, hex: '#daa520'
+    color: 0x6a9fe0, hex: '#6a9fe0'
   },
   {
-    id: 'livearea',
-    year: '2020',
-    title: 'PFSWeb LiveArea',
-    role: 'Manager, UX · Remote',
-    era: '2020 — 2021',
-    domain: 'ecomm',
-    body: 'From IC to Manager. I owned the full UX strategy and design function for Salesforce Commerce Cloud builds across B2C and B2B clients throughout the project lifecycle. Conversion, post-sale re-engagement, design systems at platform scale. I ran discovery, directed and delegated, socialized solutions — and invented "Cards Against Bad UX" to help clients empathize with their own users.',
+    id: 'reasonandresolution',
+    year: 'R&R',
+    title: 'reasonandresolution.com',
+    role: 'Studio Presence · The Full Platform',
+    era: 'The Studio',
+    domain: 'studio',
+    url: 'https://reasonandresolution.com',
+    body: 'reasonandresolution.com is the full studio presence — the umbrella that holds the philosophy, the work, and the method. Where wolfie.love is the sanctuary and wolfie.life is the commerce, reasonandresolution.com is the argument. The case for working differently, thinking longer, building with more intention than the industry tends to allow.',
     sentences: [
-      'From FlightPath to LiveArea. From individual contributor to Manager.',
-      'I owned the full UX strategy and design function throughout project lifecycles.',
-      'Full-spectrum Salesforce Commerce Cloud builds across B2C and B2B clients.',
-      'Conversion optimization, post-sale re-engagement, design systems at platform scale.',
-      'I ran discovery. I directed and delegated. I socialized solutions upward and across.',
-      'I invented "Cards Against Bad UX" — a custom card game to help clients empathize with their own users.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1556742393-d75f468bfcb0?w=240&h=180&fit=crop', caption: 'E-commerce UX' },
+      'reasonandresolution.com is the argument.',
+      'Not the portfolio. Not the shop. The argument.',
+      'The case for working differently — thinking longer, building with more intention.',
+      'It holds the philosophy, the work, and the method under one umbrella.',
+      'wolfie.love is the sanctuary. wolfie.life is commerce. This is the conviction made visible.',
     ],
     moons: [
-      { label: 'IC → Manager', desc: 'First formal management transition.' },
-      { label: 'SFCC', desc: 'Salesforce Commerce Cloud platform.' },
-      { label: 'Cards vs UX', desc: 'Custom empathy card game — invented here.' },
-      { label: 'B2B & B2C', desc: 'Multi-sector e-commerce portfolio.' },
-      { label: 'Design Systems', desc: 'Platform-scale component architecture.' },
-    ],
-    color: 0xc49a2e, hex: '#c49a2e'
-  },
-  {
-    id: 'huge',
-    year: '2021',
-    title: 'HUGE Inc.',
-    role: 'Senior UX Designer · Remote',
-    era: '03/2021 — 04/2021',
-    domain: 'enterprise',
-    body: 'A short but sharp engagement at HUGE Inc. I defined end-to-end UX and the booking flow for Sentral Lifestyle Apartments — a hospitality-tech platform reimagining urban living. Brand activation strategy, competitive analysis, and critical user flows delivered under constrained conditions. Fast, precise, shipped.',
-    sentences: [
-      'A short engagement at HUGE Inc. — brief by contract, not by output.',
-      'I defined end-to-end UX and the complete booking flow for Sentral Lifestyle Apartments.',
-      'Sentral was a hospitality-tech platform reimagining what urban apartment living could feel like.',
-      'Brand activation strategy, competitive analysis, critical flows — all delivered under constrained conditions.',
-      'Fast. Precise. Shipped.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=240&h=180&fit=crop', caption: 'Lifestyle platform' },
-      { src: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=240&h=180&fit=crop', caption: 'Urban living UX' },
-    ],
-    moons: [
-      { label: 'Sentral', desc: 'Hospitality-tech lifestyle apartment platform.' },
-      { label: 'Booking flow', desc: 'End-to-end UX for reservation system.' },
-      { label: 'Brand activation', desc: 'Strategy for a new category of living.' },
-      { label: 'Competitive audit', desc: 'Market positioning analysis.' },
+      { label: 'The argument', desc: 'Not a portfolio — a philosophy with evidence.' },
+      { label: 'Studio presence', desc: 'Wolfgang & Co. in its most considered form.' },
+      { label: 'Method', desc: 'dab.cx: Design. Architect. Build.' },
     ],
     color: 0xb87333, hex: '#b87333'
   },
   {
-    id: 'elva',
-    year: '2021',
-    title: 'Elva Design Group',
-    role: 'Senior UX Designer · Remote',
-    era: '04/2021 — 08/2021',
-    domain: 'ecomm',
-    body: 'Owned discovery through delivery for GNC\'s Shopify redesign — mobile-first, component-based, shipped in 12 weeks. Strategy and execution in the same hands. From research to component library to live storefront, this was about what it looks like when one person holds the entire thread without dropping it.',
+    id: 'ifimaybefrank',
+    year: 'imf',
+    title: 'ifimaybefrank.com',
+    role: 'Writing Engine · Manifesto Manifest of Itself',
+    era: 'The Manifesto',
+    domain: 'manifesto',
+    url: 'https://ifimaybefrank.com',
+    body: 'A writing application built around the sentence-as-primitive thesis. ifimaybefrank is a manifesto that manifests itself — the tool proves the argument by existing. Permanent vertical binder. Session stats dashboard. TextCompose surface. Chapter provenance ghost cards. A Wolfgang photograph gallery. v2 shipped in a single session.',
     sentences: [
-      'Elva Design Group — where I owned discovery through delivery for GNC\'s Shopify redesign.',
-      'Mobile-first. Component-based. Shipped in 12 weeks.',
-      'Strategy and execution in the same hands — no handoff lag, no translation loss.',
-      'From research to component library to live storefront, I held the entire thread.',
-      'GNC is a global brand. The redesign had to meet that weight and move at startup speed.',
-      'It did.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b6?w=240&h=180&fit=crop', caption: 'Shopify design' },
-      { src: 'https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?w=240&h=180&fit=crop', caption: 'Component system' },
+      'ifimaybefrank.com is a writing application and a manifesto — simultaneously.',
+      'The tool proves the argument by existing.',
+      'Permanent vertical binder. Session stats dashboard. TextCompose surface.',
+      'Chapter provenance ghost cards. A Wolfgang photograph gallery.',
+      'v2 shipped in a single session.',
+      'The sentence-as-primitive thesis, applied to writing itself.',
     ],
     moons: [
-      { label: 'GNC', desc: 'Global health & nutrition brand redesign.' },
-      { label: 'Shopify', desc: 'Mobile-first component-based storefront.' },
-      { label: '12 weeks', desc: 'Discovery to delivery — shipped on time.' },
-      { label: 'Component lib', desc: 'Modular design system for e-commerce.' },
+      { label: 'TextCompose', desc: 'The sentence-level writing surface.' },
+      { label: 'Chapter provenance', desc: 'Ghost cards that remember where sentences came from.' },
+      { label: 'Session stats', desc: 'Writing telemetry as interface.' },
+      { label: 'Wolfgang gallery', desc: 'The photographs. The reason for the words.' },
     ],
     color: 0xc49a2e, hex: '#c49a2e'
   },
   {
-    id: 'codeandtheory',
-    year: '2021',
-    title: 'Code & Theory',
-    role: 'Senior Interaction Designer · Manhattan',
-    era: '08/2021 — 04/2022',
-    domain: 'enterprise',
-    body: 'Led UX and interaction design for TikTok For Business from 62 floors above Manhattan. Ran information architecture and headless CMS workshops. Moved from Senior Designer to Associate Creative Director to Directly Responsible Individual on one of the fastest-growing advertising platforms in the world — a trajectory earned, not assigned.',
+    id: 'dab',
+    year: 'dab',
+    title: 'dab.cx',
+    role: 'Method · Design. Architect. Build.',
+    era: 'The Method',
+    domain: 'method',
+    url: 'https://dab.cx',
+    body: 'dab.cx embodies the approach in three words: Design. Architect. Build. Not design then hand off. Not design then wait. Design. Architect. Build — in one continuous motion, held by one person who thinks at the extreme edge of intentionality. The constraint is the argument.',
     sentences: [
-      'Code & Theory — from sixty-two floors above Manhattan, looking down at the city I\'d earned.',
-      'I led UX and interaction design for TikTok For Business.',
-      'One of the fastest-growing advertising platforms in the world. The pressure was consistent and high.',
-      'I ran IA and headless CMS workshops — translating content architecture for product and marketing simultaneously.',
-      'I moved from Senior Designer to ACD to Directly Responsible Individual.',
-      'That trajectory was earned, not assigned.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1499159058454-75067059248a?w=240&h=180&fit=crop', caption: 'Manhattan view' },
-      { src: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=240&h=180&fit=crop', caption: 'TikTok platform' },
+      'Design. Architect. Build.',
+      'Not design then hand off. Not design then wait.',
+      'One continuous motion. One person. One conviction.',
+      'dab.cx embodies the approach — in three words and in practice.',
+      'I think at the extreme edge of intentionality.',
+      'The constraint is the argument.',
     ],
     moons: [
-      { label: 'TikTok For Biz', desc: 'Ad platform UX at global scale.' },
-      { label: 'ACD', desc: 'Associate Creative Director — organically elevated.' },
-      { label: 'Headless CMS', desc: 'IA workshops for content architecture.' },
-      { label: 'DRI', desc: 'Directly Responsible Individual designation.' },
-      { label: '62 floors', desc: 'One World Trade Center, Manhattan.' },
-    ],
-    color: 0xdaa520, hex: '#daa520'
-  },
-  {
-    id: 'publicis',
-    year: '2022',
-    title: 'Publicis Sapient',
-    role: 'Senior UX Designer · Interim Product Owner · NYC',
-    era: '04/2022 — 03/2023',
-    domain: 'enterprise',
-    body: 'Embedded in BNY Mellon\'s digital transformation as interim Product Owner and primary client liaison — a role I wasn\'t hired for and became anyway. Architected user data models and flows across three Agile tracks. Centralized a sprawling product ecosystem into a modular, scalable design system. Named operational silos nobody else had mapped.',
-    sentences: [
-      'Publicis Sapient — embedded inside BNY Mellon\'s digital transformation for a full year.',
-      'I wasn\'t hired as Product Owner or primary client liaison. I became them.',
-      'I architected user data models and flows across three simultaneous Agile tracks.',
-      'I centralized a sprawling product ecosystem into a modular, scalable design system.',
-      'I named operational silos nobody else had mapped — which is how you fix things nobody else has fixed.',
-      '"Zack has a deep connection to emotions, imagination, and sensitivity — the quintessential idealist." — Christopher Bayle, ACD UX, Publicis Sapient',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=240&h=180&fit=crop', caption: 'BNY Mellon' },
-      { src: 'https://images.unsplash.com/photo-1535320903710-d993d3d77d29?w=240&h=180&fit=crop', caption: 'Design system' },
-    ],
-    moons: [
-      { label: 'BNY Mellon', desc: 'Year-long digital transformation embed.' },
-      { label: 'Interim PO', desc: 'Product Owner role — earned, not assigned.' },
-      { label: 'Data models', desc: 'User data architecture across 3 Agile tracks.' },
-      { label: 'Design system', desc: 'Modular, scalable component architecture.' },
-      { label: 'Silo mapping', desc: 'Named operational gaps nobody else had identified.' },
-    ],
-    color: 0xdaa520, hex: '#daa520'
-  },
-  {
-    id: 'pivot',
-    year: '2024',
-    title: 'The Low Voltage Pivot',
-    role: 'Network Technician · The Humility Semester',
-    era: '2024',
-    domain: 'pivot',
-    body: 'When I said rock & roll, I did not mean oldies. I thought I had paid my dues. And so, I pivoted — to low voltage contracting. I learned to terminate an RJ45 in 30–45 seconds. I ran cables, installed security systems, managed cable infrastructure in commercial and residential settings. Different parts of my brain — the same brain that once wireframed enterprise banking platforms. Humility is a hell of a teacher.',
-    sentences: [
-      'Come on baby, let\'s do the twist.',
-      'I pivoted to low voltage contracting — because the design market contracted and I adapted.',
-      'I learned to terminate an RJ45 connector in 30–45 seconds. Clean termination. Every time.',
-      'I ran cables, installed security systems, and managed cable infrastructure in commercial and residential buildings.',
-      'Different parts of my brain — but the same brain that once wireframed enterprise banking platforms.',
-      'Humility is a hell of a teacher. I took the class willingly.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=240&h=180&fit=crop', caption: 'Low voltage work' },
-    ],
-    moons: [
-      { label: 'RJ45', desc: 'Terminated in under 45 seconds — clean, every time.' },
-      { label: 'Security sys', desc: 'Camera + access control installation.' },
-      { label: 'Cable mgmt', desc: 'Commercial and residential infrastructure.' },
-      { label: 'Humility', desc: 'A hell of a teacher.' },
-    ],
-    color: 0x8b6914, hex: '#8b6914'
-  },
-  {
-    id: 'phenom',
-    year: '2025',
-    title: 'Phenom',
-    role: 'User Experience Strategist · Remote',
-    era: '02/2025 — 05/2025',
-    domain: 'saas',
-    body: 'Owned the corporate web presence end-to-end — content strategy, product roadmap, third-party integrations, and live event infrastructure. Operated across Marketing, Sales, and Product simultaneously. Named operational silos nobody else had mapped — again. Tools: Contentful, Jira, digital content systems. I did not ask for the scope. The scope found me.',
-    sentences: [
-      'Phenom — a talent experience platform with a global footprint and a web presence that needed ownership.',
-      'I owned it end-to-end: content strategy, product roadmap, third-party integrations, live event infrastructure.',
-      'I operated across Marketing, Sales, and Product simultaneously — crossing every lane by necessity.',
-      'I named operational silos nobody else had mapped. That sentence keeps repeating in my career because the problem keeps repeating in organizations.',
-      'Tools: Contentful, Jira, digital content systems.',
-      'I did not ask for the scope. The scope found me.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=240&h=180&fit=crop', caption: 'Web strategy' },
-      { src: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=240&h=180&fit=crop', caption: 'Cross-functional' },
-    ],
-    moons: [
-      { label: 'Contentful', desc: 'Headless CMS content architecture.' },
-      { label: 'Web presence', desc: 'Corporate site owned end-to-end.' },
-      { label: 'Live events', desc: 'Digital event infrastructure.' },
-      { label: 'Cross-org', desc: 'Marketing + Sales + Product alignment.' },
-      { label: 'Roadmap', desc: 'Product strategy for web platform.' },
-    ],
-    color: 0xc49a2e, hex: '#c49a2e'
-  },
-  {
-    id: 'wolfgang',
-    year: '2025',
-    title: 'Wolfgang & Co.',
-    role: 'Founder · Thinker & Maker · Present',
-    era: '2025 — Now',
-    domain: 'studio',
-    body: 'A concept studio focused on craft, language, and human intent — as realized through a bespoke narrative-as-nodes engine. As a self-taught designer, developer, and autodidactic learner, I have been thinking about human solutions to computer problems, namely: how we communicate. My answer is The Sentence. ifimaybefrank, reasonably, intoview, wolfie.life — each is an expression of this conviction.',
-    sentences: [
-      'Wolfgang & Co. — a concept studio focused on craft, language, and human intent.',
-      'The engine underneath everything I\'m building is a narrative-as-nodes system I designed myself.',
-      'As a self-taught designer, developer, and autodidactic learner — I\'ve been thinking about how we communicate.',
-      'My answer is The Sentence. Not the interface. Not the flow. The sentence.',
-      'ifimaybefrank.com (a writing model) · reasonably.cc (a thinking model) · intoview.pro (my model) · wolfie.life (a new category).',
-      'Each made with wolfie.love — and each an expression of the same conviction, expressed differently.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=240&h=180&fit=crop', caption: 'Wolfgang studio' },
-      { src: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=240&h=180&fit=crop', caption: 'Narrative engine' },
-    ],
-    moons: [
-      { label: 'ifimaybefrank', desc: 'A writing model — ifimaybefrank.com' },
-      { label: 'reasonably', desc: 'A thinking model — reasonably.cc' },
-      { label: 'intoview', desc: 'My professional model — intoview.pro' },
-      { label: 'wolfie.life', desc: 'A new category — wolfie.life' },
-      { label: 'The Sentence', desc: 'Core thesis: narrative as interface.' },
-    ],
-    color: 0xdaa520, hex: '#daa520'
-  },
-  {
-    id: 'now',
-    year: '2026',
-    title: 'Seek & Employ',
-    role: 'Thinker & Maker · Open to Work',
-    era: '2026 — Present',
-    domain: 'now',
-    body: 'Currently seeking the next full-time role. I want work that matters with people who care. I am not looking for a title — I am looking for a team. I offer systems thinking, hands-on prototyping, and the rare ability to bridge design and development because I have lived on both sides of the handoff. I think deeply about human-to-human interaction and how to make meaningful interfaces at scale.',
-    sentences: [
-      'Currently seeking my next full-time role. This is not a passive search.',
-      'I want work that matters with people who care — that sentence is the full criteria.',
-      'I am not looking for a title. I am looking for a team.',
-      'I offer systems thinking and hands-on prototyping — I can think it and build it.',
-      'I bridge design and development because I have lived on both sides of the handoff.',
-      'I think deeply about human-to-human interaction and how to make meaningful interfaces at scale.',
-      'I think. I make. I ship.',
-    ],
-    images: [
-      { src: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=240&h=180&fit=crop', caption: 'Thinker & Maker' },
-    ],
-    moons: [
-      { label: 'Systems thinking', desc: 'Design at the level of architecture.' },
-      { label: 'Prototyping', desc: 'Hands-on — napkin to shipped product.' },
-      { label: 'Open to work', desc: 'Full-time, principal level, in-person or remote.' },
-      { label: 'zackgort.com', desc: 'Portfolio and presence.' },
-      { label: 'intoview.pro', desc: 'My model — designed for exactly this moment.' },
+      { label: 'Design', desc: 'Not decoration — systems thinking made visible.' },
+      { label: 'Architect', desc: 'Structure before surface, always.' },
+      { label: 'Build', desc: 'Vanilla HTML/CSS/JS. The single file as constraint and argument.' },
+      { label: 'One motion', desc: 'No handoff. No translation loss. Continuous.' },
     ],
     color: 0xdaa520, hex: '#daa520'
   },
 ];
+
 
 // ─────────────────────────────────────────────────────────
 // SPIRAL GEOMETRY
@@ -1008,6 +780,7 @@ const pOrig = pPos.slice();
 const pMat = new THREE.PointsMaterial({ color: 0xdaa520, size: 0.05, transparent: true, opacity: 0.12, sizeAttenuation: true, depthWrite: false });
 scene.add(new THREE.Points(pGeo, pMat));
 
+// ─────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────
 // SCENE BUILDING
 // ─────────────────────────────────────────────────────────
@@ -1245,6 +1018,380 @@ function buildScene() {
 buildScene();
 
 // ─────────────────────────────────────────────────────────
+// GALAXY LAYER — zoom-out view, thematic clusters
+// ─────────────────────────────────────────────────────────
+const LAYER_ORRERY = 'orrery';
+const LAYER_GALAXY = 'galaxy';
+let currentLayer = LAYER_ORRERY;
+
+const GALAXY_VIEW      = { phi: Math.PI * 0.08, theta: -Math.PI * 0.08, radius: 220 };
+const GALAXY_RADIUS_DEFAULT = 220;
+const GALAXY_RADIUS_MIN     = 130;
+const GALAXY_RADIUS_MAX     = 280;
+const ORRERY_RADIUS_MIN     = 10;
+const ORRERY_RADIUS_MAX     = 130;
+const ZOOM_STEP_GALAXY      = 22;
+const ZOOM_STEP_ORRERY      = 12;
+
+function switchLayer(layer) {
+  currentLayer = layer;
+  if (layer === LAYER_GALAXY) {
+    camTarget = { ...GALAXY_VIEW };
+    document.querySelector('[data-view="galaxy"]').classList.add('active');
+    document.querySelector('[data-view="spiral"]').classList.remove('active');
+  } else {
+    camTarget = { phi: Math.PI * 0.28, theta: Math.PI * 0.1, radius: 68 };
+    document.querySelector('[data-view="spiral"]').classList.add('active');
+    document.querySelector('[data-view="galaxy"]').classList.remove('active');
+  }
+}
+
+// Cluster definitions — thematic groupings of the roadmap nodes
+const CLUSTERS = [
+  {
+    id: 'genesis',
+    name: 'Genesis\n& Soul',
+    sub: 'The Sentence · wolfie.love · The Origin',
+    color: 0xf5c842, hex: '#f5c842',
+    pos: new THREE.Vector3(-55, 0, -20),
+    nodeIds: ['origin', 'wolfie-love'],
+    size: 5.5
+  },
+  {
+    id: 'platforms',
+    name: 'Living\nPlatforms',
+    sub: 'wolfie.life · intoview.pro',
+    color: 0xdaa520, hex: '#daa520',
+    pos: new THREE.Vector3(20, 0, -55),
+    nodeIds: ['wolfie-life', 'intoview'],
+    size: 5.0
+  },
+  {
+    id: 'editorial',
+    name: 'Editorial\nSurfaces',
+    sub: 'emdash.click · ifimaybefrank.com',
+    color: 0xc49a2e, hex: '#c49a2e',
+    pos: new THREE.Vector3(60, 0, 12),
+    nodeIds: ['emdash', 'ifimaybefrank'],
+    size: 4.6
+  },
+  {
+    id: 'argument',
+    name: 'The\nArgument',
+    sub: 'reasonandresolution.com · RSP',
+    color: 0x6a9fe0, hex: '#6a9fe0',
+    pos: new THREE.Vector3(-15, 0, 62),
+    nodeIds: ['rsp', 'reasonandresolution'],
+    size: 4.8
+  },
+  {
+    id: 'method',
+    name: 'The\nMethod',
+    sub: 'dab.cx · Design. Architect. Build.',
+    color: 0xb87333, hex: '#b87333',
+    pos: new THREE.Vector3(32, 0, 68),
+    nodeIds: ['dab'],
+    size: 4.2
+  },
+];
+
+const CLUSTER_CONNECTIONS = [
+  { from: 'genesis',   to: 'platforms',  label: 'Conviction → commerce' },
+  { from: 'genesis',   to: 'editorial',  label: 'Soul → voice' },
+  { from: 'platforms', to: 'argument',   label: 'Platform → argument' },
+  { from: 'editorial', to: 'argument',   label: 'Writing → conviction' },
+  { from: 'argument',  to: 'method',     label: 'Conviction → practice' },
+  { from: 'genesis',   to: 'method',     label: 'Origin → method' },
+];
+
+const galaxyObjects = [], galaxyLines = [], galaxyGroup = new THREE.Group();
+scene.add(galaxyGroup); galaxyGroup.visible = false;
+
+function makeClusterCanvas(cluster, forLight) {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 256;
+  const ctx = c.getContext('2d');
+  const r = (cluster.color >> 16) & 255, g = (cluster.color >> 8) & 255, b = cluster.color & 255;
+  const nameColor  = forLight ? 'rgba(10,14,30,0.88)'  : `rgba(${r},${g},${b},0.95)`;
+  const subColor   = forLight ? 'rgba(10,14,30,0.44)'  : `rgba(${r},${g},${b},0.50)`;
+  const countColor = forLight ? 'rgba(10,14,30,0.28)'  : `rgba(${r},${g},${b},0.30)`;
+  ctx.fillStyle = nameColor;
+  ctx.font = '900 38px "Crimson Text", serif';
+  const lines = cluster.name.split('\n');
+  lines.forEach((ln, i) => ctx.fillText(ln, 12, 60 + i * 48));
+  ctx.fillStyle = subColor;
+  ctx.font = '300 18px "DM Mono", monospace';
+  ctx.fillText(cluster.sub, 12, 60 + lines.length * 48 + 24);
+  ctx.fillStyle = countColor;
+  ctx.font = '300 15px "DM Mono", monospace';
+  ctx.fillText(cluster.nodeIds.length + ' nodes', 12, 60 + lines.length * 48 + 48);
+  return c;
+}
+
+function getClusterDotPositions(cl) {
+  const R = cl.size * 5.5, DS = cl.size * 0.28;
+  return cl.nodeIds.map((_, i) => {
+    const a = (i / Math.max(cl.nodeIds.length, 1)) * Math.PI * 2;
+    return { x: Math.cos(a) * R * 0.75, y: 0, z: Math.sin(a) * R * 0.75, size: DS };
+  });
+}
+
+function buildGalaxyLayer() {
+  CLUSTERS.forEach(cl => {
+    const geo = new THREE.SphereGeometry(cl.size, 32, 32);
+    const mat = new THREE.MeshPhysicalMaterial({
+      color: cl.color, emissive: cl.color, emissiveIntensity: 0.6,
+      metalness: 0.1, roughness: 0.55, clearcoat: 0.4,
+      transparent: true, opacity: 0
+    });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.copy(cl.pos);
+    mesh.userData = { cluster: cl };
+    galaxyGroup.add(mesh);
+
+    const atmGeo = new THREE.SphereGeometry(cl.size * 1.55, 24, 24);
+    const atmMat = new THREE.MeshBasicMaterial({ color: cl.color, transparent: true, opacity: 0, side: THREE.BackSide, depthWrite: false });
+    const atm = new THREE.Mesh(atmGeo, atmMat);
+    atm.position.copy(cl.pos);
+    galaxyGroup.add(atm);
+
+    const glowSpr = makeGlowSprite(cl.color, cl.size);
+    glowSpr.scale.setScalar(cl.size * 9);
+    glowSpr.position.copy(cl.pos);
+    glowSpr.material.opacity = 0;
+    galaxyGroup.add(glowSpr);
+
+    const lc = makeClusterCanvas(cl, false);
+    const lSpr = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(lc), transparent: true, depthWrite: false }));
+    lSpr.scale.set(28, 14, 1);
+    lSpr.position.set(cl.pos.x - cl.size * 6.5, cl.pos.y + cl.size * 3.5, cl.pos.z);
+    lSpr.material.opacity = 0;
+    galaxyGroup.add(lSpr);
+
+    const ringPts = [];
+    for (let i = 0; i <= 80; i++) {
+      const a = i / 80 * Math.PI * 2;
+      ringPts.push(new THREE.Vector3(cl.pos.x + Math.cos(a) * cl.size * 1.35, cl.pos.y, cl.pos.z + Math.sin(a) * cl.size * 1.35));
+    }
+    const ringMat = new THREE.LineBasicMaterial({ color: cl.color, transparent: true, opacity: 0 });
+    const ringLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), ringMat);
+    galaxyGroup.add(ringLine);
+    galaxyLines.push({ line: ringLine, baseOp: 0.35 });
+
+    const dotPositions = getClusterDotPositions(cl);
+    cl.nodeIds.forEach((nid, ni) => {
+      const node = ERA_BY_ID[nid]; if (!node) return;
+      const offset = dotPositions[ni] || dotPositions[0];
+      const dotPos = new THREE.Vector3(cl.pos.x + offset.x, cl.pos.y + offset.y, cl.pos.z + offset.z);
+      const dotSize = offset.size || 0.22;
+      const dotGeo = new THREE.SphereGeometry(dotSize, 16, 16);
+      const dotMat = new THREE.MeshPhysicalMaterial({
+        color: cl.color, emissive: cl.color, emissiveIntensity: 0.55,
+        metalness: 0.15, roughness: 0.18, clearcoat: 0.7,
+        transparent: true, opacity: 0
+      });
+      const dot = new THREE.Mesh(dotGeo, dotMat);
+      dot.position.copy(dotPos);
+      dot.userData = { clusterDot: true, nodeId: nid, cluster: cl };
+      galaxyGroup.add(dot);
+
+      const dotGlow = makeGlowSprite(cl.color, dotSize);
+      dotGlow.scale.setScalar(dotSize * 9);
+      dotGlow.position.copy(dotPos);
+      dotGlow.material.opacity = 0;
+      galaxyGroup.add(dotGlow);
+      galaxyObjects.push({ type: 'dot', mesh: dot, glow: dotGlow, cluster: cl, nodeId: nid });
+
+      const threadMat = new THREE.LineBasicMaterial({ color: cl.color, transparent: true, opacity: 0 });
+      const threadLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([dotPos, cl.pos.clone()]), threadMat);
+      galaxyGroup.add(threadLine);
+      threadLine.userData = { cluster: cl };
+      galaxyLines.push({ line: threadLine, baseOp: 0.12, clusterId: cl.id });
+    });
+
+    galaxyObjects.push({ type: 'cluster', mesh, atm, glow: glowSpr, label: lSpr, ring: ringLine, cluster: cl });
+  });
+
+  CLUSTER_CONNECTIONS.forEach(cc => {
+    const fromCl = CLUSTERS.find(c => c.id === cc.from), toCl = CLUSTERS.find(c => c.id === cc.to);
+    if (!fromCl || !toCl) return;
+    const p1 = fromCl.pos.clone(), p2 = toCl.pos.clone(), mid = p1.clone().add(p2).multiplyScalar(0.5);
+    mid.y += 18 + Math.random() * 12;
+    const pts = new THREE.QuadraticBezierCurve3(p1, mid, p2).getPoints(40);
+    const arcMat = new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0, depthWrite: false });
+    const arcLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), arcMat);
+    galaxyGroup.add(arcLine);
+    arcLine.userData = { clFrom: cc.from, clTo: cc.to };
+    galaxyLines.push({ line: arcLine, baseOp: 0.28, isArc: true, label: cc.label, clFrom: cc.from, clTo: cc.to });
+  });
+}
+buildGalaxyLayer();
+
+// Galaxy hub — "Full System / Orrery View"
+const galaxyHubGroup = new THREE.Group();
+scene.add(galaxyHubGroup);
+galaxyHubGroup.visible = false;
+(function buildGalaxyHub() {
+  const hubMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(3.8, 32, 32),
+    new THREE.MeshPhysicalMaterial({ color: 0xdaa520, emissive: 0xc49a2e, emissiveIntensity: 0.7, metalness: 0.05, roughness: 0.45, clearcoat: 0.6, transparent: true, opacity: 0 })
+  );
+  hubMesh.userData = { isGalaxyHub: true };
+  galaxyHubGroup.add(hubMesh);
+  const hubAtm = new THREE.Mesh(new THREE.SphereGeometry(3.8 * 1.6, 24, 24), new THREE.MeshBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0, side: THREE.BackSide, depthWrite: false }));
+  galaxyHubGroup.add(hubAtm);
+  const hubGlow = makeGlowSprite(0xdaa520, 3.8);
+  hubGlow.scale.setScalar(3.8 * 10); hubGlow.material.opacity = 0;
+  galaxyHubGroup.add(hubGlow);
+  const hubCanvas = document.createElement('canvas'); hubCanvas.width = 512; hubCanvas.height = 128;
+  const hCtx = hubCanvas.getContext('2d');
+  hCtx.fillStyle = 'rgba(218,165,32,0.90)'; hCtx.font = '900 32px "Crimson Text",serif'; hCtx.fillText('Full System', 12, 52);
+  hCtx.fillStyle = 'rgba(218,165,32,0.45)'; hCtx.font = '300 16px "DM Mono",monospace'; hCtx.fillText('ALL NODES · ORRERY VIEW', 12, 84);
+  const hubLabel = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(hubCanvas), transparent: true, depthWrite: false }));
+  hubLabel.scale.set(24, 6, 1); hubLabel.position.set(-3.8 * 5, 3.8 * 3.5, 0); hubLabel.material.opacity = 0;
+  galaxyHubGroup.add(hubLabel);
+  const hubRingPts = [];
+  for (let i = 0; i <= 80; i++) { const a = i / 80 * Math.PI * 2; hubRingPts.push(new THREE.Vector3(Math.cos(a) * 3.8 * 1.4, 0, Math.sin(a) * 3.8 * 1.4)); }
+  const hubRing = new THREE.Line(new THREE.BufferGeometry().setFromPoints(hubRingPts), new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0 }));
+  galaxyHubGroup.add(hubRing);
+  galaxyHubGroup.userData = { mesh: hubMesh, atm: hubAtm, glow: hubGlow, label: hubLabel, ring: hubRing };
+})();
+
+const hubMeshList = [galaxyHubGroup.userData.mesh];
+let galaxyAlpha = 0, isGalaxyView = false;
+const GALAXY_ENTER_THRESHOLD = 115, GALAXY_FADE_SPEED = 0.045;
+const DARK_FOG_COLOR = 0x000000, LIGHT_FOG_COLOR = 0xf5f1ea;
+let activeGalaxyCluster = null, hoveredCluster = null, hoveredDotMesh = null;
+
+function updateGalaxyAlpha() {
+  const r = camState.radius;
+  let target = 0;
+  if (r > GALAXY_ENTER_THRESHOLD) target = Math.min((r - GALAXY_ENTER_THRESHOLD) / (GALAXY_RADIUS_DEFAULT - GALAXY_ENTER_THRESHOLD), 1);
+  galaxyAlpha += (target - galaxyAlpha) * GALAXY_FADE_SPEED;
+  if (galaxyAlpha < 0.001) galaxyAlpha = 0;
+  if (galaxyAlpha > 0.999) galaxyAlpha = 1;
+  isGalaxyView = galaxyAlpha > 0.01;
+  galaxyGroup.visible = isGalaxyView;
+  galaxyHubGroup.visible = isGalaxyView;
+
+  const oa = 1 - galaxyAlpha;
+  nodeObjects.forEach(({ mesh }) => { mesh.material.opacity = isLight ? oa * 0.88 : oa * 0.95; });
+  glowSprites.forEach(gs => { gs.material.opacity = isLight ? 0 : oa * 0.72; });
+  allLabels.forEach(({ spr }) => { spr.material.opacity = oa; });
+  allLines.forEach(({ line, darkOp, lightOp }) => {
+    line.material.opacity = Math.max(0, (isLight ? lightOp : darkOp) * oa);
+  });
+
+  const ga = galaxyAlpha, focCl = activeGalaxyCluster;
+  galaxyObjects.forEach(obj => {
+    const isFoc = focCl && obj.cluster === focCl, dim = (focCl && !isFoc) ? 0.18 : 1.0;
+    if (obj.type === 'cluster') {
+      const boost = isFoc ? 1.25 : 1.0;
+      obj.mesh.material.opacity = ga * 0.82 * dim * boost;
+      obj.atm.material.opacity = ga * (isFoc ? 0.32 : 0.12) * dim;
+      obj.glow.material.opacity = isLight ? 0 : ga * (isFoc ? 1.1 : 0.55) * dim;
+      obj.label.material.opacity = ga * dim;
+      obj.ring.material.opacity = ga * (isFoc ? 0.75 : 0.35) * dim;
+    } else if (obj.type === 'dot') {
+      const isHov = obj.mesh === hoveredDotMesh, inFoc = focCl && obj.cluster === focCl, noFoc = !focCl;
+      let tOp, tEI, tGlow;
+      if (isHov) { tOp = ga * 0.95; tEI = 1.8; tGlow = isLight ? 0 : ga * 0.55; }
+      else if (inFoc || noFoc) { tOp = ga * 0.62; tEI = 0.55; tGlow = isLight ? 0 : ga * 0.18; }
+      else { tOp = ga * 0.08; tEI = 0.1; tGlow = 0; }
+      const lk = 0.10;
+      obj.mesh.material.opacity += (tOp - obj.mesh.material.opacity) * lk;
+      obj.mesh.material.emissiveIntensity += (tEI - obj.mesh.material.emissiveIntensity) * lk;
+      if (obj.glow) obj.glow.material.opacity += (tGlow - obj.glow.material.opacity) * lk;
+    }
+  });
+
+  galaxyLines.forEach(({ line, baseOp, isArc, clFrom, clTo, clusterId }) => {
+    let op = baseOp, dim = 1.0;
+    if (focCl) {
+      if (isArc) { const inv = clFrom === focCl.id || clTo === focCl.id; dim = inv ? 1.0 : 0.08; if (inv) op = Math.min(op * 2.0, 0.80); }
+      else { dim = (!clusterId || clusterId === focCl.id) ? 1.0 : 0.08; }
+    }
+    line.material.opacity = ga * op * dim;
+  });
+
+  if (isGalaxyView && galaxyHubGroup.userData.mesh) {
+    const hub = galaxyHubGroup.userData, hDim = focCl ? 0.30 : 1.0, lk = 0.10;
+    hub.mesh.material.opacity += (ga * 0.78 * hDim - hub.mesh.material.opacity) * lk;
+    hub.atm.material.opacity  += (ga * 0.14 * hDim - hub.atm.material.opacity)  * lk;
+    hub.glow.material.opacity += ((isLight ? 0 : ga * 0.55 * hDim) - hub.glow.material.opacity) * lk;
+    hub.label.material.opacity+= (ga * hDim - hub.label.material.opacity) * lk;
+    hub.ring.material.opacity += (ga * 0.38 * hDim - hub.ring.material.opacity) * lk;
+  }
+}
+
+const clusterMeshes = galaxyObjects.filter(o => o.type === 'cluster').map(o => o.mesh);
+const dotMeshes = galaxyObjects.filter(o => o.type === 'dot').map(o => o.mesh);
+
+function setGalaxyFocus(cl) { activeGalaxyCluster = cl; }
+function clearGalaxyFocus() { activeGalaxyCluster = null; }
+
+function checkGalaxyHover(mouseVec) {
+  if (!isGalaxyView || galaxyAlpha < 0.3) return false;
+  raycaster.setFromCamera(mouseVec, cam);
+  const hubHits = raycaster.intersectObjects(hubMeshList);
+  if (hubHits.length) {
+    document.getElementById('tt-era').textContent = 'Gateway';
+    document.getElementById('tt-title').textContent = 'Full System';
+    document.getElementById('tt-title').style.color = '#daa520';
+    document.getElementById('tt-role').textContent = 'All nodes · Orrery view';
+    tooltip.classList.add('vis'); hoveredDotMesh = null; document.body.style.cursor = 'pointer';
+    return true;
+  }
+  const cHits = raycaster.intersectObjects(clusterMeshes);
+  if (cHits.length) {
+    const cl = cHits[0].object.userData.cluster;
+    if (cl !== hoveredCluster) {
+      hoveredCluster = cl;
+      document.getElementById('tt-era').textContent = cl.nodeIds.length + ' nodes';
+      document.getElementById('tt-title').textContent = cl.name.replace('\n', ' ');
+      document.getElementById('tt-title').style.color = cl.hex;
+      document.getElementById('tt-role').textContent = cl.sub;
+      tooltip.classList.add('vis');
+    }
+    hoveredDotMesh = null; setGalaxyFocus(cl); document.body.style.cursor = 'pointer';
+    return true;
+  }
+  const dHits = raycaster.intersectObjects(dotMeshes);
+  if (dHits.length) {
+    const dot = dHits[0].object, node = ERA_BY_ID[dot.userData.nodeId], cl = dot.userData.cluster;
+    if (node) {
+      document.getElementById('tt-era').textContent = cl.name.replace('\n', ' ');
+      document.getElementById('tt-title').textContent = node.title;
+      document.getElementById('tt-title').style.color = cl.hex;
+      document.getElementById('tt-role').textContent = node.role;
+      tooltip.classList.add('vis');
+    }
+    hoveredDotMesh = dot; setGalaxyFocus(cl); document.body.style.cursor = 'pointer';
+    return true;
+  }
+  hoveredDotMesh = null;
+  if (hoveredCluster) { hoveredCluster = null; tooltip.classList.remove('vis'); }
+  clearGalaxyFocus();
+  return false;
+}
+
+function handleGalaxyClick(mouseVec) {
+  if (!isGalaxyView || galaxyAlpha < 0.3) return false;
+  raycaster.setFromCamera(mouseVec, cam);
+  const hubHits = raycaster.intersectObjects(hubMeshList);
+  if (hubHits.length) { switchLayer(LAYER_ORRERY); clearGalaxyFocus(); return true; }
+  const cHits = raycaster.intersectObjects(clusterMeshes);
+  if (cHits.length) { switchLayer(LAYER_ORRERY); clearGalaxyFocus(); return true; }
+  const dHits = raycaster.intersectObjects(dotMeshes);
+  if (dHits.length) {
+    const node = ERA_BY_ID[dHits[0].object.userData.nodeId];
+    if (node) { switchLayer(LAYER_ORRERY); setTimeout(() => focusEra(node), 600); }
+    return true;
+  }
+  return false;
+}
+
+
+// ─────────────────────────────────────────────────────────
 // TIMELINE NAV STRIP
 // ─────────────────────────────────────────────────────────
 function buildTimelineNav() {
@@ -1317,6 +1464,8 @@ let currentView = 'spiral';
 let morphing = false, morphT = 0;
 
 function switchView(view) {
+  if (view === 'galaxy') { switchLayer(LAYER_GALAXY); return; }
+  if (currentLayer === LAYER_GALAXY) switchLayer(LAYER_ORRERY);
   if (view === currentView) return;
   currentView = view;
   morphing = true; morphT = 0;
@@ -1327,8 +1476,16 @@ function switchView(view) {
 }
 
 document.querySelectorAll('.hud-btn[data-view]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
-document.getElementById('hud-zoom-in').addEventListener('click', () => { camTarget.radius = Math.max(12, camTarget.radius - 12); });
-document.getElementById('hud-zoom-out').addEventListener('click', () => { camTarget.radius = Math.min(130, camTarget.radius + 12); });
+document.getElementById('hud-zoom-in').addEventListener('click', () => {
+  const step = currentLayer === LAYER_GALAXY ? ZOOM_STEP_GALAXY : ZOOM_STEP_ORRERY;
+  const mn   = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : ORRERY_RADIUS_MIN;
+  camTarget.radius = Math.max(mn, camTarget.radius - step);
+});
+document.getElementById('hud-zoom-out').addEventListener('click', () => {
+  const step = currentLayer === LAYER_GALAXY ? ZOOM_STEP_GALAXY : ZOOM_STEP_ORRERY;
+  const mx   = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
+  camTarget.radius = Math.min(mx, camTarget.radius + step);
+});
 
 // ─────────────────────────────────────────────────────────
 // PANEL
@@ -1478,6 +1635,7 @@ function getAllHittable() {
 }
 
 function checkHover(clientX, clientY) {
+  if (checkGalaxyHover(mouse)) return;
   raycaster.setFromCamera(mouse, cam);
   const hits = raycaster.intersectObjects(getAllHittable());
 
@@ -1544,6 +1702,7 @@ cvs.addEventListener('pointermove', e => {
 cvs.addEventListener('pointerup', e => {
   if (e.button === 2) return;
   if (!drag) {
+    if (handleGalaxyClick(mouse)) { if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; } return; }
     raycaster.setFromCamera(mouse, cam);
     const hits = raycaster.intersectObjects(getAllHittable());
     if (hits.length) {
@@ -1557,7 +1716,11 @@ cvs.addEventListener('pointerup', e => {
   if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; }
 });
 
-cvs.addEventListener('wheel', e => { camTarget.radius = Math.max(10, Math.min(130, camTarget.radius + e.deltaY * 0.06)); }, { passive: true });
+cvs.addEventListener('wheel', e => {
+  const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
+  const mn = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : 10;
+  camTarget.radius = Math.max(mn, Math.min(mx, camTarget.radius + e.deltaY * 0.06));
+}, { passive: true });
 cvs.addEventListener('contextmenu', e => { e.preventDefault(); openTOC(); });
 
 let longPressTimer = null;
@@ -1648,6 +1811,22 @@ function applyTheme() {
   pMat.opacity = isLight ? 0 : 0.12;
   scene.fog.color.setHex(isLight ? 0xf5f1ea : 0x000000);
   renderer.setClearColor(isLight ? 0xf5f1ea : 0x000000, 0);
+  // Galaxy cluster theme update
+  galaxyObjects.forEach(obj => {
+    if (obj.type === 'cluster') {
+      obj.glow.visible = !isLight;
+      const newLc = makeClusterCanvas(obj.cluster, isLight);
+      obj.label.material.map.dispose();
+      obj.label.material.map = new THREE.CanvasTexture(newLc);
+      obj.label.material.needsUpdate = true;
+      if (isLight) { obj.mesh.material.color.setHex(0x1a1a20); obj.atm.material.opacity = 0.06; }
+      else { obj.mesh.material.color.setHex(obj.cluster.color); }
+    }
+    if (obj.type === 'dot') {
+      if (isLight) obj.mesh.material.color.setHex(0x3a1a00);
+      else obj.mesh.material.color.setHex(obj.cluster.color);
+    }
+  });
   redrawLabels();
   drawMesh();
 }
@@ -1751,6 +1930,7 @@ function animate(ts) {
 
   tickMorph();
   tickMoons(elapsed);
+  updateGalaxyAlpha();
 
   gold1.intensity = (isLight ? 0 : 5) + Math.sin(elapsed * 0.8) * 0.5;
   gold2.intensity = (isLight ? 0 : 4) + Math.sin(elapsed * 0.6 + 1.2) * 0.4;
