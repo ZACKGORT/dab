@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>dab.cx · Design (for agentic) Architecture (& human) Bridges · Customer Experience</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'%3E%3Cellipse cx='18' cy='18' rx='16' ry='5.5' stroke='%23daa520' stroke-width='1' transform='rotate(-22,18,18)'/%3E%3Ccircle cx='18' cy='18' r='5.5' stroke='%23daa520' stroke-width='1'/%3E%3Ccircle cx='5' cy='15' r='1.4' fill='%23daa520'/%3E%3Ccircle cx='12' cy='10' r='1.1' fill='%23c49a2e'/%3E%3Ccircle cx='26' cy='11' r='1' fill='%23b87333'/%3E%3Ccircle cx='31' cy='19' r='1.3' fill='%23daa520'/%3E%3C/svg%3E">
+<title>dab.cx · design (for agentic) architecture (& human) bridges · client experience</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -478,11 +477,11 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
     </svg>
     <div id="brand-text">
       <div id="brand-name">D.A.B.CX</div>
-      <div id="brand-sub">Sentence as Primitive · Wolfgang &amp; Co.</div>
+      <div id="brand-sub">design (for agentic) architecture (& human) bridges · client experience</div>
     </div>
   </div>
   <!-- Hover ghost: full dab.cx acronym -->
-  <div id="brand-dab">Design (for agentic) Architecture (& human) Bridges · Customer Experience</div>
+  <div id="brand-dab">dab.cx</div>
 </div>
 
 <div id="era-label">
@@ -771,7 +770,7 @@ const ERAS = [
     moons: [
       { label: 'The argument', desc: 'Not a portfolio — a philosophy with evidence.' },
       { label: 'Studio presence', desc: 'Wolfgang & Co. in its most considered form.' },
-      { label: 'Method', desc: 'dab.cx: Design. Architect. Build.' },
+      { label: 'Method', desc: 'dab.cx: Design. Architect. Bridge.' },
     ],
     color: 0xb87333, hex: '#b87333'
   },
@@ -810,7 +809,7 @@ const ERAS = [
     url: 'https://dab.cx',
     body: 'dab.cx embodies the approach in three words: Design (for agentic) Architecture (& Human) Bridges. — a conviction held by one person who enjoys thinking at the extreme edge of intentionality.',
     sentences: [
-      'Design. Architect. Build.',
+      'Design. Architect. Bridge.',
       'Not design then hand off. Not design then wait.',
       'dab.cx embodies the approach',
       'I think at the extreme edge of intentionality.',
@@ -819,7 +818,7 @@ const ERAS = [
     moons: [
       { label: 'Design', desc: 'Not decoration — systems thinking made visible.' },
       { label: 'Architect', desc: 'Structure before surface, always.' },
-      { label: 'Build', desc: 'Vanilla HTML/CSS/JS. The single file as constraint and argument.' },
+      { label: 'Bridge', desc: 'Vanilla HTML/CSS/JS. The single file as constraint and argument.' },
       { label: 'One motion', desc: 'No handoff. No translation loss. Continuous.' },
     ],
     color: 0xdaa520, hex: '#daa520'
@@ -1935,17 +1934,9 @@ function focusEra(era) {
   // Screen-right at theta=0.6π is (cos θ, 0, -sin θ) in world XZ.
   // Moving pivot by +screenRight shifts node leftward in the frame.
   const THETA = preset.theta;
-  const isMobileView = window.innerWidth <= 768;
-  // Desktop: shift pivot right in screen-space so node clears the right panel
-  // Mobile: shift pivot down in world-Y so node renders in upper 40% of screen,
-  //         clear of the bottom sheet drawer
-  const panelShift = isMobileView ? 0 : 3.5;
+  const panelShift = window.innerWidth > 768 ? 3.5 : 0;
   const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
   const targetPivot = era._pos.clone().addScaledVector(screenRight, panelShift);
-  if (isMobileView) {
-    // Push pivot down in world Y → node appears higher on screen
-    targetPivot.y -= 4.5;
-  }
   scenePivotTgt.copy(targetPivot);
 
   // Fire the swoop: outward arc, sweep, close in
@@ -2045,25 +2036,7 @@ function checkHover(clientX, clientY) {
 }
 
 function posTooltip(cx, cy) {
-  // Clamp so tooltip never overflows viewport edge
-  // On mobile (touch): appear above and to the left of the finger
-  const isMobile = window.innerWidth <= 768;
-  const ttEl = document.getElementById('tt-inner');
-  const ttW = ttEl ? ttEl.offsetWidth || 220 : 220;
-  const ttH = ttEl ? ttEl.offsetHeight || 80 : 80;
-  let x, y;
-  if (isMobile) {
-    // Left of and above the touch point
-    x = cx - ttW - 12;
-    y = cy - ttH - 12;
-  } else {
-    x = cx + 18;
-    y = cy - 10;
-  }
-  // Clamp within viewport
-  x = Math.max(8, Math.min(window.innerWidth  - ttW - 8, x));
-  y = Math.max(8, Math.min(window.innerHeight - ttH - 8, y));
-  tooltip.style.transform = `translate(${x}px,${y}px)`;
+  tooltip.style.transform = `translate(${cx + 18}px,${cy - 10}px)`;
 }
 
 let pointerDownX = 0, pointerDownY = 0;
@@ -2131,22 +2104,8 @@ cvs.addEventListener('pointerup', e => {
   if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; }
 });
 
-// Re-lock orbit pivot to the focused node so zoom never drifts off-center
-function lockPivotToFocus() {
-  if (!focusedEra || !isFocused) return;
-  const THETA = Math.PI * 0.6;
-  const isMobileView = window.innerWidth <= 768;
-  const panelShift = isMobileView ? 0 : 3.5;
-  const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
-  const p = focusedEra._pos.clone().addScaledVector(screenRight, panelShift);
-  if (isMobileView) p.y -= 4.5;
-  scenePivotTgt.copy(p);
-  scenePivot.copy(p);
-}
-
 cvs.addEventListener('wheel', e => {
   if (swoop.active) { swoop.active = false; camTarget.phi = camState.phi; camTarget.theta = camState.theta; camTarget.radius = camState.radius; }
-  lockPivotToFocus();
   const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
   const mn = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : ORRERY_RADIUS_MIN;
   const sensitivity = Math.max(0.012, camTarget.radius * 0.0018);
@@ -2179,7 +2138,6 @@ cvs.addEventListener('touchmove', e => {
     const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
     const pinchSens = Math.max(0.03, camTarget.radius * 0.004);
     camTarget.radius = Math.max(mn, Math.min(mx, camTarget.radius + delta * pinchSens));
-    lockPivotToFocus();
     pinchDist = dist;
   }
 }, { passive: true });
