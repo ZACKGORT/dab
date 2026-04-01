@@ -882,6 +882,99 @@ let camTarget = { ...camState };
 const scenePivot = new THREE.Vector3();
 const scenePivotTgt = new THREE.Vector3();
 
+// ── SWOOP ANIMATOR ──────────────────────────────────────
+// Drives a three-phase camera move: pull out → arc around → close in
+// Bypasses the simple per-frame lerp while active.
+const swoop = {
+  active: false,
+  phase: 0,           // 0=pull-out, 1=arc, 2=close-in
+  t: 0,               // 0..1 within phase
+  // start state
+  startPhi: 0, startTheta: 0, startRadius: 0,
+  startPivot: new THREE.Vector3(),
+  // end state
+  endPhi: 0, endTheta: 0, endRadius: 0,
+  endPivot: new THREE.Vector3(),
+  // mid state (peak of the arc — pulled outward)
+  midRadius: 0,
+  // durations per phase in seconds
+  dur: [0.55, 0.70, 0.45],
+};
+
+function swoopTo(endPhi, endTheta, endRadius, endPivotVec) {
+  swoop.startPhi    = camState.phi;
+  swoop.startTheta  = camState.theta;
+  swoop.startRadius = camState.radius;
+  swoop.startPivot.copy(scenePivot);
+  swoop.endPhi      = endPhi;
+  swoop.endTheta    = endTheta;
+  swoop.endRadius   = endRadius;
+  swoop.endPivot.copy(endPivotVec);
+  // Mid radius: swoop outward to ~2.2× current or at least 48
+  swoop.midRadius   = Math.max(48, camState.radius * 2.2, endRadius * 2.8);
+  swoop.phase       = 0;
+  swoop.t           = 0;
+  swoop.active      = true;
+}
+
+function ease3(t) {
+  // smooth cubic ease in-out
+  return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+}
+
+function tickSwoop(dt) {
+  if (!swoop.active) return;
+  const dur = swoop.dur[swoop.phase];
+  swoop.t += dt / dur;
+  if (swoop.t >= 1) { swoop.t = 1; }
+  const e = ease3(swoop.t);
+
+  if (swoop.phase === 0) {
+    // Pull out — radius grows toward midRadius, pivot starts moving to end
+    camState.radius = swoop.startRadius + (swoop.midRadius - swoop.startRadius) * e;
+    camState.phi    = swoop.startPhi + (swoop.endPhi - swoop.startPhi) * e * 0.3;
+    camState.theta  = swoop.startTheta;
+    scenePivot.lerpVectors(swoop.startPivot, swoop.endPivot, e * 0.4);
+  } else if (swoop.phase === 1) {
+    // Arc — theta sweeps to final angle at peak radius
+    camState.radius = swoop.midRadius;
+    camState.phi    = swoop.startPhi + (swoop.endPhi - swoop.startPhi) * (0.3 + e * 0.6);
+    // Sweep theta the SHORT way around
+    let dTheta = swoop.endTheta - swoop.startTheta;
+    // Normalize to [-PI, PI] so we always take the shorter arc
+    while (dTheta >  Math.PI) dTheta -= Math.PI * 2;
+    while (dTheta < -Math.PI) dTheta += Math.PI * 2;
+    camState.theta  = swoop.startTheta + dTheta * e;
+    scenePivot.lerpVectors(swoop.startPivot, swoop.endPivot, 0.4 + e * 0.4);
+  } else {
+    // Close in — radius shrinks to endRadius
+    let dTheta = swoop.endTheta - swoop.startTheta;
+    while (dTheta >  Math.PI) dTheta -= Math.PI * 2;
+    while (dTheta < -Math.PI) dTheta += Math.PI * 2;
+    camState.radius = swoop.midRadius + (swoop.endRadius - swoop.midRadius) * e;
+    camState.phi    = swoop.startPhi + (swoop.endPhi - swoop.startPhi);
+    camState.theta  = swoop.startTheta + dTheta;
+    scenePivot.lerpVectors(swoop.startPivot, swoop.endPivot, 0.8 + e * 0.2);
+  }
+
+  if (swoop.t >= 1) {
+    swoop.phase++;
+    swoop.t = 0;
+    if (swoop.phase >= 3) {
+      // Done — land exactly on target, hand control back to normal lerp
+      swoop.active  = false;
+      camState.phi    = swoop.endPhi;
+      camState.theta  = swoop.endTheta;
+      camState.radius = swoop.endRadius;
+      camTarget.phi    = swoop.endPhi;
+      camTarget.theta  = swoop.endTheta;
+      camTarget.radius = swoop.endRadius;
+      scenePivot.copy(swoop.endPivot);
+      scenePivotTgt.copy(swoop.endPivot);
+    }
+  }
+}
+
 function applyCam() {
   const { phi, theta, radius } = camState, c = scenePivot;
   cam.position.set(
@@ -1887,14 +1980,13 @@ function openPanel(era) {
 }
 
 window.closePanel = function () {
-  focusedEra = null; isFocused = false;
+  // Dismiss the overlay — but keep focus, camera, and pivot exactly where they are.
+  // isFocused stays true; the user can keep zooming/orbiting around the active node.
+  // Focus is only released when the user navigates away or taps empty space.
   document.getElementById('ghost').classList.remove('on');
   document.getElementById('msheet').classList.remove('on');
   hideSentGhost();
-  updateWormNav(null);
-  scenePivotTgt.set(0, 0, 0);
-  camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
-  resetHighlights();
+  // Leave focusedEra, isFocused, scenePivot, camTarget all untouched.
 };
 
 // ─────────────────────────────────────────────────────────
@@ -1902,40 +1994,34 @@ window.closePanel = function () {
 // ─────────────────────────────────────────────────────────
 let isFocused = false;
 
+// Compute the preset camera for a given era (pure, no side effects)
+function eraPreset(era) {
+  // Fixed world-space camera angle — always the same 3/4 view, left-to-right.
+  // theta = PI * 0.6 ≈ 108° — camera sits front-left of world origin,
+  // looking across to the right. Every node passes through this same frame
+  // as you navigate; the spiral rotates past a fixed viewpoint.
+  const theta  = Math.PI * 0.6;
+  const phi    = Math.PI * 0.34;  // low — ~29° above horizon, see what's above
+  const radius = 20;
+  return { phi, theta, radius };
+}
+
 function focusEra(era) {
   closeGridView();
   if (currentLayer === LAYER_GALAXY) switchLayer(LAYER_ORRERY);
   isFocused = true; focusedEra = era;
 
-  // Pivot exactly on the node — no offset, no drift
-  scenePivotTgt.copy(era._pos);
-  scenePivot.copy(era._pos);
+  const preset = eraPreset(era);
+  const targetPivot = era._pos.clone();
+  scenePivotTgt.copy(targetPivot);
 
-  // Camera approach angle: position the camera so it looks FROM outside the spiral
-  // TOWARD the active node, with the next node visible ahead in the frame.
-  //
-  // The spiral wraps at angle = t * PI*2*1.65 - PI*0.5.
-  // "Outside looking in" means we place the camera at the node's own radial direction
-  // (pointing away from spiral center), elevated slightly.
-  // We also nudge theta toward the next node's spiral angle so it's in frame.
-  const idx = ERAS.findIndex(e => e.id === era.id);
-  const turns = 1.65;
-  const nodeAngle  = era._t * Math.PI * 2 * turns - Math.PI * 0.5;
+  // Fire the swoop: outward arc, sweep, close in
+  swoopTo(preset.phi, preset.theta, preset.radius, targetPivot);
 
-  // Next node's angle (wrap at end)
-  const nextEra = ERAS[Math.min(idx + 1, ERAS.length - 1)];
-  const nextAngle = nextEra._t * Math.PI * 2 * turns - Math.PI * 0.5;
-
-  // Approach from the outward radial direction of this node, biased toward next
-  // (camera sits outside the spiral, looking inward at the active node)
-  const outwardTheta = nodeAngle + Math.PI;          // 180° from node = outside the spiral
-  const towardNext   = nextAngle + Math.PI;
-  // Blend: mostly outward, slightly toward next so next node is visible in frame
-  const approachTheta = outwardTheta + (towardNext - outwardTheta) * 0.25;
-
-  camTarget.phi    = Math.PI * 0.20;   // slightly above horizontal
-  camTarget.theta  = approachTheta;
-  camTarget.radius = 18;
+  // Also set camTarget so user input after swoop continues from correct base
+  camTarget.phi    = preset.phi;
+  camTarget.theta  = preset.theta;
+  camTarget.radius = preset.radius;
 
   openPanel(era);
   highlightConnections(era);
@@ -2042,10 +2128,18 @@ cvs.addEventListener('pointermove', e => {
   mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
   posTooltip(e.clientX, e.clientY);
   if (e.buttons && e.button !== 2) {
-    // Only start drag if movement exceeds threshold (larger for touch/stylus)
     const dx = e.clientX - pointerDownX, dy = e.clientY - pointerDownY;
     const dragThreshold = e.pointerType === 'mouse' ? 4 : 10;
-    if (!drag && Math.sqrt(dx*dx + dy*dy) > dragThreshold) drag = true;
+    if (!drag && Math.sqrt(dx*dx + dy*dy) > dragThreshold) {
+      drag = true;
+      // Cancel swoop so user takes control immediately
+      if (swoop.active) {
+        swoop.active = false;
+        camTarget.phi    = camState.phi;
+        camTarget.theta  = camState.theta;
+        camTarget.radius = camState.radius;
+      }
+    }
     if (drag) {
       isDragging = true;
       camTarget.theta -= (e.clientX - lastDragX) * 0.005;
@@ -2068,16 +2162,25 @@ cvs.addEventListener('pointerup', e => {
       const nodeObj = nodeObjects.find(o => o.mesh === hit || o.hitMesh === hit);
       if (nodeObj) focusEra(nodeObj.era);
     } else if (isFocused) {
-      closePanel();
+      // Tap on empty space = full release: dismiss overlay AND exit focus
+      document.getElementById('ghost').classList.remove('on');
+      document.getElementById('msheet').classList.remove('on');
+      hideSentGhost();
+      focusedEra = null; isFocused = false;
+      swoop.active = false;
+      updateWormNav(null);
+      scenePivotTgt.set(0, 0, 0);
+      camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
+      resetHighlights();
     }
   }
   if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; }
 });
 
 cvs.addEventListener('wheel', e => {
+  if (swoop.active) { swoop.active = false; camTarget.phi = camState.phi; camTarget.theta = camState.theta; camTarget.radius = camState.radius; }
   const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
   const mn = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : ORRERY_RADIUS_MIN;
-  // Scale sensitivity by current radius so close-in zoom is finer
   const sensitivity = Math.max(0.012, camTarget.radius * 0.0018);
   camTarget.radius = Math.max(mn, Math.min(mx, camTarget.radius + e.deltaY * sensitivity));
 }, { passive: true });
@@ -2334,14 +2437,17 @@ function animate(ts) {
   const dt = Math.min((ts - lastTime) / 1000, 0.05);
   lastTime = ts; elapsed += dt;
 
-  camState.phi   += (camTarget.phi   - camState.phi)   * 0.08;
-  camState.theta += (camTarget.theta - camState.theta) * 0.08;
-  camState.radius+= (camTarget.radius- camState.radius)* 0.08;
-  // When focused, snap pivot faster so zoom always orbits the node
-  const pivotLerpSpeed = isFocused ? 0.22 : 0.08;
-  scenePivot.lerp(scenePivotTgt, pivotLerpSpeed);
-
-  if (!isFocused && !isDragging && !orbitPaused) camTarget.theta += dt * 0.015;
+  if (swoop.active) {
+    tickSwoop(dt);
+    // Suppress auto-orbit and user drag during swoop
+  } else {
+    camState.phi   += (camTarget.phi   - camState.phi)   * 0.08;
+    camState.theta += (camTarget.theta - camState.theta) * 0.08;
+    camState.radius+= (camTarget.radius- camState.radius)* 0.08;
+    const pivotLerpSpeed = isFocused ? 0.22 : 0.08;
+    scenePivot.lerp(scenePivotTgt, pivotLerpSpeed);
+    if (!isFocused && !isDragging && !orbitPaused) camTarget.theta += dt * 0.015;
+  }
 
   if (!isFocused) {
     nodeObjects.forEach(({ mesh, era }) => {
