@@ -1,0 +1,229 @@
+// ─────────────────────────────────────────────────────────
+// CAREER DATA
+// ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// ROADMAP NODES — narrative-as-nodes
+// The sentence as primitive: wolfie.love → ecosystem
+// ─────────────────────────────────────────────────────────
+const ERAS = [
+  {
+    id: 'origin',
+    year: '∅',
+    title: 'The Sentence',
+    role: 'Origin · Impetus · Thesis',
+    era: 'The Beginning',
+    domain: 'thesis',
+    url: null,
+    body: 'Every system has a seed. Mine is a conviction about language — that the sentence, not the page, not the interface, not the flow, is the irreducible unit of thought. This is not a product feature. It is a philosophy. Everything that follows is an expression of it.',
+    sentences: [
+      'Every system has a seed.',
+      'Mine is a conviction: the sentence is the irreducible unit of thought.',
+      'Not the page. Not the interface. Not the flow.',
+      'The sentence.',
+      'This is not a product feature. It is a philosophy.',
+      'Everything that follows is an expression of it.',
+    ],
+    moons: [
+      { label: 'Primitive', desc: 'The sentence as the atom of all meaning.' },
+      { label: 'Conviction', desc: 'Not a feature — a belief system.' },
+      { label: 'Format shapes attention', desc: 'The medium is the message, sentence-by-sentence.' },
+      { label: 'dab.cx', desc: 'Design (for agentic) Architecture (& Human) Bridges.' },
+    ],
+    color: 0xdaa520, hex: '#daa520'
+  },
+  {
+    id: 'wolfie-love',
+    year: '★',
+    title: 'wolfie.love',
+    role: 'Origin Platform · Sanctuary · Soul',
+    era: 'The Heart',
+    domain: 'sanctuary',
+    url: 'https://wolfie.love',
+    body: 'Built entirely from scratch. No derivative parts. wolfie.love is a memorial for Wolfgang — my late blind rescue poodle — and the origin point of everything. It established the sentence-progressive reading engine, the dark interstitial "now we go sleepy" moment, Flow Mode with authored timing markup, and the four-theme system. Wolfgang & Co. lives here first.',
+    sentences: [
+      'Built entirely from scratch. No derivative parts.',
+      'wolfie.love is a memorial for Wolfgang — my late blind rescue poodle.',
+      'This is where the sentence-progressive reading engine was born.',
+      'Flow Mode. Authored timing markup. The dark "now we go sleepy" interstitial.',
+      'A four-theme system that proved the interface could disappear and leave only understanding.',
+      'Wolfgang & Co. lives here first. Everything else is downstream.',
+    ],
+    moons: [
+      { label: 'Flow Mode', desc: 'Authored timing markup — reading at the speed of thought.' },
+      { label: 'Now we go sleepy', desc: 'The dark interstitial. A ritual, not a page.' },
+      { label: 'Four themes', desc: 'Proof that format shapes attention.' },
+      { label: 'Wolfgang', desc: 'Blind. Rescue. Poodle. The reason for all of it.' },
+    ],
+    color: 0xf5c842, hex: '#f5c842'
+  },
+  {
+    id: 'wolfie-life',
+    year: 'wl',
+    title: 'wolfie.life',
+    role: 'Active Business Presence · Ecosystem Hub',
+    era: 'The Platform',
+    domain: 'platform',
+    url: 'https://wolfie.life',
+    body: 'wolfie.life is the active business face of Wolfgang & Co. — where the sanctuary becomes commerce, service, and community. Four verticals in orbit: /shop, /real, /food, /job. The same sentence-as-primitive engine, now doing real work in the world.',
+    sentences: [
+      'wolfie.life is where the sanctuary becomes service.',
+      'It is the active business face of Wolfgang & Co.',
+      'Four verticals orbit the center: /shop, /real, /food, /job.',
+      'The sentence-as-primitive engine, now doing real work in the world.',
+      'Same philosophy. Different surface. Expanded scope.',
+    ],
+    moons: [
+      { label: '/shop', desc: 'wolfie.life/shop — commerce surface.' },
+      { label: '/real', desc: 'wolfie.life/real — real estate vertical.' },
+      { label: '/food', desc: 'wolfie.life/food — culinary vertical.' },
+      { label: '/job', desc: 'wolfie.life/job — employment vertical.' },
+    ],
+    color: 0xc49a2e, hex: '#c49a2e'
+  },
+  {
+    id: 'intoview',
+    year: 'iv',
+    title: 'intoview.pro',
+    role: 'Professional Presence · Case Study Engine',
+    era: 'The Portfolio',
+    domain: 'portfolio',
+    url: 'https://intoview.pro',
+    body: 'So, I fancy myself an information architect, and as such I think LinkedIn is hot garbage, but it is the most popular dumpster for us professional folk to dive into. Anyway, here is my little trash pile.',
+    sentences: [
+      'intoview.pro is my professional presence — built on the same engine as everything else.',
+      'A pedigree panel: 14 organizations, 20 years, filter pills, deepdive inlets.',
+      'The narrative-as-nodes architecture applied to the job market.',
+      'Two case studies carry rings: GNC and BNY Mellon.',
+      'GNC: global health & nutrition Shopify redesign, discovery to delivery in 12 weeks.',
+      'BNY Mellon: a year-long digital transformation embed where I became interim Product Owner.',
+    ],
+    moons: [
+      { label: 'Systems Soluttioning [sic]', desc: 'The interface is built upon its own principals.' },
+      { label: 'CASE STUDY: BNY Mellon (FinTech)', desc: 'Digital transformation embed. Interim Product Owner.' },
+      { label: 'CASE STUDY: GNC (E-commerce)', desc: '12 weeks · Headless & Atomic · Shopify · UX Strategy · Brand Design' },
+      { label: 'Social Layer', desc: 'Proprietary audience feedback layer.' },
+      { label: 'Analytics Layer', desc: 'Bespoke narrative-as-nodes telemetry engine & interface' },
+      { label: 'Intentional Friction', desc: 'Atomic approach agnostic to template-typical thinking.' },
+
+    ],
+    color: 0xdaa520, hex: '#daa520'
+  },
+  {
+    id: 'emdash',
+    year: '—',
+    title: 'emdash.click',
+    role: 'Editorial Surface · Pause Made Visible',
+    era: 'The Pause',
+    domain: 'editorial',
+    url: 'https://emdash.click',
+    body: 'Honestly, I am working on a PC laptop with a broken keyboard (where I use the extra buttons on my mouse for the missing letters — but alas, before I digress into the paranthetical void ). Anyway, I made emdash.click',
+    sentences: [
+      'copy that em—effer',
+      'use it em—phatically.',
+      'Do not let the robots win — mmkay?',
+      '—',
+      ],
+    moons: [
+      { label: 'Pause', desc: 'The intentional breath before meaning arrives.' },
+      { label: 'Editorial', desc: 'Writing as interface design.' },
+      { label: 'Punctuation', desc: 'The em dash as navigation primitive.' },
+    ],
+    color: 0x9a7820, hex: '#9a7820'
+  },
+  {
+    id: 'rsp',
+    year: 'RSP',
+    title: 'reasonandresolution.com/rsp',
+    role: 'Policy as Narrative · RSP 3.0',
+    era: 'The Document',
+    domain: 'document',
+    url: 'https://reasonandresolution.com/rsp',
+    body: 'Anthropic\'s Responsible Scaling Policy 3.0, rendered as narrative nodes. anthropic.html — hosted at reasonandresolution.com — brought live behavioral telemetry, a three-theme system, and a dispatch analytics panel to a policy document. The argument: even governance can benefit from the sentence-as-primitive approach. Complex thought deserves a considered container.',
+    sentences: [
+      'Anthropic\'s Responsible Scaling Policy 3.0 — rendered as narrative nodes.',
+      'Live behavioral telemetry. Three-theme system. Dispatch analytics panel.',
+      'A policy document made navigable at the sentence level.',
+      'The argument: even governance benefits from the sentence-as-primitive approach.',
+      'Complex thought deserves a considered container.',
+      'This was not a redesign. It was a translation.',
+    ],
+    moons: [
+      { label: 'RSP 3.0', desc: 'Anthropic\'s Responsible Scaling Policy as narrative nodes.' },
+      { label: 'Telemetry', desc: 'Live behavioral data inside the reading experience.' },
+      { label: 'Three themes', desc: 'Dark · LinkedIn · Raw — the system applied to policy.' },
+    ],
+    color: 0x6a9fe0, hex: '#6a9fe0'
+  },
+  {
+    id: 'reasonandresolution',
+    year: 'R&R',
+    title: 'reasonandresolution.com',
+    role: 'Studio Presence · The Full Platform',
+    era: 'The Studio',
+    domain: 'studio',
+    url: 'https://reasonandresolution.com',
+    body: 'reasonandresolution.com is an immediate answer to a chaotic moment. ',
+    sentences: [
+      'I have my reasons.',
+      'This is my resolution.',
+      'Think different. [sic]',
+      'I think.',
+      'I make.',
+    ],
+    moons: [
+      { label: 'The argument', desc: 'Not a portfolio — a philosophy with evidence.' },
+      { label: 'Studio presence', desc: 'Wolfgang & Co. in its most considered form.' },
+      { label: 'Method', desc: 'dab.cx: Design. Architect. Build.' },
+    ],
+    color: 0xb87333, hex: '#b87333'
+  },
+  {
+    id: 'ifimaybefrank',
+    year: 'imf',
+    title: 'ifimaybefrank.com',
+    role: 'Writing Engine · Manifesto Manifest of Itself',
+    era: 'The Manifesto',
+    domain: 'manifesto',
+    url: 'https://ifimaybefrank.com',
+    body: 'A writing application built around the sentence-as-primitive thesis. ifimaybefrank is a manifesto that manifests itself — the tool proves the argument by existing. Permanent vertical binder. Session stats dashboard. TextCompose surface. Chapter provenance ghost cards. A Wolfgang photograph gallery. v2 shipped in a single session.',
+    sentences: [
+      'ifimaybefrank.com is a writing application and a manifesto — simultaneously.',
+      'The tool proves the argument by existing.',
+      'Permanent vertical binder. Session stats dashboard. TextCompose surface.',
+      'Chapter provenance ghost cards. A Wolfgang photograph gallery.',
+      'v2 shipped in a single session.',
+      'The sentence-as-primitive thesis, applied to writing itself.',
+    ],
+    moons: [
+      { label: 'TextCompose', desc: 'The sentence-level writing surface.' },
+      { label: 'Chapter provenance', desc: 'Ghost cards that remember where sentences came from.' },
+      { label: 'Session stats', desc: 'Writing telemetry as interface.' },
+      { label: 'Wolfgang gallery', desc: 'The photographs. The reason for the words.' },
+    ],
+    color: 0xc49a2e, hex: '#c49a2e'
+  },
+  {
+    id: 'dab',
+    year: 'dab',
+    title: 'dab.cx',
+    role: 'Design (for agentic) Architecture (& Human) Bridges.',
+    era: 'The Method',
+    domain: 'method',
+    url: 'https://dab.cx',
+    body: 'dab.cx embodies the approach in three words: Design (for agentic) Architecture (& Human) Bridges. — a conviction held by one person who enjoys thinking at the extreme edge of intentionality.',
+    sentences: [
+      'Design. Architect. Build.',
+      'Not design then hand off. Not design then wait.',
+      'dab.cx embodies the approach',
+      'I think at the extreme edge of intentionality.',
+      'The constraint is the argument.',
+    ],
+    moons: [
+      { label: 'Design', desc: 'Not decoration — systems thinking made visible.' },
+      { label: 'Architect', desc: 'Structure before surface, always.' },
+      { label: 'Build', desc: 'Vanilla HTML/CSS/JS. The single file as constraint and argument.' },
+      { label: 'One motion', desc: 'No handoff. No translation loss. Continuous.' },
+    ],
+    color: 0xdaa520, hex: '#daa520'
+  },
+];
