@@ -3,138 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>dab.cx · a roadmap</title>
+<title>D.A.B.CX · Design (for agentic) Architecture (& human) Bridges · A Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:#05030a;transition:background 0.6s;}
-body.light{background:#f5f1ea;}
+body.light{background:#ffffff;}
 canvas{display:block;width:100vw;height:100vh;position:relative;z-index:1;}
 #bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-#brand{position:fixed;top:24px;left:28px;z-index:100;pointer-events:none;font-family:'DM Mono',monospace;}
+#brand{position:fixed;top:20px;left:24px;z-index:100;font-family:'DM Mono',monospace;cursor:pointer;}
+#brand-logo{display:flex;align-items:center;gap:10px;position:relative;}
+#brand-saturn{flex-shrink:0;opacity:0.75;transition:opacity 0.3s;}
+#brand:hover #brand-saturn{opacity:1;}
+#brand-text{display:flex;flex-direction:column;gap:3px;}
 #brand-name{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(218,165,32,0.70);transition:color 0.5s;}
-#brand-sub{font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(218,165,32,0.28);margin-top:5px;transition:color 0.5s;}
-body.light #brand-name{color:rgba(100,60,0,0.85);}
-body.light #brand-sub{color:rgba(100,60,0,0.45);}
+#brand-sub{font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(218,165,32,0.28);transition:color 0.5s;}
+/* Ghost acronym tooltip */
+#brand-dab{
+  position:absolute;top:calc(100% + 8px);left:0;
+  font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.18em;
+  text-transform:uppercase;color:rgba(218,165,32,0.70);
+  background:rgba(5,3,10,0.92);border:1px solid rgba(218,165,32,0.14);
+  border-radius:2px;padding:5px 10px;white-space:nowrap;
+  opacity:0;transform:translateY(-4px);
+  transition:opacity 0.2s, transform 0.2s;
+  pointer-events:none;z-index:200;
+}
+#brand:hover #brand-dab{opacity:1;transform:translateY(0);}
+body.light #brand-name{color:rgba(0,0,0,0.90);}
+body.light #brand-sub{color:rgba(0,0,0,0.50);}
+body.light #brand-saturn circle,body.light #brand-saturn ellipse,body.light #brand-saturn line{stroke:rgba(0,0,0,0.45)!important;}
+body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.60)!important;stroke:none!important;}
+body.light #brand-dab{background:#fff;border-color:rgba(0,0,0,0.12);color:rgba(0,0,0,0.75);}
 
 #era-label{position:fixed;top:24px;right:28px;z-index:100;font-family:'DM Mono',monospace;text-align:right;pointer-events:none;}
 #era-year{font-size:28px;letter-spacing:-0.02em;color:rgba(218,165,32,0.18);transition:color 0.5s,opacity 0.4s;font-family:'Crimson Text',serif;font-style:italic;}
 #era-name{font-size:7px;letter-spacing:0.20em;text-transform:uppercase;color:rgba(218,165,32,0.22);margin-top:4px;}
-body.light #era-year{color:rgba(100,60,0,0.22);}
-body.light #era-name{color:rgba(100,60,0,0.30);}
+body.light #era-year{color:rgba(0,0,0,0.22);}
+body.light #era-name{color:rgba(0,0,0,0.55);}
 
+/* ── TOP HUD ── */
 #hud{
-  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  position:fixed;top:20px;right:24px;
   display:flex;align-items:center;gap:1px;
   background:rgba(218,165,32,0.04);
   border:1px solid rgba(218,165,32,0.12);
   border-radius:4px;overflow:hidden;z-index:100;
   transition:background 0.5s,border-color 0.5s;
 }
+@media(max-width:768px){
+  #hud{right:auto;left:0;right:0;top:auto;bottom:24px;
+    justify-content:center;border-radius:0;
+    border-left:none;border-right:none;border-bottom:none;
+    background:rgba(5,3,10,0.92);backdrop-filter:blur(16px);}
+  /* Mobile: only show prev/next — hide views, separators, theme */
+  #hud .hud-btn[data-view],
+  #hud #theme-toggle-hud,
+  #hud .hud-sep{display:none;}
+  #hud #hud-prev-btn,
+  #hud #hud-next-btn{display:flex;padding:10px 28px;font-size:9px;letter-spacing:0.20em;}
+}
 .hud-btn{
   background:none;border:none;cursor:pointer;
   color:rgba(218,165,32,0.35);
   font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.18em;
-  text-transform:uppercase;padding:9px 18px;
+  text-transform:uppercase;padding:8px 16px;
   border-right:1px solid rgba(218,165,32,0.10);
   transition:color 0.2s,background 0.2s;
 }
 .hud-btn:last-child{border-right:none;}
 .hud-btn:hover{color:rgba(218,165,32,0.85);background:rgba(218,165,32,0.06);}
 .hud-btn.active{color:#daa520;background:rgba(218,165,32,0.10);}
-.hud-sep{width:1px;background:rgba(218,165,32,0.15);align-self:stretch;flex-shrink:0;margin:6px 0;}
-.hud-zoom{padding:9px 14px;font-size:13px;letter-spacing:0;color:rgba(218,165,32,0.30);}
-.hud-zoom:hover{color:rgba(218,165,32,0.85);}
-body.light #hud{background:rgba(100,60,0,0.03);border-color:rgba(100,60,0,0.16);}
-body.light .hud-btn{color:rgba(100,60,0,0.50);border-right-color:rgba(100,60,0,0.10);}
-body.light .hud-btn:hover{color:rgba(100,60,0,0.90);}
-body.light .hud-btn.active{color:rgba(100,60,0,0.95);}
+.hud-sep{width:1px;background:rgba(218,165,32,0.15);align-self:stretch;flex-shrink:0;margin:5px 0;}
+body.light #hud{background:rgba(255,255,255,0.96);border-color:rgba(0,0,0,0.12);}
+body.light .hud-btn{color:rgba(0,0,0,0.55);border-right-color:rgba(0,0,0,0.08);}
+body.light .hud-btn:hover{color:#000;}
+body.light .hud-btn.active{color:#000;background:rgba(0,0,0,0.08);}
 
-/* ── TIMELINE NAV STRIP ── */
-#timeline-nav{
-  position:fixed;bottom:70px;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:0;
-  z-index:100;
-  font-family:'DM Mono',monospace;
-  background:rgba(5,3,10,0.85);
-  border:1px solid rgba(218,165,32,0.14);
-  border-radius:4px;
-  backdrop-filter:blur(16px);
-  overflow:hidden;
+/* ── SENTENCE GHOST IMAGE ── */
+#sent-ghost{
+  position:fixed;left:0;top:0;
+  width:220px;height:165px;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.35s, transform 0.35s;
+  z-index:690;
+  transform:translateX(-12px);
+}
+#sent-ghost.vis{opacity:1;transform:translateX(0);}
+#sent-ghost-img{
+  width:100%;height:100%;object-fit:cover;
+  border-radius:3px;
+  filter:saturate(0.7) brightness(0.75);
+  display:block;
+}
+#sent-ghost-cap{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:6px 10px;
+  font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:0.14em;
+  text-transform:uppercase;color:rgba(245,236,213,0.55);
+  background:linear-gradient(transparent,rgba(0,0,0,0.6));
+  border-radius:0 0 3px 3px;
+}
+body.light #sent-ghost-img{filter:saturate(0) brightness(1.0);}
+body.light #sent-ghost-cap{color:rgba(0,0,0,0.55);}
+@media(max-width:768px){#sent-ghost{display:none;}}
+
+/* ── GRID VIEW ── */
+#grid-overlay{
+  position:fixed;inset:0;z-index:500;
+  display:none;
+  align-items:flex-start;justify-content:center;
+  pointer-events:none;
+  opacity:0;
   transition:opacity 0.4s;
+  overflow-y:auto;
 }
-body.light #timeline-nav{background:rgba(255,252,240,0.92);border-color:rgba(100,60,0,0.18);}
-#tl-prev,#tl-next{
-  background:none;border:none;cursor:pointer;
-  color:rgba(218,165,32,0.55);
-  padding:7px 13px;font-size:13px;
-  transition:color 0.2s,background 0.2s;
-  border-right:1px solid rgba(218,165,32,0.08);
+#grid-overlay.vis{opacity:1;pointer-events:all;}
+#grid-inner{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  padding:24px 16px 80px;
+  width:min(960px,100%);
+  min-height:100%;
 }
-#tl-next{border-left:1px solid rgba(218,165,32,0.08);border-right:none;}
-#tl-prev:hover,#tl-next:hover{color:#daa520;background:rgba(218,165,32,0.08);}
-#tl-prev:disabled,#tl-next:disabled{color:rgba(218,165,32,0.12);cursor:default;}
-body.light #tl-prev,body.light #tl-next{color:rgba(100,60,0,0.50);}
-body.light #tl-prev:hover,body.light #tl-next:hover{color:rgba(100,60,0,0.9);}
+#grid-inner::-webkit-scrollbar{display:none;}
+@media(max-width:600px){
+  #grid-inner{
+    grid-template-columns:1fr;
+    gap:8px;
+    padding:16px 14px 88px;
+  }
+}
+@media(min-width:601px) and (max-width:860px){#grid-inner{grid-template-columns:repeat(2,1fr);}}
+.grid-card{
+  background:rgba(5,3,10,0.94);
+  border:1px solid rgba(218,165,32,0.12);
+  border-radius:5px;padding:16px 14px 14px;
+  cursor:pointer;transition:all 0.20s;
+  position:relative;overflow:hidden;
+  opacity:0;transform:translateY(8px) scale(0.97);
+  animation:cardIn 0.35s forwards;
+}
+@keyframes cardIn{to{opacity:1;transform:none;}}
+.grid-card:hover{border-color:rgba(218,165,32,0.40);background:rgba(10,6,20,0.97);}
+@media(max-width:600px){
+  .grid-card{
+    display:flex;align-items:baseline;gap:14px;
+    padding:14px 14px 14px;
+  }
+  .gc-bar-top{display:none;}
+  .grid-card-year{flex-shrink:0;margin:0;font-size:7.5px;letter-spacing:0.18em;width:auto;}
+  .grid-card-role,.grid-card-body{display:none;}
+  .grid-card-title{font-size:17px;margin:0;}
+}
+.gc-bar-top{height:2px;width:100%;position:absolute;top:0;left:0;border-radius:5px 5px 0 0;}
+.grid-card-year{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.20em;text-transform:uppercase;color:rgba(218,165,32,0.38);margin-bottom:8px;margin-top:4px;}
+.grid-card-title{font-family:'Crimson Text',serif;font-size:16px;letter-spacing:-0.01em;color:#f5ecd5;line-height:1.25;margin-bottom:5px;}
+.grid-card-role{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(218,165,32,0.28);line-height:1.5;}
+.grid-card-body{font-family:'Crimson Text',serif;font-size:12px;line-height:1.58;color:rgba(245,236,213,0.38);margin-top:8px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+body.light .grid-card{background:#fff;border-color:rgba(0,0,0,0.10);}
+body.light .grid-card:hover{border-color:rgba(0,0,0,0.40);}
+body.light .grid-card-year{color:rgba(0,0,0,0.40);}
+body.light .grid-card-title{color:#000;}
+body.light .grid-card-role{color:rgba(0,0,0,0.45);}
+body.light .grid-card-body{color:rgba(0,0,0,0.60);}
 
-#tl-track{
-  display:flex;align-items:center;
-  gap:2px;
-  padding:7px 10px;
-  overflow-x:auto;
-  scrollbar-width:none;
-  max-width:min(640px, 65vw);
-}
-#tl-track::-webkit-scrollbar{display:none;}
-.tl-pip{
-  width:22px;height:22px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  position:relative;
-  border-radius:2px;
-  transition:background 0.15s;
-}
-.tl-pip:hover{background:rgba(218,165,32,0.08);}
-.tl-pip-dot{
-  width:5px;height:5px;border-radius:50%;
-  background:rgba(218,165,32,0.20);
-  transition:all 0.25s;
-  flex-shrink:0;
-}
-.tl-pip.active .tl-pip-dot{
-  background:#daa520;
-  width:8px;height:8px;
-  box-shadow:0 0 6px rgba(218,165,32,0.6);
-}
-.tl-pip:hover .tl-pip-dot{background:rgba(218,165,32,0.60);}
-.tl-pip-year{
-  position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);
-  font-size:6px;letter-spacing:0.12em;color:rgba(218,165,32,0.35);
-  white-space:nowrap;pointer-events:none;
-  opacity:0;transition:opacity 0.15s;
-}
-.tl-pip:hover .tl-pip-year,.tl-pip.active .tl-pip-year{opacity:1;color:rgba(218,165,32,0.70);}
-body.light .tl-pip-dot{background:rgba(100,60,0,0.22);}
-body.light .tl-pip.active .tl-pip-dot{background:rgba(100,60,0,0.80);}
+#tl-label{display:none;}
 
-#tl-label{
-  padding:5px 10px 5px 2px;
-  font-size:7px;letter-spacing:0.14em;text-transform:uppercase;
-  color:rgba(218,165,32,0.35);
-  white-space:nowrap;border-left:1px solid rgba(218,165,32,0.08);
-  min-width:90px;
-  transition:color 0.2s;
-}
-body.light #tl-label{color:rgba(100,60,0,0.50);}
+#hint{display:none;}
 
-#hint{position:fixed;bottom:120px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(218,165,32,0.16);z-index:100;pointer-events:none;white-space:nowrap;transition:opacity 1.2s;}
-body.light #hint{color:rgba(100,60,0,0.38);}
-
-#theme-toggle{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:100;background:none;border:1px solid rgba(218,165,32,0.16);color:rgba(218,165,32,0.32);font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.20em;text-transform:uppercase;padding:6px 14px;border-radius:2px;cursor:pointer;transition:all 0.2s;}
-#theme-toggle:hover{color:rgba(218,165,32,0.75);border-color:rgba(218,165,32,0.45);}
-body.light #theme-toggle{border-color:rgba(100,60,0,0.22);color:rgba(100,60,0,0.55);}
+#theme-toggle{display:none;}
 
 #tooltip{position:fixed;top:0;left:0;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:200;}
 #tooltip.vis{opacity:1;}
@@ -143,10 +185,10 @@ body.light #theme-toggle{border-color:rgba(100,60,0,0.22);color:rgba(100,60,0,0.
 .tt-title{font-family:'Crimson Text',serif;font-size:16px;color:#f5ecd5;line-height:1.2;margin-bottom:5px;letter-spacing:-0.01em;}
 .tt-role{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(218,165,32,0.35);}
 .tt-sub{font-family:'DM Mono',monospace;font-size:6px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(218,165,32,0.25);margin-top:4px;font-style:italic;}
-body.light #tt-inner{background:rgba(255,252,244,0.99);border-color:rgba(100,60,0,0.16);}
-body.light .tt-era{color:rgba(100,60,0,0.55);}
-body.light .tt-title{color:rgba(30,15,0,0.92);}
-body.light .tt-role{color:rgba(100,60,0,0.55);}
+body.light #tt-inner{background:#fff;border-color:rgba(0,0,0,0.12);}
+body.light .tt-era{color:rgba(0,0,0,0.45);}
+body.light .tt-title{color:#000;}
+body.light .tt-role{color:rgba(0,0,0,0.55);}
 
 /* DETAIL PANEL */
 #ghost{position:fixed;z-index:700;width:360px;pointer-events:none;opacity:0;right:28px;top:50%;transform:translateY(-50%) translateX(18px) scale(0.97);transition:opacity 0.30s,transform 0.30s;}
@@ -155,39 +197,54 @@ body.light .tt-role{color:rgba(100,60,0,0.55);}
 .gcscroll{max-height:82vh;overflow-y:auto;scrollbar-width:none;}
 .gcscroll::-webkit-scrollbar{display:none;}
 .gcbar{height:2px;width:100%;background:rgba(218,165,32,0.55);}
-.gchead{padding:16px 16px 12px;border-bottom:1px solid rgba(218,165,32,0.08);}
+.gchead{
+  padding:12px 14px 12px;
+  border-bottom:1px solid rgba(218,165,32,0.08);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+}
+.gchead-text{flex:1;min-width:0;}
 .gcera{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(218,165,32,0.40);margin-bottom:6px;}
 .gctitle{font-family:'Crimson Text',serif;font-size:19px;letter-spacing:-0.02em;color:#f5ecd5;line-height:1.2;margin-bottom:5px;}
 .gcrole{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(218,165,32,0.32);}
+.gchead-nav{display:flex;gap:4px;align-items:center;flex-shrink:0;padding-top:2px;}
 
-/* IMAGE STRIP in ghost panel */
-.gc-images{
-  display:flex;gap:4px;padding:10px 16px 2px;
-  overflow-x:auto;scrollbar-width:none;
+/* IFRAME HERO */
+.gc-iframe-wrap{
+  position:relative;width:100%;height:200px;
+  background:rgba(218,165,32,0.04);
+  border-bottom:1px solid rgba(218,165,32,0.08);
+  overflow:hidden;
 }
-.gc-images::-webkit-scrollbar{display:none;}
-.gc-img-frame{
-  width:80px;height:60px;flex-shrink:0;
-  border-radius:3px;overflow:hidden;
-  background:rgba(218,165,32,0.06);
-  border:1px solid rgba(218,165,32,0.10);
-  position:relative;
+.gc-iframe-wrap iframe{
+  width:160%;height:160%;
+  transform:scale(0.625);transform-origin:top left;
+  border:none;pointer-events:none;
+  position:absolute;top:0;left:0;
+  opacity:0.88;
 }
-.gc-img-frame img{
-  width:100%;height:100%;object-fit:cover;
-  opacity:0.80;transition:opacity 0.2s;
-  display:block;
+.gc-iframe-cover{
+  position:absolute;inset:0;z-index:2;
+  background:linear-gradient(to bottom, transparent 55%, rgba(5,3,10,0.80) 100%);
+  cursor:pointer;
 }
-.gc-img-frame img:hover{opacity:1;}
-.gc-img-placeholder{
-  width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;
-  font-size:7px;letter-spacing:0.14em;
-  color:rgba(218,165,32,0.20);
-  text-align:center;
-  padding:6px;
+.gc-iframe-badge{
+  position:absolute;bottom:10px;right:12px;z-index:3;
+  font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.18em;
+  text-transform:uppercase;color:rgba(218,165,32,0.60);
+  background:rgba(5,3,10,0.75);border:1px solid rgba(218,165,32,0.20);
+  border-radius:2px;padding:3px 8px;
+  transition:all 0.2s;pointer-events:all;
 }
+.gc-iframe-badge:hover{color:#daa520;border-color:rgba(218,165,32,0.55);}
+.gc-iframe-none{
+  display:flex;align-items:center;justify-content:center;height:100%;
+  font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.16em;
+  text-transform:uppercase;color:rgba(218,165,32,0.15);
+}
+body.light .gc-iframe-wrap{background:#f2f2f2;border-color:rgba(0,0,0,0.08);}
+body.light .gc-iframe-cover{background:linear-gradient(to bottom, transparent 55%, rgba(255,255,255,0.85) 100%);}
+body.light .gc-iframe-badge{background:rgba(255,255,255,0.92);color:rgba(0,0,0,0.55);border-color:rgba(0,0,0,0.14);}
+body.light .gc-iframe-none{color:rgba(0,0,0,0.22);}
 
 /* SUBNODE pills in ghost panel */
 .gc-moons{
@@ -207,41 +264,35 @@ body.light .tt-role{color:rgba(100,60,0,0.55);}
 .gc-moon-pill:hover{background:rgba(218,165,32,0.10);color:rgba(218,165,32,0.85);border-color:rgba(218,165,32,0.50);}
 .gc-moon-pill.active{background:rgba(218,165,32,0.12);color:#daa520;border-color:rgba(218,165,32,0.60);}
 
-.gcbody{padding:14px 16px 14px;font-family:'Crimson Text',serif;font-size:15px;line-height:1.72;color:rgba(245,236,213,0.65);border-bottom:1px solid rgba(218,165,32,0.06);}
-body.light .gcbody{color:rgba(30,15,0,0.72);}
-.gc-sentences{padding:10px 16px 14px;border-bottom:1px solid rgba(218,165,32,0.06);}
-.gc-sent-label{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(218,165,32,0.25);margin-bottom:8px;}
-.gc-sent{font-family:'Crimson Text',serif;font-size:13.5px;line-height:1.62;color:rgba(245,236,213,0.45);cursor:pointer;padding:4px 6px;border-radius:2px;transition:all 0.15s;margin-bottom:3px;display:block;}
-.gc-sent:hover{color:rgba(245,236,213,0.88);background:rgba(218,165,32,0.06);}
-.gc-sent.active{color:#f5ecd5;background:rgba(218,165,32,0.10);border-left:2px solid rgba(218,165,32,0.55);padding-left:10px;}
-.gcft{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 12px;}
-.gctag{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 9px;border-radius:9px;border:1px solid rgba(218,165,32,0.35);color:rgba(218,165,32,0.55);}
+.gcbody{padding:14px 16px 16px;font-family:'Crimson Text',serif;font-size:15px;line-height:1.76;color:rgba(245,236,213,0.70);}
+body.light .gcbody{color:rgba(0,0,0,0.80);}
+.gcft{display:flex;align-items:center;padding:10px 16px 12px;border-top:1px solid rgba(218,165,32,0.06);}
+.gctag{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 9px;border-radius:9px;border:1px solid rgba(218,165,32,0.30);color:rgba(218,165,32,0.50);}
 
-/* nav arrows in panel footer */
-.gc-nav{display:flex;gap:4px;align-items:center;}
-.gcnav-btn{background:none;border:1px solid rgba(218,165,32,0.16);color:rgba(218,165,32,0.35);width:26px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;pointer-events:all;}
+/* nav arrows — now in header */
+.gcnav-btn{background:none;border:1px solid rgba(218,165,32,0.16);color:rgba(218,165,32,0.38);width:24px;height:22px;border-radius:2px;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;pointer-events:all;}
 .gcnav-btn:hover:not(:disabled){color:#f5ecd5;border-color:rgba(218,165,32,0.55);}
-.gcnav-btn:disabled{opacity:0.2;cursor:default;}
-.gcclose{background:none;border:1px solid rgba(218,165,32,0.16);color:rgba(218,165,32,0.35);width:22px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;pointer-events:all;}
+.gcnav-btn:disabled{opacity:0.18;cursor:default;}
+.gcclose{background:none;border:1px solid rgba(218,165,32,0.16);color:rgba(218,165,32,0.38);width:22px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;pointer-events:all;}
 .gcclose:hover{color:#f5ecd5;border-color:rgba(218,165,32,0.55);}
 
-body.light .gc{background:rgba(255,252,244,0.99);border-color:rgba(100,60,0,0.14);}
-body.light .gchead,.gcbody,.gc-sentences,.gcft{border-color:rgba(100,60,0,0.10);}
-body.light .gcera{color:rgba(100,60,0,0.55);}
-body.light .gctitle{color:rgba(30,15,0,0.92);}
-body.light .gcrole{color:rgba(100,60,0,0.55);}
-body.light .gc-sent{color:rgba(30,15,0,0.50);}
-body.light .gc-sent:hover{color:rgba(30,15,0,0.90);background:rgba(100,60,0,0.05);}
-body.light .gc-sent.active{color:rgba(30,15,0,0.95);background:rgba(100,60,0,0.07);border-left-color:rgba(100,60,0,0.50);}
-body.light .gc-sent-label{color:rgba(100,60,0,0.40);}
-body.light .gcclose{border-color:rgba(100,60,0,0.22);color:rgba(100,60,0,0.55);}
-body.light .gcclose:hover{color:rgba(30,15,0,0.90);}
-body.light .gctag{color:rgba(100,60,0,0.55);border-color:rgba(100,60,0,0.35);}
-body.light .gc-images{background:none;}
-body.light .gc-img-frame{background:rgba(100,60,0,0.05);border-color:rgba(100,60,0,0.12);}
-body.light .gc-moons-label{color:rgba(100,60,0,0.40);}
-body.light .gc-moon-pill{color:rgba(100,60,0,0.50);border-color:rgba(100,60,0,0.25);}
-body.light .gc-moon-pill:hover{background:rgba(100,60,0,0.06);color:rgba(100,60,0,0.85);}
+body.light .gc{background:#fff;border-color:rgba(0,0,0,0.10);}
+body.light .gchead,body.light .gcbody,body.light .gcft{border-color:rgba(0,0,0,0.08);}
+body.light .gcera{color:rgba(0,0,0,0.42);}
+body.light .gctitle{color:#000;}
+body.light .gcrole{color:rgba(0,0,0,0.50);}
+body.light .gc-sent{color:rgba(0,0,0,0.65);}
+body.light .gc-sent:hover{color:#000;background:rgba(0,0,0,0.05);}
+body.light .gc-sent.active{color:#000;background:rgba(0,0,0,0.06);border-left-color:rgba(0,0,0,0.40);}
+body.light .gc-sent-label{color:rgba(0,0,0,0.38);}
+body.light .gcclose{border-color:rgba(0,0,0,0.14);color:rgba(0,0,0,0.45);}
+body.light .gcclose:hover{color:#000;}
+body.light .gctag{color:rgba(0,0,0,0.50);border-color:rgba(0,0,0,0.20);}
+
+body.light .gc-img-frame{background:#eee;border-color:rgba(0,0,0,0.10);}
+body.light .gc-moons-label{color:rgba(0,0,0,0.38);}
+body.light .gc-moon-pill{color:rgba(0,0,0,0.50);border-color:rgba(0,0,0,0.18);}
+body.light .gc-moon-pill:hover{background:rgba(0,0,0,0.05);color:#000;}
 
 /* MOBILE SHEET */
 #msheet{display:none;position:fixed;bottom:0;left:0;right:0;z-index:700;background:rgba(5,3,10,0.98);border-top:1px solid rgba(218,165,32,0.10);border-radius:14px 14px 0 0;max-height:72vh;overflow-y:auto;scrollbar-width:none;transform:translateY(100%);transition:transform 0.38s cubic-bezier(0.22,1,0.36,1);backdrop-filter:blur(28px);}
@@ -280,7 +331,7 @@ body.light .gc-moon-pill:hover{background:rgba(100,60,0,0.06);color:rgba(100,60,
   backdrop-filter:blur(22px);
 }
 #toc.vis{opacity:1;pointer-events:all;}
-body.light #toc{background:rgba(245,241,234,0.88);}
+body.light #toc{background:rgba(255,255,255,0.94);}
 #toc-inner{
   width:min(560px,90vw);
   max-height:88vh;
@@ -292,7 +343,7 @@ body.light #toc{background:rgba(245,241,234,0.88);}
   box-shadow:0 24px 80px rgba(0,0,0,0.9);
 }
 #toc-inner::-webkit-scrollbar{display:none;}
-body.light #toc-inner{background:rgba(255,252,244,0.99);border-color:rgba(100,60,0,0.16);}
+body.light #toc-inner{background:#fff;border-color:rgba(0,0,0,0.10);}
 #toc-header{
   padding:20px 24px 16px;
   border-bottom:1px solid rgba(218,165,32,0.10);
@@ -302,7 +353,7 @@ body.light #toc-inner{background:rgba(255,252,244,0.99);border-color:rgba(100,60
   font-family:'Crimson Text',serif;font-size:18px;letter-spacing:-0.01em;
   color:rgba(245,236,213,0.85);font-style:italic;
 }
-body.light #toc-title{color:rgba(30,15,0,0.85);}
+body.light #toc-title{color:#000;}
 #toc-sub{
   font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.20em;
   text-transform:uppercase;color:rgba(218,165,32,0.35);margin-top:4px;
@@ -315,7 +366,7 @@ body.light #toc-title{color:rgba(30,15,0,0.85);}
   font-family:'DM Mono',monospace;transition:all 0.2s;
 }
 #toc-close:hover{color:#f5ecd5;border-color:rgba(218,165,32,0.60);}
-body.light #toc-close{color:rgba(100,60,0,0.55);border-color:rgba(100,60,0,0.22);}
+body.light #toc-close{color:rgba(0,0,0,0.45);border-color:rgba(0,0,0,0.14);}
 #toc-list{padding:10px 0 16px;}
 .toc-row{
   display:flex;align-items:baseline;gap:16px;
@@ -327,35 +378,83 @@ body.light #toc-close{color:rgba(100,60,0,0.55);border-color:rgba(100,60,0,0.22)
   background:rgba(218,165,32,0.05);
   border-left-color:rgba(218,165,32,0.40);
 }
-body.light .toc-row:hover{background:rgba(100,60,0,0.04);border-left-color:rgba(100,60,0,0.35);}
+body.light .toc-row:hover{background:rgba(0,0,0,0.04);border-left-color:rgba(0,0,0,0.30);}
 .toc-year{
   font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.18em;
   color:rgba(218,165,32,0.35);flex-shrink:0;width:34px;
   transition:color 0.15s;
 }
 .toc-row:hover .toc-year{color:rgba(218,165,32,0.75);}
-body.light .toc-year{color:rgba(100,60,0,0.45);}
+body.light .toc-year{color:rgba(0,0,0,0.35);}
 .toc-name{
   font-family:'Crimson Text',serif;font-size:16px;letter-spacing:-0.01em;
   color:rgba(245,236,213,0.65);line-height:1.2;
   transition:color 0.15s;
 }
 .toc-row:hover .toc-name{color:rgba(245,236,213,0.95);}
-body.light .toc-name{color:rgba(30,15,0,0.60);}
-body.light .toc-row:hover .toc-name{color:rgba(30,15,0,0.92);}
+body.light .toc-name{color:rgba(0,0,0,0.68);}
+body.light .toc-row:hover .toc-name{color:#000;}
 .toc-domain{
   font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:0.14em;
   text-transform:uppercase;color:rgba(218,165,32,0.22);margin-left:auto;flex-shrink:0;
   transition:color 0.15s;
 }
 .toc-row:hover .toc-domain{color:rgba(218,165,32,0.55);}
-body.light .toc-domain{color:rgba(100,60,0,0.30);}
+body.light .toc-domain{color:rgba(0,0,0,0.28);}
 #toc-hint{
   text-align:center;padding:0 24px 16px;
   font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:0.16em;
   text-transform:uppercase;color:rgba(218,165,32,0.16);
 }
-body.light #toc-hint{color:rgba(100,60,0,0.30);}
+body.light #toc-hint{color:rgba(0,0,0,0.28);}
+
+
+/* ── LIGHT THEME: B&W ACCESSIBLE ── */
+body.light{background:#fff;color:#000;}
+body.light #brand-name{color:rgba(0,0,0,0.90)!important;}
+body.light #brand-sub{color:rgba(0,0,0,0.50)!important;}
+body.light #era-year{color:rgba(0,0,0,0.25)!important;}
+body.light #era-name{color:rgba(0,0,0,0.55)!important;}
+body.light #hud{background:rgba(255,255,255,0.94)!important;border-color:rgba(0,0,0,0.14)!important;box-shadow:0 1px 8px rgba(0,0,0,0.08);}
+body.light .hud-btn{color:rgba(0,0,0,0.55)!important;border-right-color:rgba(0,0,0,0.08)!important;}
+body.light .hud-btn:hover{color:#000!important;background:rgba(0,0,0,0.05)!important;}
+body.light .hud-btn.active{color:#000!important;background:rgba(0,0,0,0.08)!important;}
+body.light #tt-inner{background:#fff!important;border-color:rgba(0,0,0,0.14)!important;}
+body.light .tt-era{color:rgba(0,0,0,0.50)!important;}
+body.light .tt-title{color:#000!important;}
+body.light .tt-role{color:rgba(0,0,0,0.60)!important;}
+body.light .gc{background:#fff!important;border-color:rgba(0,0,0,0.12)!important;box-shadow:0 8px 32px rgba(0,0,0,0.12)!important;}
+body.light .gchead,body.light .gcbody,body.light .gcft{border-color:rgba(0,0,0,0.08)!important;}
+body.light .gcera{color:rgba(0,0,0,0.45)!important;}
+body.light .gctitle{color:#000!important;}
+body.light .gcrole{color:rgba(0,0,0,0.50)!important;}
+body.light .gcbody{color:rgba(0,0,0,0.80)!important;}
+body.light .gcclose{border-color:rgba(0,0,0,0.16)!important;color:rgba(0,0,0,0.45)!important;}
+body.light .gcnav-btn{border-color:rgba(0,0,0,0.14)!important;color:rgba(0,0,0,0.45)!important;}
+body.light .gctag{color:rgba(0,0,0,0.55)!important;border-color:rgba(0,0,0,0.22)!important;}
+body.light .gc-moon-pill{color:rgba(0,0,0,0.55)!important;border-color:rgba(0,0,0,0.22)!important;}
+body.light .gc-moon-pill:hover{background:rgba(0,0,0,0.06)!important;color:#000!important;}
+body.light .gc-iframe-wrap{background:#f4f4f4!important;border-color:rgba(0,0,0,0.08)!important;}
+body.light .gc-iframe-badge{background:rgba(255,255,255,0.90)!important;color:rgba(0,0,0,0.60)!important;border-color:rgba(0,0,0,0.16)!important;}
+body.light .grid-card{background:#fff!important;border-color:rgba(0,0,0,0.10)!important;}
+body.light .grid-card:hover{border-color:rgba(0,0,0,0.40)!important;}
+body.light .grid-card-year{color:rgba(0,0,0,0.45)!important;}
+body.light .grid-card-title{color:#000!important;}
+body.light .grid-card-role{color:rgba(0,0,0,0.50)!important;}
+body.light .grid-card-body{color:rgba(0,0,0,0.65)!important;}
+body.light .toc-name{color:rgba(0,0,0,0.72)!important;}
+body.light .toc-row:hover .toc-name{color:#000!important;}
+body.light .toc-year{color:rgba(0,0,0,0.40)!important;}
+body.light #toc{background:rgba(255,255,255,0.92)!important;}
+body.light #toc-inner{background:#fff!important;border-color:rgba(0,0,0,0.12)!important;}
+body.light #toc-title{color:#000!important;}
+body.light #toc-close{border-color:rgba(0,0,0,0.16)!important;color:rgba(0,0,0,0.50)!important;}
+body.light .toc-row:hover{background:rgba(0,0,0,0.04)!important;border-left-color:rgba(0,0,0,0.35)!important;}
+body.light #brand-dab{background:#fff!important;border-color:rgba(0,0,0,0.14)!important;color:rgba(0,0,0,0.75)!important;}
+body.light #brand-saturn circle,body.light #brand-saturn ellipse{stroke:rgba(0,0,0,0.50)!important;}
+body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none!important;}
+
+
 </style>
 </head>
 <body>
@@ -363,11 +462,27 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
 <canvas id="canvas"></canvas>
 
 <div id="brand">
-  <div id="brand-name">Design (for agentic) Architecture (& Human) Bridges.</div>
-  <div id="brand-sub">Roadmap · Sentence as Primitive</div>
-  <div id="brand-sub">by Zack Gort, thinker & maker</div>
+  <div id="brand-logo">
+    <!-- Saturn + moons logo: orbit ring, planet, 4 node-dots -->
+    <svg id="brand-saturn" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <!-- Orbit ring (tilted ellipse) -->
+      <ellipse cx="18" cy="18" rx="16" ry="5.5" stroke="rgba(218,165,32,0.38)" stroke-width="0.75" transform="rotate(-22,18,18)"/>
+      <!-- Planet body -->
+      <circle cx="18" cy="18" r="5.5" stroke="rgba(218,165,32,0.55)" stroke-width="0.75"/>
+      <!-- Node moons on orbit -->
+      <circle class="node" cx="5"  cy="15" r="1.4" fill="rgba(218,165,32,0.70)"/>
+      <circle class="node" cx="12" cy="10" r="1.1" fill="rgba(218,165,32,0.50)"/>
+      <circle class="node" cx="26" cy="11" r="1.0" fill="rgba(218,165,32,0.45)"/>
+      <circle class="node" cx="31" cy="19" r="1.3" fill="rgba(218,165,32,0.60)"/>
+    </svg>
+    <div id="brand-text">
+      <div id="brand-name">D.A.B.CX</div>
+      <div id="brand-sub">Sentence as Primitive · Wolfgang &amp; Co.</div>
+    </div>
+  </div>
+  <!-- Hover ghost: full dab.cx acronym -->
+  <div id="brand-dab">Design (for agentic) Architecture (& human) Bridges · A Roadmap</div>
 </div>
-<button id="theme-toggle">Paper</button>
 
 <div id="era-label">
   <div id="era-year">★</div>
@@ -376,24 +491,26 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
 
 <div id="spine-indicator"></div>
 
+<!-- TOP-RIGHT HUD: views + theme -->
 <div id="hud">
   <button class="hud-btn active" data-view="spiral">SPIRAL</button>
   <button class="hud-btn" data-view="arc">TIMELINE</button>
+  <button class="hud-btn" data-view="grid">GRID</button>
   <button class="hud-btn" data-view="galaxy">GALAXY</button>
   <div class="hud-sep"></div>
-  <button class="hud-btn hud-zoom" id="hud-zoom-out">−</button>
-  <button class="hud-btn hud-zoom" id="hud-zoom-in">+</button>
+  <button class="hud-btn" id="hud-prev-btn">&#8592; PREV</button>
+  <button class="hud-btn" id="hud-next-btn">NEXT &#8594;</button>
 </div>
 
-<!-- TIMELINE NAV STRIP -->
-<div id="timeline-nav">
-  <button id="tl-prev" title="Previous era">&#8592;</button>
+<!-- hidden stubs so JS refs don't break -->
+<button id="theme-toggle" style="display:none">Light</button>
+<div id="timeline-nav" style="display:none">
+  <button id="tl-prev"></button>
   <div id="tl-track"></div>
-  <div id="tl-label">——</div>
-  <button id="tl-next" title="Next era">&#8594;</button>
+  <div id="tl-label"></div>
+  <button id="tl-next"></button>
 </div>
-
-<div id="hint">drag to orbit · scroll to zoom · click a node · galaxy zooms out · ← → navigate</div>
+<div id="hint" style="display:none"></div>
 
 <div id="tooltip"><div id="tt-inner">
   <div class="tt-era" id="tt-era"></div>
@@ -405,30 +522,31 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
 <div id="ghost"><div class="gc">
   <div class="gcbar"></div>
   <div class="gcscroll">
+    <!-- TOP BAR: title + nav + close -->
     <div class="gchead">
-      <div class="gcera" id="gc-era"></div>
-      <div class="gctitle" id="gc-title"></div>
-      <div class="gcrole" id="gc-role"></div>
+      <div class="gchead-text">
+        <div class="gcera" id="gc-era"></div>
+        <div class="gctitle" id="gc-title"></div>
+        <div class="gcrole" id="gc-role"></div>
+      </div>
+      <div class="gchead-nav">
+        <button class="gcnav-btn" id="gc-prev" title="Previous">&#8592;</button>
+        <button class="gcnav-btn" id="gc-next" title="Next">&#8594;</button>
+        <button class="gcclose" onclick="closePanel()">✕</button>
+      </div>
     </div>
-    <!-- image strip -->
-    <div class="gc-images" id="gc-images"></div>
+    <!-- IFRAME HERO -->
+    <div class="gc-iframe-wrap" id="gc-iframe-wrap">
+      <div class="gc-iframe-none" id="gc-iframe-none">no url</div>
+    </div>
     <!-- moon pills -->
     <div class="gc-moons" id="gc-moons" style="display:none;">
       <div class="gc-moons-label">Satellites</div>
       <div class="gc-moon-pills" id="gc-moon-pills"></div>
     </div>
     <div class="gcbody" id="gc-body"></div>
-    <div class="gc-sentences" id="gc-sentences">
-      <div class="gc-sent-label">From the narrative</div>
-      <div id="gc-sent-list"></div>
-    </div>
     <div class="gcft">
       <span class="gctag" id="gc-tag"></span>
-      <div class="gc-nav">
-        <button class="gcnav-btn" id="gc-prev" title="Previous era">&#8592;</button>
-        <button class="gcnav-btn" id="gc-next" title="Next era">&#8594;</button>
-        <button class="gcclose" onclick="closePanel()">✕</button>
-      </div>
     </div>
   </div>
 </div></div>
@@ -453,12 +571,23 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
 <!-- moon ghost disabled -->
 <div id="moon-ghost"></div>
 
+<!-- SENTENCE GHOST IMAGE -->
+<div id="sent-ghost">
+  <img id="sent-ghost-img" src="" alt="">
+  <div id="sent-ghost-cap"></div>
+</div>
+
+<!-- GRID VIEW OVERLAY -->
+<div id="grid-overlay">
+  <div id="grid-inner"></div>
+</div>
+
 <!-- TABLE OF CONTENTS -->
 <div id="toc">
   <div id="toc-inner">
     <div id="toc-header">
       <div>
-        <div id="toc-title">Wolfgang & Co. · Roadmap</div>
+        <div id="toc-title">D.A.B.CX · A Roadmap</div>
         <div id="toc-sub">Wolfgang &amp; Co. · Table of Contents</div>
       </div>
       <button id="toc-close" onclick="closeTOC()">✕</button>
@@ -470,9 +599,6 @@ body.light #toc-hint{color:rgba(100,60,0,0.30);}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ─────────────────────────────────────────────────────────
-// CAREER DATA
-// ─────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────
 // ROADMAP NODES — narrative-as-nodes
 // The sentence as primitive: wolfie.love → ecosystem
@@ -576,7 +702,6 @@ const ERAS = [
       { label: 'Social Layer', desc: 'Proprietary audience feedback layer.' },
       { label: 'Analytics Layer', desc: 'Bespoke narrative-as-nodes telemetry engine & interface' },
       { label: 'Intentional Friction', desc: 'Atomic approach agnostic to template-typical thinking.' },
-
     ],
     color: 0xdaa520, hex: '#daa520'
   },
@@ -594,7 +719,7 @@ const ERAS = [
       'use it em—phatically.',
       'Do not let the robots win — mmkay?',
       '—',
-      ],
+    ],
     moons: [
       { label: 'Pause', desc: 'The intentional breath before meaning arrives.' },
       { label: 'Editorial', desc: 'Writing as interface design.' },
@@ -634,7 +759,7 @@ const ERAS = [
     era: 'The Studio',
     domain: 'studio',
     url: 'https://reasonandresolution.com',
-    body: 'reasonandresolution.com is an immediate answer to a chaotic moment. ',
+    body: 'reasonandresolution.com is an immediate answer to a chaotic moment.',
     sentences: [
       'I have my reasons.',
       'This is my resolution.',
@@ -706,13 +831,13 @@ const ERAS = [
 // ─────────────────────────────────────────────────────────
 function spiralPos(t, view) {
   if (view === 'arc') {
-    const angle = (t - 0.5) * Math.PI * 1.2;
-    const radius = 28;
-    return new THREE.Vector3(
-      Math.cos(angle) * radius,
-      (t - 0.5) * 8,
-      Math.sin(angle) * radius * 0.3
-    );
+    // Vertical arc: evenly spaced nodes along a clean arc scaled to node count
+    const N = ERAS.length;
+    const totalSpan = 24;  // world units, vertical
+    const yOff = (t - 0.5) * totalSpan;
+    const arcBow = 14;     // how much the arc bows outward
+    const bow = arcBow * (1 - Math.pow(t * 2 - 1, 2)); // parabola, 0 at ends, max at center
+    return new THREE.Vector3(bow, yOff, 0);
   }
   const turns = 1.65;
   const angle = t * Math.PI * 2 * turns - Math.PI * 0.5;
@@ -750,6 +875,83 @@ let camTarget = { ...camState };
 const scenePivot = new THREE.Vector3();
 const scenePivotTgt = new THREE.Vector3();
 
+// ── SWOOP ANIMATOR ──────────────────────────────────────
+// Single continuous arc: gentle outward bow, theta sweep, arriving
+// low (phi near horizon) looking slightly upward toward the node.
+const swoop = {
+  active: false,
+  t: 0,
+  totalDur: 1.40,   // seconds — unhurried, cinematic
+  startPhi: 0, startTheta: 0, startRadius: 0,
+  startPivot: new THREE.Vector3(),
+  endPhi: 0, endTheta: 0, endRadius: 0,
+  endPivot: new THREE.Vector3(),
+};
+
+function swoopTo(endPhi, endTheta, endRadius, endPivotVec) {
+  swoop.startPhi    = camState.phi;
+  swoop.startTheta  = camState.theta;
+  swoop.startRadius = camState.radius;
+  swoop.startPivot.copy(scenePivot);
+  swoop.endPhi      = endPhi;
+  swoop.endTheta    = endTheta;
+  swoop.endRadius   = endRadius;
+  swoop.endPivot.copy(endPivotVec);
+  swoop.t           = 0;
+  swoop.active      = true;
+}
+
+// Ease: smooth-start, ease into landing
+function easeFigure8(t) {
+  // Quintic ease-out — fast start, very smooth arrival
+  return 1 - Math.pow(1 - t, 4);
+}
+
+// Bow curve: rises to peak at t≈0.35 then returns — mild outward arc
+function bowCurve(t) {
+  return Math.sin(t * Math.PI) * 0.22;  // max +22% radius bow at midpoint
+}
+
+function tickSwoop(dt) {
+  if (!swoop.active) return;
+  swoop.t = Math.min(swoop.t + dt / swoop.totalDur, 1);
+  const t = swoop.t;
+  const e = easeFigure8(t);
+
+  // Radius: smoothly close in, with a gentle outward bow early in the move
+  const bow = bowCurve(t);
+  const baseRadius = swoop.startRadius + (swoop.endRadius - swoop.startRadius) * e;
+  camState.radius = baseRadius * (1 + bow);
+
+  // Theta: sweep the short way around
+  let dTheta = swoop.endTheta - swoop.startTheta;
+  while (dTheta >  Math.PI) dTheta -= Math.PI * 2;
+  while (dTheta < -Math.PI) dTheta += Math.PI * 2;
+  camState.theta = swoop.startTheta + dTheta * e;
+
+  // Phi: arrive lower than start — ease from current elevation down to endPhi
+  // The "looking up" feel comes from endPhi being closer to π/2 (horizon),
+  // with a slight overshoot past endPhi that recovers, making camera dip below
+  // and float back up to final angle
+  const phiOvershoot = swoop.endPhi * 0.08 * Math.sin(t * Math.PI);
+  camState.phi = swoop.startPhi + (swoop.endPhi - swoop.startPhi) * e + phiOvershoot;
+
+  // Pivot: track smoothly to target
+  scenePivot.lerpVectors(swoop.startPivot, swoop.endPivot, e);
+
+  if (swoop.t >= 1) {
+    swoop.active = false;
+    camState.phi    = swoop.endPhi;
+    camState.theta  = swoop.endTheta;
+    camState.radius = swoop.endRadius;
+    camTarget.phi    = swoop.endPhi;
+    camTarget.theta  = swoop.endTheta;
+    camTarget.radius = swoop.endRadius;
+    scenePivot.copy(swoop.endPivot);
+    scenePivotTgt.copy(swoop.endPivot);
+  }
+}
+
 function applyCam() {
   const { phi, theta, radius } = camState, c = scenePivot;
   cam.position.set(
@@ -766,6 +968,10 @@ const dLight = new THREE.DirectionalLight(0xffd070, 0.4); dLight.position.set(10
 const gold1 = new THREE.PointLight(0xdaa520, 5, 120); gold1.position.set(-15, 8, -15); scene.add(gold1);
 const gold2 = new THREE.PointLight(0xb87333, 4, 100); gold2.position.set(15, 8, 15); scene.add(gold2);
 const warmTop = new THREE.PointLight(0xffc060, 3, 80); warmTop.position.set(0, 20, 0); scene.add(warmTop);
+// Extra lights for galaxy view — placed near cluster positions
+const galaxyLight1 = new THREE.PointLight(0x6080ff, 6, 150); galaxyLight1.position.set(-40, 10, -15); scene.add(galaxyLight1);
+const galaxyLight2 = new THREE.PointLight(0xd070ff, 5, 130); galaxyLight2.position.set(45, 5, 10); scene.add(galaxyLight2);
+const galaxyLight3 = new THREE.PointLight(0x40c0a0, 4, 120); galaxyLight3.position.set(0, 8, 50); scene.add(galaxyLight3);
 
 // Particles
 const PC = 800;
@@ -807,8 +1013,9 @@ function makeLabelCanvas(text, color, fs) {
   const c = document.createElement('canvas'); c.width = 640; c.height = 64;
   const ctx = c.getContext('2d');
   ctx.fillStyle = color;
-  ctx.font = `400 ${fs * 2.2}px "DM Mono", monospace`;
-  ctx.fillText(text.toUpperCase(), 10, 42);
+  // Use Crimson Text for all floating labels — matches panel typography
+  ctx.font = `italic 600 ${fs * 2.6}px "Crimson Text", serif`;
+  ctx.fillText(text, 10, 44);
   return c;
 }
 
@@ -824,7 +1031,7 @@ function addLabel(text, pos, dkColor, fs) {
 
 function redrawLabels() {
   allLabels.forEach(({ spr, text, darkColor, fs }) => {
-    const color = isLight ? 'rgba(60,30,0,0.65)' : darkColor;
+    const color = isLight ? 'rgba(0,0,0,0.85)' : darkColor;
     const c = makeLabelCanvas(text, color, fs);
     spr.material.map.dispose();
     spr.material.map = new THREE.CanvasTexture(c);
@@ -838,10 +1045,9 @@ function redrawLabels() {
 function makeMoonLabelCanvas(text, hexColor) {
   const c = document.createElement('canvas'); c.width = 320; c.height = 40;
   const ctx = c.getContext('2d');
-  // Pure text on transparent canvas — no pill, no background, no stroke
-  ctx.fillStyle = isLight ? 'rgba(60,30,0,0.75)' : hexColor + 'cc';
-  ctx.font = '400 13px "DM Mono", monospace';
-  ctx.fillText(text.toUpperCase(), 6, 26);
+  ctx.fillStyle = isLight ? 'rgba(0,0,0,0.80)' : hexColor + 'cc';
+  ctx.font = 'italic 600 15px "Crimson Text", serif';
+  ctx.fillText(text, 6, 28);
   return { canvas: c, w: 320, h: 40 };
 }
 
@@ -872,7 +1078,7 @@ function buildMoons(era, parentPos, parentSize) {
       new THREE.LineBasicMaterial({ color: era.color, transparent: true, opacity: 0.055, depthWrite: false })
     );
     scene.add(ring);
-    allLines.push({ line: ring, darkOp: 0.055, lightOp: 0.14, darkColor: era.color, lightColor: 0x5a3000 });
+    allLines.push({ line: ring, darkOp: 0.055, lightOp: 0.25, darkColor: era.color, lightColor: 0x000000 });
 
     group.forEach((moon, mi) => {
       const baseAngle = (mi / group.length) * Math.PI * 2;
@@ -947,12 +1153,12 @@ function buildSpiralTube() {
   const tubeMat = new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0.08 });
   const tube = new THREE.Line(new THREE.BufferGeometry().setFromPoints(tubePts), tubeMat);
   scene.add(tube);
-  allLines.push({ line: tube, darkOp: 0.08, lightOp: 0.20, darkColor: 0xdaa520, lightColor: 0x5a3000 });
+  allLines.push({ line: tube, darkOp: 0.08, lightOp: 0.22, darkColor: 0xdaa520, lightColor: 0x000000 });
 
   const innerMat = new THREE.LineBasicMaterial({ color: 0xb87333, transparent: true, opacity: 0.04 });
   const inner = new THREE.Line(new THREE.BufferGeometry().setFromPoints(tubePts), innerMat);
   scene.add(inner);
-  allLines.push({ line: inner, darkOp: 0.04, lightOp: 0.12, darkColor: 0xb87333, lightColor: 0x5a3000 });
+  allLines.push({ line: inner, darkOp: 0.04, lightOp: 0.10, darkColor: 0xb87333, lightColor: 0x000000 });
 }
 
 function buildScene() {
@@ -962,7 +1168,7 @@ function buildScene() {
   const spineMat = new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0.04 });
   const spine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(spinePts), spineMat);
   scene.add(spine);
-  allLines.push({ line: spine, darkOp: 0.04, lightOp: 0.10, darkColor: 0xdaa520, lightColor: 0x5a3000 });
+  allLines.push({ line: spine, darkOp: 0.04, lightOp: 0.08, darkColor: 0xdaa520, lightColor: 0x000000 });
 
   ERAS.forEach((era, i) => {
     const pos = era._spiralPos;
@@ -973,7 +1179,7 @@ function buildScene() {
     const spokeMat = new THREE.LineBasicMaterial({ color: era.color, transparent: true, opacity: 0.06 });
     const spoke = new THREE.Line(new THREE.BufferGeometry().setFromPoints([spokeY, pos.clone()]), spokeMat);
     scene.add(spoke);
-    allLines.push({ line: spoke, darkOp: 0.06, lightOp: 0.18, darkColor: era.color, lightColor: 0x5a3000 });
+    allLines.push({ line: spoke, darkOp: 0.06, lightOp: 0.15, darkColor: era.color, lightColor: 0x000000 });
 
     // Planet node
     const geo = new THREE.SphereGeometry(nodeSize, 16, 16);
@@ -987,7 +1193,14 @@ function buildScene() {
     mesh.position.copy(pos);
     mesh.userData = { era, origColor: era.color, origEI: era.id === 'now' ? 2.4 : 1.3, isMoon: false };
     scene.add(mesh);
-    nodeObjects.push({ mesh, era });
+    // Invisible large hit proxy for touch accuracy
+    const hitGeo = new THREE.SphereGeometry(nodeSize * 3.5, 8, 8);
+    const hitMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
+    const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+    hitMesh.position.copy(pos);
+    hitMesh.userData = { era, isHitProxy: true };
+    scene.add(hitMesh);
+    nodeObjects.push({ mesh, hitMesh, era });
 
     // Glow sprite on planet
     const gs = makeGlowSprite(era.color, nodeSize);
@@ -1013,7 +1226,7 @@ function buildScene() {
     const connMat = new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0.22 });
     const conn = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), connMat);
     scene.add(conn);
-    allLines.push({ line: conn, darkOp: 0.22, lightOp: 0.40, darkColor: 0xdaa520, lightColor: 0x5a3000 });
+    allLines.push({ line: conn, darkOp: 0.22, lightOp: 0.35, darkColor: 0xdaa520, lightColor: 0x000000 });
   }
 }
 buildScene();
@@ -1025,11 +1238,11 @@ const LAYER_ORRERY = 'orrery';
 const LAYER_GALAXY = 'galaxy';
 let currentLayer = LAYER_ORRERY;
 
-const GALAXY_VIEW      = { phi: Math.PI * 0.08, theta: -Math.PI * 0.08, radius: 220 };
-const GALAXY_RADIUS_DEFAULT = 220;
-const GALAXY_RADIUS_MIN     = 130;
-const GALAXY_RADIUS_MAX     = 280;
-const ORRERY_RADIUS_MIN     = 10;
+const GALAXY_VIEW      = { phi: Math.PI * 0.12, theta: -Math.PI * 0.06, radius: 145 };
+const GALAXY_RADIUS_DEFAULT = 145;
+const GALAXY_RADIUS_MIN     = 90;
+const GALAXY_RADIUS_MAX     = 180;
+const ORRERY_RADIUS_MIN     = 2;
 const ORRERY_RADIUS_MAX     = 130;
 const ZOOM_STEP_GALAXY      = 22;
 const ZOOM_STEP_ORRERY      = 12;
@@ -1037,13 +1250,26 @@ const ZOOM_STEP_ORRERY      = 12;
 function switchLayer(layer) {
   currentLayer = layer;
   if (layer === LAYER_GALAXY) {
+    // Dismiss everything before entering galaxy
+    if (focusedEra) {
+      focusedEra = null; isFocused = false;
+      document.getElementById('ghost').classList.remove('on');
+      document.getElementById('msheet').classList.remove('on');
+      hideSentGhost();
+      resetHighlights();
+    }
+    tooltip.classList.remove('vis');
+    hoveredMesh = null;
+    closeGridView();
+    scenePivotTgt.set(0, 0, 0);
     camTarget = { ...GALAXY_VIEW };
+    document.querySelectorAll('.hud-btn[data-view]').forEach(b => b.classList.remove('active'));
     document.querySelector('[data-view="galaxy"]').classList.add('active');
-    document.querySelector('[data-view="spiral"]').classList.remove('active');
   } else {
     camTarget = { phi: Math.PI * 0.28, theta: Math.PI * 0.1, radius: 68 };
+    document.querySelectorAll('.hud-btn[data-view]').forEach(b => b.classList.remove('active'));
     document.querySelector('[data-view="spiral"]').classList.add('active');
-    document.querySelector('[data-view="galaxy"]').classList.remove('active');
+    clearGalaxyFocus();
   }
 }
 
@@ -1054,7 +1280,7 @@ const CLUSTERS = [
     name: 'Genesis\n& Soul',
     sub: 'The Sentence · wolfie.love · The Origin',
     color: 0xf5c842, hex: '#f5c842',
-    pos: new THREE.Vector3(-55, 0, -20),
+    pos: new THREE.Vector3(-42, 0, -16),
     nodeIds: ['origin', 'wolfie-love'],
     size: 5.5
   },
@@ -1063,7 +1289,7 @@ const CLUSTERS = [
     name: 'Living\nPlatforms',
     sub: 'wolfie.life · intoview.pro',
     color: 0xdaa520, hex: '#daa520',
-    pos: new THREE.Vector3(20, 0, -55),
+    pos: new THREE.Vector3(16, 0, -42),
     nodeIds: ['wolfie-life', 'intoview'],
     size: 5.0
   },
@@ -1072,7 +1298,7 @@ const CLUSTERS = [
     name: 'Editorial\nSurfaces',
     sub: 'emdash.click · ifimaybefrank.com',
     color: 0xc49a2e, hex: '#c49a2e',
-    pos: new THREE.Vector3(60, 0, 12),
+    pos: new THREE.Vector3(48, 0, 8),
     nodeIds: ['emdash', 'ifimaybefrank'],
     size: 4.6
   },
@@ -1081,7 +1307,7 @@ const CLUSTERS = [
     name: 'The\nArgument',
     sub: 'reasonandresolution.com · RSP',
     color: 0x6a9fe0, hex: '#6a9fe0',
-    pos: new THREE.Vector3(-15, 0, 62),
+    pos: new THREE.Vector3(-12, 0, 48),
     nodeIds: ['rsp', 'reasonandresolution'],
     size: 4.8
   },
@@ -1090,7 +1316,7 @@ const CLUSTERS = [
     name: 'The\nMethod',
     sub: 'dab.cx · Design. Architect. Build.',
     color: 0xb87333, hex: '#b87333',
-    pos: new THREE.Vector3(32, 0, 68),
+    pos: new THREE.Vector3(26, 0, 52),
     nodeIds: ['dab'],
     size: 4.2
   },
@@ -1140,8 +1366,8 @@ function buildGalaxyLayer() {
   CLUSTERS.forEach(cl => {
     const geo = new THREE.SphereGeometry(cl.size, 32, 32);
     const mat = new THREE.MeshPhysicalMaterial({
-      color: cl.color, emissive: cl.color, emissiveIntensity: 0.6,
-      metalness: 0.1, roughness: 0.55, clearcoat: 0.4,
+      color: cl.color, emissive: cl.color, emissiveIntensity: 1.8,
+      metalness: 0.05, roughness: 0.35, clearcoat: 0.6,
       transparent: true, opacity: 0
     });
     const mesh = new THREE.Mesh(geo, mat);
@@ -1186,8 +1412,8 @@ function buildGalaxyLayer() {
       const dotSize = offset.size || 0.22;
       const dotGeo = new THREE.SphereGeometry(dotSize, 16, 16);
       const dotMat = new THREE.MeshPhysicalMaterial({
-        color: cl.color, emissive: cl.color, emissiveIntensity: 0.55,
-        metalness: 0.15, roughness: 0.18, clearcoat: 0.7,
+        color: cl.color, emissive: cl.color, emissiveIntensity: 1.6,
+        metalness: 0.05, roughness: 0.15, clearcoat: 0.8,
         transparent: true, opacity: 0
       });
       const dot = new THREE.Mesh(dotGeo, dotMat);
@@ -1234,7 +1460,7 @@ galaxyHubGroup.visible = false;
 (function buildGalaxyHub() {
   const hubMesh = new THREE.Mesh(
     new THREE.SphereGeometry(3.8, 32, 32),
-    new THREE.MeshPhysicalMaterial({ color: 0xdaa520, emissive: 0xc49a2e, emissiveIntensity: 0.7, metalness: 0.05, roughness: 0.45, clearcoat: 0.6, transparent: true, opacity: 0 })
+    new THREE.MeshPhysicalMaterial({ color: 0xdaa520, emissive: 0xdaa520, emissiveIntensity: 2.2, metalness: 0.05, roughness: 0.3, clearcoat: 0.8, transparent: true, opacity: 0 })
   );
   hubMesh.userData = { isGalaxyHub: true };
   galaxyHubGroup.add(hubMesh);
@@ -1259,7 +1485,7 @@ galaxyHubGroup.visible = false;
 
 const hubMeshList = [galaxyHubGroup.userData.mesh];
 let galaxyAlpha = 0, isGalaxyView = false;
-const GALAXY_ENTER_THRESHOLD = 115, GALAXY_FADE_SPEED = 0.045;
+const GALAXY_ENTER_THRESHOLD = 80, GALAXY_FADE_SPEED = 0.065;
 const DARK_FOG_COLOR = 0x000000, LIGHT_FOG_COLOR = 0xf5f1ea;
 let activeGalaxyCluster = null, hoveredCluster = null, hoveredDotMesh = null;
 
@@ -1287,17 +1513,17 @@ function updateGalaxyAlpha() {
     const isFoc = focCl && obj.cluster === focCl, dim = (focCl && !isFoc) ? 0.18 : 1.0;
     if (obj.type === 'cluster') {
       const boost = isFoc ? 1.25 : 1.0;
-      obj.mesh.material.opacity = ga * 0.82 * dim * boost;
-      obj.atm.material.opacity = ga * (isFoc ? 0.32 : 0.12) * dim;
-      obj.glow.material.opacity = isLight ? 0 : ga * (isFoc ? 1.1 : 0.55) * dim;
+      obj.mesh.material.opacity = ga * 1.0 * dim * boost;
+      obj.atm.material.opacity = ga * (isFoc ? 0.45 : 0.20) * dim;
+      obj.glow.material.opacity = isLight ? 0 : ga * (isFoc ? 1.4 : 0.80) * dim;
       obj.label.material.opacity = ga * dim;
-      obj.ring.material.opacity = ga * (isFoc ? 0.75 : 0.35) * dim;
+      obj.ring.material.opacity = ga * (isFoc ? 0.90 : 0.55) * dim;
     } else if (obj.type === 'dot') {
       const isHov = obj.mesh === hoveredDotMesh, inFoc = focCl && obj.cluster === focCl, noFoc = !focCl;
       let tOp, tEI, tGlow;
-      if (isHov) { tOp = ga * 0.95; tEI = 1.8; tGlow = isLight ? 0 : ga * 0.55; }
-      else if (inFoc || noFoc) { tOp = ga * 0.62; tEI = 0.55; tGlow = isLight ? 0 : ga * 0.18; }
-      else { tOp = ga * 0.08; tEI = 0.1; tGlow = 0; }
+      if (isHov) { tOp = ga * 1.0; tEI = 2.4; tGlow = isLight ? 0 : ga * 0.90; }
+      else if (inFoc || noFoc) { tOp = ga * 0.88; tEI = 1.6; tGlow = isLight ? 0 : ga * 0.45; }
+      else { tOp = ga * 0.15; tEI = 0.3; tGlow = 0; }
       const lk = 0.10;
       obj.mesh.material.opacity += (tOp - obj.mesh.material.opacity) * lk;
       obj.mesh.material.emissiveIntensity += (tEI - obj.mesh.material.emissiveIntensity) * lk;
@@ -1306,22 +1532,26 @@ function updateGalaxyAlpha() {
   });
 
   galaxyLines.forEach(({ line, baseOp, isArc, clFrom, clTo, clusterId }) => {
-    let op = baseOp, dim = 1.0;
+    let op = baseOp * 1.8, dim = 1.0;  // base boost for all lines
     if (focCl) {
-      if (isArc) { const inv = clFrom === focCl.id || clTo === focCl.id; dim = inv ? 1.0 : 0.08; if (inv) op = Math.min(op * 2.0, 0.80); }
-      else { dim = (!clusterId || clusterId === focCl.id) ? 1.0 : 0.08; }
+      if (isArc) { const inv = clFrom === focCl.id || clTo === focCl.id; dim = inv ? 1.0 : 0.12; if (inv) op = Math.min(op * 2.0, 0.95); }
+      else { dim = (!clusterId || clusterId === focCl.id) ? 1.0 : 0.12; }
     }
-    line.material.opacity = ga * op * dim;
+    line.material.opacity = Math.min(ga * op * dim, 0.95);
   });
 
   if (isGalaxyView && galaxyHubGroup.userData.mesh) {
     const hub = galaxyHubGroup.userData, hDim = focCl ? 0.30 : 1.0, lk = 0.10;
-    hub.mesh.material.opacity += (ga * 0.78 * hDim - hub.mesh.material.opacity) * lk;
-    hub.atm.material.opacity  += (ga * 0.14 * hDim - hub.atm.material.opacity)  * lk;
-    hub.glow.material.opacity += ((isLight ? 0 : ga * 0.55 * hDim) - hub.glow.material.opacity) * lk;
+    hub.mesh.material.opacity += (ga * 1.0 * hDim - hub.mesh.material.opacity) * lk;
+    hub.atm.material.opacity  += (ga * 0.28 * hDim - hub.atm.material.opacity)  * lk;
+    hub.glow.material.opacity += ((isLight ? 0 : ga * 0.95 * hDim) - hub.glow.material.opacity) * lk;
     hub.label.material.opacity+= (ga * hDim - hub.label.material.opacity) * lk;
-    hub.ring.material.opacity += (ga * 0.38 * hDim - hub.ring.material.opacity) * lk;
+    hub.ring.material.opacity += (ga * 0.65 * hDim - hub.ring.material.opacity) * lk;
   }
+  // redraw bg nebula with galaxy color blend every 3 frames
+  if (typeof _galaxyNebulaTick === 'undefined') window._galaxyNebulaTick = 0;
+  _galaxyNebulaTick++;
+  if (_galaxyNebulaTick % 3 === 0) drawMesh();
 }
 
 const clusterMeshes = galaxyObjects.filter(o => o.type === 'cluster').map(o => o.mesh);
@@ -1395,39 +1625,9 @@ function handleGalaxyClick(mouseVec) {
 // ─────────────────────────────────────────────────────────
 // TIMELINE NAV STRIP
 // ─────────────────────────────────────────────────────────
-function buildTimelineNav() {
-  const track = document.getElementById('tl-track');
-  ERAS.forEach((era, i) => {
-    const pip = document.createElement('div');
-    pip.className = 'tl-pip';
-    pip.dataset.idx = i;
-    pip.title = era.title;
-    pip.innerHTML = `<div class="tl-pip-year">${era.year}</div><div class="tl-pip-dot"></div>`;
-    pip.addEventListener('click', () => focusEra(era));
-    track.appendChild(pip);
-  });
-}
-buildTimelineNav();
+// Navigation handled by HUD prev/next buttons and direct node tap
 
-function updateTimelineNav(activeEra) {
-  document.querySelectorAll('.tl-pip').forEach((pip, i) => {
-    pip.classList.toggle('active', activeEra && ERAS[i].id === activeEra.id);
-  });
-  if (activeEra) {
-    const activePip = document.querySelector('.tl-pip.active');
-    if (activePip) activePip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-
-    const idx = ERAS.findIndex(e => e.id === activeEra.id);
-    document.getElementById('tl-label').textContent = `${idx + 1} / ${ERAS.length}`;
-    document.getElementById('tl-prev').disabled = idx === 0;
-    document.getElementById('tl-next').disabled = idx === ERAS.length - 1;
-  } else {
-    document.getElementById('tl-label').textContent = '——';
-    document.getElementById('tl-prev').disabled = false;
-    document.getElementById('tl-next').disabled = false;
-  }
-}
-
+// Stubs for old tl-prev/tl-next (hidden but referenced)
 document.getElementById('tl-prev').addEventListener('click', () => {
   const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 1;
   if (idx > 0) focusEra(ERAS[idx - 1]);
@@ -1461,31 +1661,131 @@ document.getElementById('ms-next').addEventListener('click', () => {
 // ─────────────────────────────────────────────────────────
 // VIEW SWITCHING
 // ─────────────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────
+// GRID VIEW
+// ─────────────────────────────────────────────────────────
+let gridVisible = false;
+
+function buildGridView() {
+  const inner = document.getElementById('grid-inner');
+  inner.innerHTML = '';
+  ERAS.forEach((era, i) => {
+    const card = document.createElement('div');
+    card.className = 'grid-card';
+    card.style.animationDelay = (i * 0.04) + 's';
+    const bar = document.createElement('div');
+    bar.className = 'gc-bar-top';
+    bar.style.background = era.hex;
+    card.appendChild(bar);
+    card.innerHTML += `
+      <div class="grid-card-year">${era.year} &nbsp;·&nbsp; ${era.era}</div>
+      <div class="grid-card-title">${era.title}</div>
+      <div class="grid-card-role">${era.role}</div>
+      <div class="grid-card-body">${era.body}</div>`;
+    card.prepend(bar);
+    card.addEventListener('click', () => { closeGridView(); setTimeout(() => focusEra(era), 250); });
+    inner.appendChild(card);
+  });
+}
+
+function openGridView() {
+  gridVisible = true;
+  buildGridView();
+  const el = document.getElementById('grid-overlay');
+  el.style.display = 'flex';
+  requestAnimationFrame(() => el.classList.add('vis'));
+  document.querySelectorAll('.hud-btn[data-view]').forEach(b => b.classList.remove('active'));
+  document.querySelector('[data-view="grid"]').classList.add('active');
+  // Tap/click outside any card closes grid
+  el.addEventListener('pointerdown', function handler(ev) {
+    if (!ev.target.closest('.grid-card')) {
+      closeGridView();
+      switchView('spiral');
+      el.removeEventListener('pointerdown', handler);
+    }
+  });
+}
+
+function closeGridView() {
+  if (!gridVisible) return;
+  gridVisible = false;
+  const el = document.getElementById('grid-overlay');
+  el.classList.remove('vis');
+  setTimeout(() => { el.style.display = 'none'; }, 420);
+}
+
+// ─────────────────────────────────────────────────────────
+// SENTENCE GHOST IMAGE
+// ─────────────────────────────────────────────────────────
+let sentGhostTimer = null;
+const sentGhostEl = document.getElementById('sent-ghost');
+const sentGhostImg = document.getElementById('sent-ghost-img');
+const sentGhostCap = document.getElementById('sent-ghost-cap');
+
+// Sentence image pool — map sentence index → unsplash image
+// Each node's images cycle across sentences
+function getSentenceImage(era, sentIndex) {
+  if (!era.images || era.images.length === 0) return null;
+  return era.images[sentIndex % era.images.length];
+}
+
+function showSentGhost(era, sentIndex, anchorEl) {
+  const img = getSentenceImage(era, sentIndex);
+  if (!img) { hideSentGhost(); return; }
+  sentGhostImg.src = img.src;
+  sentGhostCap.textContent = img.caption || '';
+  // Position: vertically centered on sentence, to the left of the ghost panel
+  const anchorRect = anchorEl ? anchorEl.getBoundingClientRect() : { top: window.innerHeight/2, height: 40 };
+  const midY = anchorRect.top + anchorRect.height / 2;
+  const y = Math.max(20, Math.min(window.innerHeight - 190, midY - 82));
+  const panelLeft = window.innerWidth - 28 - 360;  // ghost panel: right:28px width:360px
+  sentGhostEl.style.top = y + 'px';
+  sentGhostEl.style.left = Math.max(8, panelLeft - 244) + 'px';
+  sentGhostEl.classList.add('vis');
+}
+
+function hideSentGhost() {
+  sentGhostEl.classList.remove('vis');
+}
+
 let currentView = 'spiral';
 let morphing = false, morphT = 0;
 
 function switchView(view) {
-  if (view === 'galaxy') { switchLayer(LAYER_GALAXY); return; }
+  if (view === 'galaxy') { closeGridView(); switchLayer(LAYER_GALAXY); return; }
   if (currentLayer === LAYER_GALAXY) switchLayer(LAYER_ORRERY);
+  if (view === 'grid') { openGridView(); return; }
+  closeGridView();
   if (view === currentView) return;
   currentView = view;
   morphing = true; morphT = 0;
   document.querySelectorAll('.hud-btn[data-view]').forEach(b => b.classList.remove('active'));
   document.querySelector(`[data-view="${view}"]`).classList.add('active');
-  if (view === 'arc') { camTarget.phi = Math.PI * 0.08; camTarget.theta = 0; camTarget.radius = 55; }
+  if (view === 'arc') { camTarget.phi = Math.PI * 0.06; camTarget.theta = 0; camTarget.radius = 48; }
   else { camTarget.phi = Math.PI * 0.28; camTarget.radius = 68; }
 }
 
 document.querySelectorAll('.hud-btn[data-view]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
-document.getElementById('hud-zoom-in').addEventListener('click', () => {
-  const step = currentLayer === LAYER_GALAXY ? ZOOM_STEP_GALAXY : ZOOM_STEP_ORRERY;
-  const mn   = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : ORRERY_RADIUS_MIN;
-  camTarget.radius = Math.max(mn, camTarget.radius - step);
-});
-document.getElementById('hud-zoom-out').addEventListener('click', () => {
-  const step = currentLayer === LAYER_GALAXY ? ZOOM_STEP_GALAXY : ZOOM_STEP_ORRERY;
-  const mx   = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
-  camTarget.radius = Math.min(mx, camTarget.radius + step);
+// ─── NAVIGATION ─────────────────────────────────────────
+function navPrev() {
+  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 1;
+  focusEra(idx > 0 ? ERAS[idx - 1] : ERAS[ERAS.length - 1]);
+}
+function navNext() {
+  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : -1;
+  focusEra(idx < ERAS.length - 1 ? ERAS[idx + 1] : ERAS[0]);
+}
+
+document.getElementById('hud-prev-btn').addEventListener('click', navPrev);
+document.getElementById('hud-next-btn').addEventListener('click', navNext);
+
+// Theme toggle in HUD
+// Theme toggle: click the brand logo
+document.getElementById('brand').addEventListener('click', () => {
+  isLight = !isLight;
+  applyTheme();
+  document.getElementById('theme-toggle').textContent = isLight ? 'Dark' : 'Light';
 });
 
 // ─────────────────────────────────────────────────────────
@@ -1535,6 +1835,39 @@ function buildMoonPills(era) {
   });
 }
 
+function buildIframeHero(era) {
+  const wrap = document.getElementById('gc-iframe-wrap');
+  const none = document.getElementById('gc-iframe-none');
+  // Remove old iframe if present
+  const old = wrap.querySelector('iframe');
+  if (old) old.remove();
+  const oldBadge = wrap.querySelector('.gc-iframe-badge');
+  if (oldBadge) oldBadge.remove();
+  const oldCover = wrap.querySelector('.gc-iframe-cover');
+  if (oldCover) oldCover.remove();
+  if (!era.url) {
+    none.style.display = 'flex';
+    return;
+  }
+  none.style.display = 'none';
+  const iframe = document.createElement('iframe');
+  iframe.src = era.url;
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+  iframe.setAttribute('loading', 'lazy');
+  iframe.setAttribute('title', era.title + ' preview');
+  wrap.appendChild(iframe);
+  const cover = document.createElement('div');
+  cover.className = 'gc-iframe-cover';
+  wrap.appendChild(cover);
+  const badge = document.createElement('a');
+  badge.className = 'gc-iframe-badge';
+  badge.textContent = era.url.replace('https://', '');
+  badge.href = era.url;
+  badge.target = '_blank';
+  badge.rel = 'noopener';
+  wrap.appendChild(badge);
+}
+
 function openPanel(era) {
   const idx = ERAS.findIndex(e => e.id === era.id);
   document.getElementById('gc-era').textContent = era.era;
@@ -1546,22 +1879,9 @@ function openPanel(era) {
   document.getElementById('gc-prev').disabled = idx === 0;
   document.getElementById('gc-next').disabled = idx === ERAS.length - 1;
 
-  buildImageStrip(era, 'gc-images');
+  buildIframeHero(era);
   buildImageStrip(era, 'ms-images');
   buildMoonPills(era);
-
-  const list = document.getElementById('gc-sent-list');
-  list.innerHTML = '';
-  era.sentences.forEach((s, i) => {
-    const el = document.createElement('span');
-    el.className = 'gc-sent' + (i === 0 ? ' active' : '');
-    el.textContent = s;
-    el.addEventListener('click', () => {
-      list.querySelectorAll('.gc-sent').forEach(x => x.classList.remove('active'));
-      el.classList.add('active');
-    });
-    list.appendChild(el);
-  });
 
   document.getElementById('ghost').classList.add('on');
 
@@ -1575,17 +1895,16 @@ function openPanel(era) {
   document.getElementById('era-year').textContent = era.year;
   document.getElementById('era-name').textContent = era.era;
 
-  updateTimelineNav(era);
 }
 
 window.closePanel = function () {
-  focusedEra = null; isFocused = false;
+  // Dismiss the overlay — but keep focus, camera, and pivot exactly where they are.
+  // isFocused stays true; the user can keep zooming/orbiting around the active node.
+  // Focus is only released when the user navigates away or taps empty space.
   document.getElementById('ghost').classList.remove('on');
   document.getElementById('msheet').classList.remove('on');
-  updateTimelineNav(null);
-  scenePivotTgt.set(0, 0, 0);
-  camTarget.radius = 68; camTarget.phi = Math.PI * 0.28;
-  resetHighlights();
+  hideSentGhost();
+  // Leave focusedEra, isFocused, scenePivot, camTarget all untouched.
 };
 
 // ─────────────────────────────────────────────────────────
@@ -1593,10 +1912,52 @@ window.closePanel = function () {
 // ─────────────────────────────────────────────────────────
 let isFocused = false;
 
+// Compute the preset camera for a given era (pure, no side effects)
+function eraPreset(era) {
+  // Fixed world-space angle. Camera sits front-left, looks across right.
+  const theta  = Math.PI * 0.6;
+  // Low elevation — phi near horizon (π/2 = flat). Node sits slightly above
+  // camera eyeline giving the "looking up to center" feel.
+  const phi    = Math.PI * 0.44;  // ~21° above horizon
+  const radius = 20;
+  return { phi, theta, radius };
+}
+
 function focusEra(era) {
+  closeGridView();
+  if (currentLayer === LAYER_GALAXY) switchLayer(LAYER_ORRERY);
   isFocused = true; focusedEra = era;
-  scenePivotTgt.copy(era._pos);
-  camTarget.radius = 20; camTarget.phi = Math.PI * 0.22;
+
+  const preset = eraPreset(era);
+
+  // Shift pivot left on screen so node clears the right-side panel.
+  // Screen-right at theta=0.6π is (cos θ, 0, -sin θ) in world XZ.
+  // Moving pivot by +screenRight shifts node leftward in the frame.
+  const THETA = preset.theta;
+  const isMobileView = window.innerWidth <= 768;
+  // Desktop: shift pivot right in screen-space so node clears the right panel
+  // Mobile: shift pivot down in world-Y so node renders in upper 40% of screen,
+  //         clear of the bottom sheet drawer
+  const panelShift = isMobileView ? 0 : 3.5;
+  const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
+  const targetPivot = era._pos.clone().addScaledVector(screenRight, panelShift);
+  if (isMobileView) {
+    // Push pivot down in world Y → node appears higher on screen
+    targetPivot.y -= 4.5;
+  }
+  scenePivotTgt.copy(targetPivot);
+
+  // Fire the swoop: outward arc, sweep, close in
+  swoopTo(preset.phi, preset.theta, preset.radius, targetPivot);
+
+  // Also set camTarget so user input after swoop continues from correct base
+  camTarget.phi    = preset.phi;
+  camTarget.theta  = preset.theta;
+  camTarget.radius = preset.radius;
+
+  // Set per-node nebula
+  activeNodeNebulaIdx = ERAS.findIndex(e => e.id === era.id);
+
   openPanel(era);
   highlightConnections(era);
 }
@@ -1632,7 +1993,10 @@ let hintFaded = false, orbitPaused = false;
 let hoveredNodeMesh = null;
 
 function getAllHittable() {
-  return nodeObjects.map(o => o.mesh);
+  // Include both visual mesh and large hit proxies for touch accuracy
+  const meshes = [];
+  nodeObjects.forEach(o => { meshes.push(o.mesh); if (o.hitMesh) meshes.push(o.hitMesh); });
+  return meshes;
 }
 
 function checkHover(clientX, clientY) {
@@ -1647,7 +2011,7 @@ function checkHover(clientX, clientY) {
 
   if (hits.length) {
     const hit = hits[0].object;
-    const nodeObj = nodeObjects.find(o => o.mesh === hit);
+    const nodeObj = nodeObjects.find(o => o.mesh === hit || o.hitMesh === hit);
     const e = nodeObj ? nodeObj.era : null;
 
     if (e && hoveredMesh !== hit) {
@@ -1661,10 +2025,15 @@ function checkHover(clientX, clientY) {
     }
 
     if (nodeObj && nodeObj.mesh !== hoveredNodeMesh) {
-      if (hoveredNodeMesh) hoveredNodeMesh.scale.setScalar(hoveredNodeMesh.userData._baseScale || 1);
+      if (hoveredNodeMesh) {
+        hoveredNodeMesh.scale.setScalar(hoveredNodeMesh.userData._baseScale || 1);
+        const prevObj = nodeObjects.find(o => o.mesh === hoveredNodeMesh);
+        if (prevObj && prevObj.hitMesh) prevObj.hitMesh.scale.setScalar(1);
+      }
       hoveredNodeMesh = nodeObj.mesh;
       if (!hoveredNodeMesh.userData._baseScale) hoveredNodeMesh.userData._baseScale = 1;
       hoveredNodeMesh.scale.setScalar(1.55);
+      if (nodeObj.hitMesh) nodeObj.hitMesh.scale.setScalar(1.55);
     }
 
     document.body.style.cursor = 'pointer';
@@ -1675,12 +2044,33 @@ function checkHover(clientX, clientY) {
 }
 
 function posTooltip(cx, cy) {
-  tooltip.style.transform = `translate(${cx + 18}px,${cy - 10}px)`;
+  // Clamp so tooltip never overflows viewport edge
+  // On mobile (touch): appear above and to the left of the finger
+  const isMobile = window.innerWidth <= 768;
+  const ttEl = document.getElementById('tt-inner');
+  const ttW = ttEl ? ttEl.offsetWidth || 220 : 220;
+  const ttH = ttEl ? ttEl.offsetHeight || 80 : 80;
+  let x, y;
+  if (isMobile) {
+    // Left of and above the touch point
+    x = cx - ttW - 12;
+    y = cy - ttH - 12;
+  } else {
+    x = cx + 18;
+    y = cy - 10;
+  }
+  // Clamp within viewport
+  x = Math.max(8, Math.min(window.innerWidth  - ttW - 8, x));
+  y = Math.max(8, Math.min(window.innerHeight - ttH - 8, y));
+  tooltip.style.transform = `translate(${x}px,${y}px)`;
 }
+
+let pointerDownX = 0, pointerDownY = 0;
 
 cvs.addEventListener('pointerdown', e => {
   if (e.button === 2) return;
   isDragging = false; drag = false;
+  pointerDownX = e.clientX; pointerDownY = e.clientY;
   lastDragX = e.clientX; lastDragY = e.clientY;
   cvs.setPointerCapture(e.pointerId);
 });
@@ -1691,12 +2081,26 @@ cvs.addEventListener('pointermove', e => {
   mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
   posTooltip(e.clientX, e.clientY);
   if (e.buttons && e.button !== 2) {
-    isDragging = true; drag = true;
-    camTarget.theta -= (e.clientX - lastDragX) * 0.005;
-    camTarget.phi = Math.max(0.04, Math.min(Math.PI * 0.48, camTarget.phi + (e.clientY - lastDragY) * 0.005));
+    const dx = e.clientX - pointerDownX, dy = e.clientY - pointerDownY;
+    const dragThreshold = e.pointerType === 'mouse' ? 4 : 10;
+    if (!drag && Math.sqrt(dx*dx + dy*dy) > dragThreshold) {
+      drag = true;
+      // Cancel swoop so user takes control immediately
+      if (swoop.active) {
+        swoop.active = false;
+        camTarget.phi    = camState.phi;
+        camTarget.theta  = camState.theta;
+        camTarget.radius = camState.radius;
+      }
+    }
+    if (drag) {
+      isDragging = true;
+      camTarget.theta -= (e.clientX - lastDragX) * 0.005;
+      camTarget.phi = Math.max(0.04, Math.min(Math.PI * 0.48, camTarget.phi + (e.clientY - lastDragY) * 0.005));
+    }
     lastDragX = e.clientX; lastDragY = e.clientY;
   } else {
-    checkHover(e.clientX, e.clientY);
+    if (e.pointerType === 'mouse') checkHover(e.clientX, e.clientY);
   }
 });
 
@@ -1708,31 +2112,81 @@ cvs.addEventListener('pointerup', e => {
     const hits = raycaster.intersectObjects(getAllHittable());
     if (hits.length) {
       const hit = hits[0].object;
-      const nodeObj = nodeObjects.find(o => o.mesh === hit);
+      const nodeObj = nodeObjects.find(o => o.mesh === hit || o.hitMesh === hit);
       if (nodeObj) focusEra(nodeObj.era);
     } else if (isFocused) {
-      closePanel();
+      // Tap on empty space = full release: dismiss overlay AND exit focus
+      document.getElementById('ghost').classList.remove('on');
+      document.getElementById('msheet').classList.remove('on');
+      hideSentGhost();
+      focusedEra = null; isFocused = false;
+      swoop.active = false;
+      activeNodeNebulaIdx = -1;
+      scenePivotTgt.set(0, 0, 0);
+      camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
+      resetHighlights();
     }
   }
   if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; }
 });
 
+// Re-lock orbit pivot to the focused node so zoom never drifts off-center
+function lockPivotToFocus() {
+  if (!focusedEra || !isFocused) return;
+  const THETA = Math.PI * 0.6;
+  const isMobileView = window.innerWidth <= 768;
+  const panelShift = isMobileView ? 0 : 3.5;
+  const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
+  const p = focusedEra._pos.clone().addScaledVector(screenRight, panelShift);
+  if (isMobileView) p.y -= 4.5;
+  scenePivotTgt.copy(p);
+  scenePivot.copy(p);
+}
+
 cvs.addEventListener('wheel', e => {
+  if (swoop.active) { swoop.active = false; camTarget.phi = camState.phi; camTarget.theta = camState.theta; camTarget.radius = camState.radius; }
+  lockPivotToFocus();
   const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
-  const mn = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : 10;
-  camTarget.radius = Math.max(mn, Math.min(mx, camTarget.radius + e.deltaY * 0.06));
+  const mn = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : ORRERY_RADIUS_MIN;
+  const sensitivity = Math.max(0.012, camTarget.radius * 0.0018);
+  camTarget.radius = Math.max(mn, Math.min(mx, camTarget.radius + e.deltaY * sensitivity));
 }, { passive: true });
 cvs.addEventListener('contextmenu', e => { e.preventDefault(); openTOC(); });
 
 let longPressTimer = null;
+let pinchDist = 0;
+
 cvs.addEventListener('touchstart', e => {
+  if (e.touches.length === 2) {
+    clearTimeout(longPressTimer);
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    pinchDist = Math.sqrt(dx*dx + dy*dy);
+    return;
+  }
   longPressTimer = setTimeout(() => { openTOC(); }, 600);
 }, { passive: true });
+
+cvs.addEventListener('touchmove', e => {
+  clearTimeout(longPressTimer);
+  if (e.touches.length === 2) {
+    const dx = e.touches[0].clientX - e.touches[1].clientX;
+    const dy = e.touches[0].clientY - e.touches[1].clientY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const delta = pinchDist - dist;
+    const mn = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : ORRERY_RADIUS_MIN;
+    const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
+    const pinchSens = Math.max(0.03, camTarget.radius * 0.004);
+    camTarget.radius = Math.max(mn, Math.min(mx, camTarget.radius + delta * pinchSens));
+    lockPivotToFocus();
+    pinchDist = dist;
+  }
+}, { passive: true });
+
 cvs.addEventListener('touchend', () => { clearTimeout(longPressTimer); });
-cvs.addEventListener('touchmove', () => { clearTimeout(longPressTimer); });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { if (tocVisible) { closeTOC(); } else { closePanel(); } }
+  if (e.key === 'Escape') { if (tocVisible) { closeTOC(); } else if (gridVisible) { closeGridView(); switchView('spiral'); } else { closePanel(); } }
   if (e.code === 'Space') { e.preventDefault(); orbitPaused = !orbitPaused; }
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
     e.preventDefault();
@@ -1792,10 +2246,10 @@ function applyTheme() {
   });
   nodeObjects.forEach(({ mesh }) => {
     if (isLight) {
-      mesh.material.color.setHex(0x3a1a00);
+      mesh.material.color.setHex(0x111111);
       mesh.material.emissive.setHex(0x000000);
       mesh.material.emissiveIntensity = 0;
-      mesh.material.metalness = 0.1; mesh.material.roughness = 0.6;
+      mesh.material.metalness = 0; mesh.material.roughness = 0.9;
     } else {
       const ud = mesh.userData;
       mesh.material.color.setHex(ud.origColor);
@@ -1805,13 +2259,36 @@ function applyTheme() {
     }
   });
   glowSprites.forEach(gs => { gs.visible = !isLight; });
+  // Moon dots: black in light mode
+  moonSystems.forEach(sys => {
+    sys.moons.forEach(m => {
+      if (isLight) {
+        m.dot.material.color.setHex(0x000000);
+        m.dot.material.emissive.setHex(0x000000);
+        m.dot.material.emissiveIntensity = 0;
+      } else {
+        m.dot.material.color.setHex(m.era.color);
+        m.dot.material.emissive.setHex(m.era.color);
+        m.dot.material.emissiveIntensity = 1.2;
+      }
+    });
+  });
+  // Redraw moon labels with correct color
+  moonSystems.forEach(sys => {
+    sys.moons.forEach(m => {
+      const { canvas } = makeMoonLabelCanvas(m.moon.label, m.era.hex);
+      m.spr.material.map.dispose();
+      m.spr.material.map = new THREE.CanvasTexture(canvas);
+      m.spr.material.needsUpdate = true;
+    });
+  });
   gold1.intensity = isLight ? 0 : 5;
   gold2.intensity = isLight ? 0 : 4;
   warmTop.intensity = isLight ? 0 : 3;
   ambLight.intensity = isLight ? 1.1 : 0.12;
   pMat.opacity = isLight ? 0 : 0.12;
-  scene.fog.color.setHex(isLight ? 0xf5f1ea : 0x000000);
-  renderer.setClearColor(isLight ? 0xf5f1ea : 0x000000, 0);
+  scene.fog.color.setHex(isLight ? 0xffffff : 0x000000);
+  renderer.setClearColor(isLight ? 0xffffff : 0x000000, 0);
   // Galaxy cluster theme update
   galaxyObjects.forEach(obj => {
     if (obj.type === 'cluster') {
@@ -1844,24 +2321,86 @@ const BD = [
   { x:0.85,y:0.15,vx:-0.00006,vy:-0.00006,r:0.45,col:[80,45,8] },
   { x:0.20,y:0.82,vx:0.00006,vy:-0.00005,r:0.50,col:[40,15,2] },
 ];
-const BL = [
-  { x:0.12,y:0.22,vx:0.00007,vy:0.00005,r:0.65,col:[220,200,170] },
-  { x:0.78,y:0.70,vx:-0.00005,vy:0.00007,r:0.55,col:[210,185,150] },
-  { x:0.85,y:0.15,vx:-0.00006,vy:-0.00006,r:0.45,col:[230,215,185] },
-  { x:0.20,y:0.82,vx:0.00006,vy:-0.00005,r:0.50,col:[215,195,165] },
+// Galaxy nebula — deep blue-violet
+const BG = [
+  { x:0.12,y:0.22,vx:0.00007,vy:0.00005,r:0.68,col:[8,18,80] },
+  { x:0.78,y:0.70,vx:-0.00005,vy:0.00007,r:0.58,col:[40,12,90] },
+  { x:0.85,y:0.15,vx:-0.00006,vy:-0.00006,r:0.48,col:[6,50,65] },
+  { x:0.20,y:0.82,vx:0.00006,vy:-0.00005,r:0.52,col:[20,8,72] },
 ];
+const BGL = [
+  { x:0.12,y:0.22,vx:0.00007,vy:0.00005,r:0.68,col:[190,195,240] },
+  { x:0.78,y:0.70,vx:-0.00005,vy:0.00007,r:0.58,col:[215,195,240] },
+  { x:0.85,y:0.15,vx:-0.00006,vy:-0.00006,r:0.48,col:[185,225,235] },
+  { x:0.20,y:0.82,vx:0.00006,vy:-0.00005,r:0.52,col:[200,190,240] },
+];
+const BL = [
+  { x:0.12,y:0.22,vx:0.00007,vy:0.00005,r:0.65,col:[220,220,220] },
+  { x:0.78,y:0.70,vx:-0.00005,vy:0.00007,r:0.55,col:[200,200,200] },
+  { x:0.85,y:0.15,vx:-0.00006,vy:-0.00006,r:0.45,col:[235,235,235] },
+  { x:0.20,y:0.82,vx:0.00006,vy:-0.00005,r:0.50,col:[210,210,210] },
+];
+
+// Per-node nebula palettes — indexed by ERAS order
+// Each is [r,g,b] for the dominant nebula blob, dark theme
+const NODE_NEBULA_DARK = [
+  [[80,55,5],[60,35,2],[90,50,8],[50,30,2]],      // origin: gold
+  [[85,70,10],[70,55,5],[95,80,12],[65,50,5]],     // wolfie.love: warm amber
+  [[55,35,75],[45,25,65],[65,42,80],[40,20,60]],   // wolfie.life: violet
+  [[70,50,10],[55,38,5],[80,58,12],[50,32,5]],     // intoview: gold-amber
+  [[40,30,8],[30,22,4],[50,35,10],[28,18,4]],      // emdash: deep bronze
+  [[20,45,90],[15,35,80],[25,55,95],[12,30,75]],   // rsp: blue
+  [[65,35,15],[50,25,8],[75,42,18],[45,20,8]],     // reasonandresolution: copper
+  [[55,38,10],[42,28,5],[65,45,12],[38,22,5]],     // ifimaybefrank: amber
+  [[80,60,8],[65,45,4],[90,68,10],[55,38,3]],      // dab: gold
+];
+let activeNodeNebulaIdx = -1;  // -1 = default
+function lerpBlobSets(setA, setB, t) {
+  return setA.map((a, i) => {
+    const b = setB[i];
+    return { ...a, col: [
+      Math.round(a.col[0] + (b.col[0] - a.col[0]) * t),
+      Math.round(a.col[1] + (b.col[1] - a.col[1]) * t),
+      Math.round(a.col[2] + (b.col[2] - a.col[2]) * t),
+    ]};
+  });
+}
 function drawMesh() {
   const w = bgCanvas.width, h = bgCanvas.height;
   bgCtx.clearRect(0, 0, w, h);
-  const blobs = isLight ? BL : BD;
-  bgCtx.fillStyle = isLight ? '#f5f1ea' : '#05030a';
+  const ga = typeof galaxyAlpha !== 'undefined' ? galaxyAlpha : 0;
+  let baseSet = isLight ? BL : BD;
+  // Blend toward active node nebula when focused (dark mode only)
+  if (!isLight && activeNodeNebulaIdx >= 0 && ga < 0.1) {
+    const nc = NODE_NEBULA_DARK[activeNodeNebulaIdx];
+    if (nc) {
+      const nodeSet = BD.map((b, i) => ({ ...b, col: nc[i] || b.col }));
+      baseSet = lerpBlobSets(BD, nodeSet, 0.65);
+    }
+  }
+  const galaxySet = isLight ? BGL : BG;
+  const blobs = ga > 0.01 ? lerpBlobSets(baseSet, galaxySet, ga) : baseSet;
+  const bgBase = isLight ? '#f5f1ea' : '#05030a';
+  const bgGal  = isLight ? '#e8eaf5' : '#01020f';
+  if (ga > 0.01) {
+    const t = ga;
+    const baseRgb = isLight ? [245,241,234] : [5,3,10];
+    const galRgb  = isLight ? [232,234,245] : [1,2,15];
+    const r = Math.round(baseRgb[0] + (galRgb[0]-baseRgb[0])*t);
+    const g = Math.round(baseRgb[1] + (galRgb[1]-baseRgb[1])*t);
+    const b = Math.round(baseRgb[2] + (galRgb[2]-baseRgb[2])*t);
+    bgCtx.fillStyle = `rgb(${r},${g},${b})`;
+  } else {
+    bgCtx.fillStyle = bgBase;
+  }
   bgCtx.fillRect(0, 0, w, h);
   blobs.forEach(b => {
     const cx = b.x*w, cy = b.y*h, rad = Math.max(w,h)*b.r;
     const grd = bgCtx.createRadialGradient(cx,cy,0,cx,cy,rad);
     const [r,g,bl] = b.col;
-    grd.addColorStop(0, `rgba(${r},${g},${bl},${isLight?0.40:0.55})`);
-    grd.addColorStop(0.5, `rgba(${r},${g},${bl},${isLight?0.12:0.14})`);
+    const intensity = isLight ? (ga > 0.01 ? 0.50 : 0.40) : (ga > 0.01 ? 0.65 : 0.55);
+    grd.addColorStop(0, `rgba(${r},${g},${bl},${intensity})`);
+    grd.addColorStop(0.5, `rgba(${r},${g},${bl},${intensity*0.28})`);
     grd.addColorStop(1, `rgba(${r},${g},${bl},0)`);
     bgCtx.fillStyle = grd; bgCtx.fillRect(0, 0, w, h);
   });
@@ -1873,7 +2412,7 @@ function drawMesh() {
 let meshT = 0;
 function tickMesh() {
   meshT++;
-  [...BD,...BL].forEach(b => {
+  [...BD,...BL,...BG,...BGL].forEach(b => {
     b.x += b.vx; b.y += b.vy;
     if (b.x<0||b.x>1) b.vx*=-1;
     if (b.y<0||b.y>1) b.vy*=-1;
@@ -1890,11 +2429,12 @@ function tickMorph() {
   if (!morphing) return;
   morphT = Math.min(morphT + 0.04, 1);
   const ease = morphT < 0.5 ? 2*morphT*morphT : 1 - Math.pow(-2*morphT+2,2)/2;
-  nodeObjects.forEach(({ mesh, era }, i) => {
+  nodeObjects.forEach(({ mesh, hitMesh, era }, i) => {
     const from = currentView === 'arc' ? era._spiralPos : era._arcPos;
     const to   = currentView === 'arc' ? era._arcPos   : era._spiralPos;
     mesh.position.lerpVectors(from, to, ease);
     era._pos.copy(mesh.position);
+    if (hitMesh) hitMesh.position.copy(mesh.position);
     if (glowSprites[i]) glowSprites[i].position.copy(mesh.position);
     if (allLabels[i*2]) allLabels[i*2].spr.position.set(mesh.position.x+0.6, mesh.position.y+0.5, mesh.position.z);
   });
@@ -1911,12 +2451,17 @@ function animate(ts) {
   const dt = Math.min((ts - lastTime) / 1000, 0.05);
   lastTime = ts; elapsed += dt;
 
-  camState.phi   += (camTarget.phi   - camState.phi)   * 0.08;
-  camState.theta += (camTarget.theta - camState.theta) * 0.08;
-  camState.radius+= (camTarget.radius- camState.radius)* 0.08;
-  scenePivot.lerp(scenePivotTgt, 0.08);
-
-  if (!isFocused && !isDragging && !orbitPaused) camTarget.theta += dt * 0.015;
+  if (swoop.active) {
+    tickSwoop(dt);
+    // Suppress auto-orbit and user drag during swoop
+  } else {
+    camState.phi   += (camTarget.phi   - camState.phi)   * 0.08;
+    camState.theta += (camTarget.theta - camState.theta) * 0.08;
+    camState.radius+= (camTarget.radius- camState.radius)* 0.08;
+    const pivotLerpSpeed = isFocused ? 0.22 : 0.08;
+    scenePivot.lerp(scenePivotTgt, pivotLerpSpeed);
+    if (!isFocused && !isDragging && !orbitPaused) camTarget.theta += dt * 0.015;
+  }
 
   if (!isFocused) {
     nodeObjects.forEach(({ mesh, era }) => {
@@ -1933,8 +2478,25 @@ function animate(ts) {
   tickMoons(elapsed);
   updateGalaxyAlpha();
 
-  gold1.intensity = (isLight ? 0 : 5) + Math.sin(elapsed * 0.8) * 0.5;
-  gold2.intensity = (isLight ? 0 : 4) + Math.sin(elapsed * 0.6 + 1.2) * 0.4;
+  // Blend point lights toward focused node color
+  const _ni = activeNodeNebulaIdx;
+  const _nc = (!isLight && _ni >= 0 && NODE_NEBULA_DARK[_ni]) ? NODE_NEBULA_DARK[_ni][0] : null;
+  if (_nc) {
+    const _hex = (_nc[0]<<16)|(_nc[1]<<8)|_nc[2];
+    gold1.color.setHex(_hex); gold2.color.setHex(_hex);
+    gold1.intensity = 5 + Math.sin(elapsed * 0.8) * 0.5;
+    gold2.intensity = 4 + Math.sin(elapsed * 0.6 + 1.2) * 0.4;
+  } else {
+    gold1.color.setHex(0xdaa520); gold2.color.setHex(0xb87333);
+    gold1.intensity = (isLight ? 0 : 5) + Math.sin(elapsed * 0.8) * 0.5;
+    gold2.intensity = (isLight ? 0 : 4) + Math.sin(elapsed * 0.6 + 1.2) * 0.4;
+  }
+  if (typeof galaxyAlpha !== 'undefined') {
+    const ga = galaxyAlpha;
+    galaxyLight1.intensity = isLight ? 0 : ga * (6 + Math.sin(elapsed * 0.4) * 1.0);
+    galaxyLight2.intensity = isLight ? 0 : ga * (5 + Math.sin(elapsed * 0.5 + 1) * 0.8);
+    galaxyLight3.intensity = isLight ? 0 : ga * (4 + Math.sin(elapsed * 0.3 + 2) * 0.6);
+  }
 
   applyCam();
   renderer.render(scene, cam);
