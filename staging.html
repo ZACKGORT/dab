@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Wolfgang & Co. · Roadmap</title>
+<title>D.A.B.CX · Design (for agentic) Architecture (& human) Bridges · A Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -398,9 +398,6 @@ body.light #hud{background:rgba(255,255,255,0.94)!important;border-color:rgba(0,
 body.light .hud-btn{color:rgba(0,0,0,0.55)!important;border-right-color:rgba(0,0,0,0.08)!important;}
 body.light .hud-btn:hover{color:#000!important;background:rgba(0,0,0,0.05)!important;}
 body.light .hud-btn.active{color:#000!important;background:rgba(0,0,0,0.08)!important;}
-body.light .dkey{background:rgba(0,0,0,0.04)!important;border-color:rgba(0,0,0,0.18)!important;color:rgba(0,0,0,0.50)!important;}
-body.light .dkey:hover{background:rgba(0,0,0,0.08)!important;border-color:rgba(0,0,0,0.40)!important;color:#000!important;}
-body.light .dkey.pressed{background:rgba(0,0,0,0.14)!important;border-color:rgba(0,0,0,0.70)!important;color:#000!important;}
 body.light #tt-inner{background:#fff!important;border-color:rgba(0,0,0,0.14)!important;}
 body.light .tt-era{color:rgba(0,0,0,0.50)!important;}
 body.light .tt-title{color:#000!important;}
@@ -436,57 +433,7 @@ body.light #brand-dab{background:#fff!important;border-color:rgba(0,0,0,0.14)!im
 body.light #brand-saturn circle,body.light #brand-saturn ellipse{stroke:rgba(0,0,0,0.50)!important;}
 body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none!important;}
 
-/* ── D-PAD KEY CLUSTER ── */
-#joystick{
-  position:fixed;
-  right:24px;top:84px;
-  z-index:150;
-  width:86px;height:86px;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-}
-@media(max-width:768px){
-  #joystick{
-    right:auto;top:auto;
-    left:50%;transform:translateX(-50%);
-    bottom:72px;
-  }
-}
-.dkey{
-  position:absolute;
-  width:26px;height:26px;
-  background:rgba(218,165,32,0.045);
-  border:1px solid rgba(218,165,32,0.14);
-  border-radius:3px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  transition:background 0.10s, border-color 0.10s, transform 0.08s;
-  touch-action:manipulation;
-  color:rgba(218,165,32,0.35);
-  font-size:9px;
-  font-family:'DM Mono',monospace;
-  letter-spacing:0;
-}
-/* Diamond: 26px keys, 8px gap between */
-#joy-up   { top:0;   left:27px; }
-#joy-down { bottom:0;left:27px; }
-#joy-left { top:27px;left:0;    }
-#joy-right{ top:27px;right:0;   }
-.dkey:hover{
-  background:rgba(218,165,32,0.10);
-  border-color:rgba(218,165,32,0.38);
-  color:rgba(218,165,32,0.75);
-}
-.dkey.pressed,.dkey:active{
-  background:rgba(218,165,32,0.16);
-  border-color:rgba(218,165,32,0.60);
-  color:#daa520;
-  transform:scale(0.93) translateY(1px);
-  transition:transform 0.05s;
-}
-body.light .dkey{background:rgba(100,60,0,0.04);border-color:rgba(100,60,0,0.18);color:rgba(100,60,0,0.38);}
-body.light .dkey:hover{background:rgba(100,60,0,0.09);border-color:rgba(100,60,0,0.40);color:rgba(80,40,0,0.80);}
-body.light .dkey.pressed{background:rgba(100,60,0,0.14);border-color:rgba(100,60,0,0.65);color:rgba(60,25,0,0.95);}
+
 </style>
 </head>
 <body>
@@ -508,12 +455,12 @@ body.light .dkey.pressed{background:rgba(100,60,0,0.14);border-color:rgba(100,60
       <circle class="node" cx="31" cy="19" r="1.3" fill="rgba(218,165,32,0.60)"/>
     </svg>
     <div id="brand-text">
-      <div id="brand-name">Wolfgang &amp; Co.</div>
-      <div id="brand-sub">Roadmap · Sentence as Primitive</div>
+      <div id="brand-name">D.A.B.CX</div>
+      <div id="brand-sub">Sentence as Primitive · Wolfgang &amp; Co.</div>
     </div>
   </div>
   <!-- Hover ghost: full dab.cx acronym -->
-  <div id="brand-dab">dab.cx &nbsp;·&nbsp; Design (for agentic) &nbsp;·&nbsp; Architecture (& Human) &nbsp;·&nbsp; Bridges</div>
+  <div id="brand-dab">Design (for agentic) Architecture (& human) Bridges · A Roadmap</div>
 </div>
 
 <div id="era-label">
@@ -530,15 +477,10 @@ body.light .dkey.pressed{background:rgba(100,60,0,0.14);border-color:rgba(100,60
   <button class="hud-btn" data-view="grid">GRID</button>
   <button class="hud-btn" data-view="galaxy">GALAXY</button>
   <div class="hud-sep"></div>
+  <button class="hud-btn" id="hud-prev-btn">&#8592; PREV</button>
+  <button class="hud-btn" id="hud-next-btn">NEXT &#8594;</button>
+  <div class="hud-sep"></div>
   <button class="hud-btn" id="theme-toggle-hud">LIGHT</button>
-</div>
-
-<!-- D-PAD — four keys, PlayStation / arrow-key diamond -->
-<div id="joystick">
-  <div class="dkey" id="joy-up"    data-joy="up">    &#8593;</div>
-  <div class="dkey" id="joy-left"  data-joy="left">  &#8592;</div>
-  <div class="dkey" id="joy-right" data-joy="right"> &#8594;</div>
-  <div class="dkey" id="joy-down"  data-joy="down">  &#8595;</div>
 </div>
 
 <!-- hidden stubs so JS refs don't break -->
@@ -550,8 +492,6 @@ body.light .dkey.pressed{background:rgba(100,60,0,0.14);border-color:rgba(100,60
   <button id="tl-next"></button>
 </div>
 <div id="hint" style="display:none"></div>
-<div id="hud-prev" style="display:none"></div>
-<div id="hud-next" style="display:none"></div>
 
 <div id="tooltip"><div id="tt-inner">
   <div class="tt-era" id="tt-era"></div>
@@ -628,7 +568,7 @@ body.light .dkey.pressed{background:rgba(100,60,0,0.14);border-color:rgba(100,60
   <div id="toc-inner">
     <div id="toc-header">
       <div>
-        <div id="toc-title">Wolfgang & Co. · Roadmap</div>
+        <div id="toc-title">D.A.B.CX · A Roadmap</div>
         <div id="toc-sub">Wolfgang &amp; Co. · Table of Contents</div>
       </div>
       <button id="toc-close" onclick="closeTOC()">✕</button>
@@ -917,22 +857,16 @@ const scenePivot = new THREE.Vector3();
 const scenePivotTgt = new THREE.Vector3();
 
 // ── SWOOP ANIMATOR ──────────────────────────────────────
-// Drives a three-phase camera move: pull out → arc around → close in
-// Bypasses the simple per-frame lerp while active.
+// Single continuous arc: gentle outward bow, theta sweep, arriving
+// low (phi near horizon) looking slightly upward toward the node.
 const swoop = {
   active: false,
-  phase: 0,           // 0=pull-out, 1=arc, 2=close-in
-  t: 0,               // 0..1 within phase
-  // start state
+  t: 0,
+  totalDur: 1.40,   // seconds — unhurried, cinematic
   startPhi: 0, startTheta: 0, startRadius: 0,
   startPivot: new THREE.Vector3(),
-  // end state
   endPhi: 0, endTheta: 0, endRadius: 0,
   endPivot: new THREE.Vector3(),
-  // mid state (peak of the arc — pulled outward)
-  midRadius: 0,
-  // durations per phase in seconds
-  dur: [0.55, 0.70, 0.45],
 };
 
 function swoopTo(endPhi, endTheta, endRadius, endPivotVec) {
@@ -944,68 +878,58 @@ function swoopTo(endPhi, endTheta, endRadius, endPivotVec) {
   swoop.endTheta    = endTheta;
   swoop.endRadius   = endRadius;
   swoop.endPivot.copy(endPivotVec);
-  // Mid radius: swoop outward to ~2.2× current or at least 48
-  swoop.midRadius   = Math.max(48, camState.radius * 2.2, endRadius * 2.8);
-  swoop.phase       = 0;
   swoop.t           = 0;
   swoop.active      = true;
 }
 
-function ease3(t) {
-  // smooth cubic ease in-out
-  return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+// Ease: smooth-start, ease into landing
+function easeFigure8(t) {
+  // Quintic ease-out — fast start, very smooth arrival
+  return 1 - Math.pow(1 - t, 4);
+}
+
+// Bow curve: rises to peak at t≈0.35 then returns — mild outward arc
+function bowCurve(t) {
+  return Math.sin(t * Math.PI) * 0.22;  // max +22% radius bow at midpoint
 }
 
 function tickSwoop(dt) {
   if (!swoop.active) return;
-  const dur = swoop.dur[swoop.phase];
-  swoop.t += dt / dur;
-  if (swoop.t >= 1) { swoop.t = 1; }
-  const e = ease3(swoop.t);
+  swoop.t = Math.min(swoop.t + dt / swoop.totalDur, 1);
+  const t = swoop.t;
+  const e = easeFigure8(t);
 
-  if (swoop.phase === 0) {
-    // Pull out — radius grows toward midRadius, pivot starts moving to end
-    camState.radius = swoop.startRadius + (swoop.midRadius - swoop.startRadius) * e;
-    camState.phi    = swoop.startPhi + (swoop.endPhi - swoop.startPhi) * e * 0.3;
-    camState.theta  = swoop.startTheta;
-    scenePivot.lerpVectors(swoop.startPivot, swoop.endPivot, e * 0.4);
-  } else if (swoop.phase === 1) {
-    // Arc — theta sweeps to final angle at peak radius
-    camState.radius = swoop.midRadius;
-    camState.phi    = swoop.startPhi + (swoop.endPhi - swoop.startPhi) * (0.3 + e * 0.6);
-    // Sweep theta the SHORT way around
-    let dTheta = swoop.endTheta - swoop.startTheta;
-    // Normalize to [-PI, PI] so we always take the shorter arc
-    while (dTheta >  Math.PI) dTheta -= Math.PI * 2;
-    while (dTheta < -Math.PI) dTheta += Math.PI * 2;
-    camState.theta  = swoop.startTheta + dTheta * e;
-    scenePivot.lerpVectors(swoop.startPivot, swoop.endPivot, 0.4 + e * 0.4);
-  } else {
-    // Close in — radius shrinks to endRadius
-    let dTheta = swoop.endTheta - swoop.startTheta;
-    while (dTheta >  Math.PI) dTheta -= Math.PI * 2;
-    while (dTheta < -Math.PI) dTheta += Math.PI * 2;
-    camState.radius = swoop.midRadius + (swoop.endRadius - swoop.midRadius) * e;
-    camState.phi    = swoop.startPhi + (swoop.endPhi - swoop.startPhi);
-    camState.theta  = swoop.startTheta + dTheta;
-    scenePivot.lerpVectors(swoop.startPivot, swoop.endPivot, 0.8 + e * 0.2);
-  }
+  // Radius: smoothly close in, with a gentle outward bow early in the move
+  const bow = bowCurve(t);
+  const baseRadius = swoop.startRadius + (swoop.endRadius - swoop.startRadius) * e;
+  camState.radius = baseRadius * (1 + bow);
+
+  // Theta: sweep the short way around
+  let dTheta = swoop.endTheta - swoop.startTheta;
+  while (dTheta >  Math.PI) dTheta -= Math.PI * 2;
+  while (dTheta < -Math.PI) dTheta += Math.PI * 2;
+  camState.theta = swoop.startTheta + dTheta * e;
+
+  // Phi: arrive lower than start — ease from current elevation down to endPhi
+  // The "looking up" feel comes from endPhi being closer to π/2 (horizon),
+  // with a slight overshoot past endPhi that recovers, making camera dip below
+  // and float back up to final angle
+  const phiOvershoot = swoop.endPhi * 0.08 * Math.sin(t * Math.PI);
+  camState.phi = swoop.startPhi + (swoop.endPhi - swoop.startPhi) * e + phiOvershoot;
+
+  // Pivot: track smoothly to target
+  scenePivot.lerpVectors(swoop.startPivot, swoop.endPivot, e);
 
   if (swoop.t >= 1) {
-    swoop.phase++;
-    swoop.t = 0;
-    if (swoop.phase >= 3) {
-      // Done — land exactly on target, hand control back to normal lerp
-      swoop.active  = false;
-      camState.phi    = swoop.endPhi;
-      camState.theta  = swoop.endTheta;
-      camState.radius = swoop.endRadius;
-      camTarget.phi    = swoop.endPhi;
-      camTarget.theta  = swoop.endTheta;
-      camTarget.radius = swoop.endRadius;
-      scenePivot.copy(swoop.endPivot);
-      scenePivotTgt.copy(swoop.endPivot);
-    }
+    swoop.active = false;
+    camState.phi    = swoop.endPhi;
+    camState.theta  = swoop.endTheta;
+    camState.radius = swoop.endRadius;
+    camTarget.phi    = swoop.endPhi;
+    camTarget.theta  = swoop.endTheta;
+    camTarget.radius = swoop.endRadius;
+    scenePivot.copy(swoop.endPivot);
+    scenePivotTgt.copy(swoop.endPivot);
   }
 }
 
@@ -1683,7 +1607,7 @@ function handleGalaxyClick(mouseVec) {
 // ─────────────────────────────────────────────────────────
 // TIMELINE NAV STRIP
 // ─────────────────────────────────────────────────────────
-// Navigation handled by joystick and direct node tap
+// Navigation handled by HUD prev/next buttons and direct node tap
 
 // Stubs for old tl-prev/tl-next (hidden but referenced)
 document.getElementById('tl-prev').addEventListener('click', () => {
@@ -1825,7 +1749,7 @@ function switchView(view) {
 }
 
 document.querySelectorAll('.hud-btn[data-view]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
-// ─── JOYSTICK ───────────────────────────────────────────
+// ─── NAVIGATION ─────────────────────────────────────────
 function navPrev() {
   const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 1;
   focusEra(idx > 0 ? ERAS[idx - 1] : ERAS[ERAS.length - 1]);
@@ -1834,38 +1758,9 @@ function navNext() {
   const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : -1;
   focusEra(idx < ERAS.length - 1 ? ERAS[idx + 1] : ERAS[0]);
 }
-function joyZoom(dir) {
-  // dir: -1 = zoom in, +1 = zoom out
-  const mn = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : ORRERY_RADIUS_MIN;
-  const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
-  const step = Math.max(1.5, camTarget.radius * 0.12) * dir;
-  camTarget.radius = Math.max(mn, Math.min(mx, camTarget.radius + step));
-}
 
-let joyInterval = null;
-function joyHold(fn) {
-  fn();
-  joyInterval = setInterval(fn, 120);
-}
-function joyRelease() { clearInterval(joyInterval); joyInterval = null; }
-
-['joy-up','joy-down','joy-left','joy-right'].forEach(id => {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const dir = el.dataset.joy;
-  const fn = dir === 'up'   ? () => joyZoom(-1) :
-             dir === 'down' ? () => joyZoom(1)  :
-             dir === 'left' ? navPrev : navNext;
-  const repeats = (dir === 'up' || dir === 'down');
-
-  el.addEventListener('pointerdown', e => {
-    e.preventDefault();
-    el.classList.add('pressed');
-    if (repeats) joyHold(fn); else fn();
-  });
-  el.addEventListener('pointerup',    () => { el.classList.remove('pressed'); if (repeats) joyRelease(); });
-  el.addEventListener('pointerleave', () => { el.classList.remove('pressed'); if (repeats) joyRelease(); });
-});
+document.getElementById('hud-prev-btn').addEventListener('click', navPrev);
+document.getElementById('hud-next-btn').addEventListener('click', navNext);
 
 // Theme toggle in HUD
 document.getElementById('theme-toggle-hud').addEventListener('click', () => {
@@ -2001,12 +1896,11 @@ let isFocused = false;
 
 // Compute the preset camera for a given era (pure, no side effects)
 function eraPreset(era) {
-  // Fixed world-space camera angle — always the same 3/4 view, left-to-right.
-  // theta = PI * 0.6 ≈ 108° — camera sits front-left of world origin,
-  // looking across to the right. Every node passes through this same frame
-  // as you navigate; the spiral rotates past a fixed viewpoint.
+  // Fixed world-space angle. Camera sits front-left, looks across right.
   const theta  = Math.PI * 0.6;
-  const phi    = Math.PI * 0.34;  // low — ~29° above horizon, see what's above
+  // Low elevation — phi near horizon (π/2 = flat). Node sits slightly above
+  // camera eyeline giving the "looking up to center" feel.
+  const phi    = Math.PI * 0.44;  // ~21° above horizon
   const radius = 20;
   return { phi, theta, radius };
 }
