@@ -9,15 +9,34 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:#05030a;transition:background 0.6s;}
-body.light{background:#f5f1ea;}
+body.light{background:#ffffff;}
 canvas{display:block;width:100vw;height:100vh;position:relative;z-index:1;}
 #bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-#brand{position:fixed;top:24px;left:28px;z-index:100;pointer-events:none;font-family:'DM Mono',monospace;}
+#brand{position:fixed;top:20px;left:24px;z-index:100;font-family:'DM Mono',monospace;cursor:default;}
+#brand-logo{display:flex;align-items:center;gap:10px;position:relative;}
+#brand-saturn{flex-shrink:0;opacity:0.75;transition:opacity 0.3s;}
+#brand:hover #brand-saturn{opacity:1;}
+#brand-text{display:flex;flex-direction:column;gap:3px;}
 #brand-name{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(218,165,32,0.70);transition:color 0.5s;}
-#brand-sub{font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(218,165,32,0.28);margin-top:5px;transition:color 0.5s;}
+#brand-sub{font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(218,165,32,0.28);transition:color 0.5s;}
+/* Ghost acronym tooltip */
+#brand-dab{
+  position:absolute;top:calc(100% + 8px);left:0;
+  font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.18em;
+  text-transform:uppercase;color:rgba(218,165,32,0.70);
+  background:rgba(5,3,10,0.92);border:1px solid rgba(218,165,32,0.14);
+  border-radius:2px;padding:5px 10px;white-space:nowrap;
+  opacity:0;transform:translateY(-4px);
+  transition:opacity 0.2s, transform 0.2s;
+  pointer-events:none;z-index:200;
+}
+#brand:hover #brand-dab{opacity:1;transform:translateY(0);}
 body.light #brand-name{color:rgba(50,20,0,0.97);}
 body.light #brand-sub{color:rgba(70,35,0,0.70);}
+body.light #brand-saturn circle,body.light #brand-saturn ellipse,body.light #brand-saturn line{stroke:rgba(60,25,0,0.65)!important;}
+body.light #brand-saturn circle.node{fill:rgba(60,25,0,0.70)!important;stroke:none!important;}
+body.light #brand-dab{background:rgba(255,252,244,0.96);border-color:rgba(100,60,0,0.18);color:rgba(80,35,0,0.85);}
 
 #era-label{position:fixed;top:24px;right:28px;z-index:100;font-family:'DM Mono',monospace;text-align:right;pointer-events:none;}
 #era-year{font-size:28px;letter-spacing:-0.02em;color:rgba(218,165,32,0.18);transition:color 0.5s,opacity 0.4s;font-family:'Crimson Text',serif;font-style:italic;}
@@ -368,63 +387,106 @@ body.light .toc-domain{color:rgba(100,60,0,0.30);}
 }
 body.light #toc-hint{color:rgba(100,60,0,0.30);}
 
-/* ── JOYSTICK — vitruvian circle-in-square ── */
+
+/* ── LIGHT THEME: B&W ACCESSIBLE ── */
+body.light{background:#fff;color:#000;}
+body.light #brand-name{color:rgba(0,0,0,0.90)!important;}
+body.light #brand-sub{color:rgba(0,0,0,0.50)!important;}
+body.light #era-year{color:rgba(0,0,0,0.25)!important;}
+body.light #era-name{color:rgba(0,0,0,0.55)!important;}
+body.light #hud{background:rgba(255,255,255,0.94)!important;border-color:rgba(0,0,0,0.14)!important;box-shadow:0 1px 8px rgba(0,0,0,0.08);}
+body.light .hud-btn{color:rgba(0,0,0,0.55)!important;border-right-color:rgba(0,0,0,0.08)!important;}
+body.light .hud-btn:hover{color:#000!important;background:rgba(0,0,0,0.05)!important;}
+body.light .hud-btn.active{color:#000!important;background:rgba(0,0,0,0.08)!important;}
+body.light .dkey{background:rgba(0,0,0,0.04)!important;border-color:rgba(0,0,0,0.18)!important;color:rgba(0,0,0,0.50)!important;}
+body.light .dkey:hover{background:rgba(0,0,0,0.08)!important;border-color:rgba(0,0,0,0.40)!important;color:#000!important;}
+body.light .dkey.pressed{background:rgba(0,0,0,0.14)!important;border-color:rgba(0,0,0,0.70)!important;color:#000!important;}
+body.light #tt-inner{background:#fff!important;border-color:rgba(0,0,0,0.14)!important;}
+body.light .tt-era{color:rgba(0,0,0,0.50)!important;}
+body.light .tt-title{color:#000!important;}
+body.light .tt-role{color:rgba(0,0,0,0.60)!important;}
+body.light .gc{background:#fff!important;border-color:rgba(0,0,0,0.12)!important;box-shadow:0 8px 32px rgba(0,0,0,0.12)!important;}
+body.light .gchead,body.light .gcbody,body.light .gcft{border-color:rgba(0,0,0,0.08)!important;}
+body.light .gcera{color:rgba(0,0,0,0.45)!important;}
+body.light .gctitle{color:#000!important;}
+body.light .gcrole{color:rgba(0,0,0,0.50)!important;}
+body.light .gcbody{color:rgba(0,0,0,0.80)!important;}
+body.light .gcclose{border-color:rgba(0,0,0,0.16)!important;color:rgba(0,0,0,0.45)!important;}
+body.light .gcnav-btn{border-color:rgba(0,0,0,0.14)!important;color:rgba(0,0,0,0.45)!important;}
+body.light .gctag{color:rgba(0,0,0,0.55)!important;border-color:rgba(0,0,0,0.22)!important;}
+body.light .gc-moon-pill{color:rgba(0,0,0,0.55)!important;border-color:rgba(0,0,0,0.22)!important;}
+body.light .gc-moon-pill:hover{background:rgba(0,0,0,0.06)!important;color:#000!important;}
+body.light .gc-iframe-wrap{background:#f4f4f4!important;border-color:rgba(0,0,0,0.08)!important;}
+body.light .gc-iframe-badge{background:rgba(255,255,255,0.90)!important;color:rgba(0,0,0,0.60)!important;border-color:rgba(0,0,0,0.16)!important;}
+body.light .grid-card{background:#fff!important;border-color:rgba(0,0,0,0.10)!important;}
+body.light .grid-card:hover{border-color:rgba(0,0,0,0.40)!important;}
+body.light .grid-card-year{color:rgba(0,0,0,0.45)!important;}
+body.light .grid-card-title{color:#000!important;}
+body.light .grid-card-role{color:rgba(0,0,0,0.50)!important;}
+body.light .grid-card-body{color:rgba(0,0,0,0.65)!important;}
+body.light .toc-name{color:rgba(0,0,0,0.72)!important;}
+body.light .toc-row:hover .toc-name{color:#000!important;}
+body.light .toc-year{color:rgba(0,0,0,0.40)!important;}
+body.light #toc{background:rgba(255,255,255,0.92)!important;}
+body.light #toc-inner{background:#fff!important;border-color:rgba(0,0,0,0.12)!important;}
+body.light #toc-title{color:#000!important;}
+body.light #toc-close{border-color:rgba(0,0,0,0.16)!important;color:rgba(0,0,0,0.50)!important;}
+body.light .toc-row:hover{background:rgba(0,0,0,0.04)!important;border-left-color:rgba(0,0,0,0.35)!important;}
+body.light #brand-dab{background:#fff!important;border-color:rgba(0,0,0,0.14)!important;color:rgba(0,0,0,0.75)!important;}
+body.light #brand-saturn circle,body.light #brand-saturn ellipse{stroke:rgba(0,0,0,0.50)!important;}
+body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none!important;}
+
+/* ── D-PAD KEY CLUSTER ── */
 #joystick{
   position:fixed;
-  /* Desktop: centered above the top-right HUD */
-  right:24px;top:72px;
+  right:24px;top:84px;
   z-index:150;
-  width:88px;height:88px;
+  width:86px;height:86px;
   user-select:none;
+  -webkit-tap-highlight-color:transparent;
 }
 @media(max-width:768px){
-  /* Mobile: centered above the bottom HUD strip */
   #joystick{
     right:auto;top:auto;
     left:50%;transform:translateX(-50%);
-    bottom:60px;
+    bottom:72px;
   }
 }
-#joy-svg{
-  width:88px;height:88px;
-  display:block;
-  overflow:visible;
-}
-/* The four hit zones — invisible rects over each arm */
-.joy-zone{
+.dkey{
+  position:absolute;
+  width:26px;height:26px;
+  background:rgba(218,165,32,0.045);
+  border:1px solid rgba(218,165,32,0.14);
+  border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
   cursor:pointer;
-  fill:transparent;
-  -webkit-tap-highlight-color:transparent;
+  transition:background 0.10s, border-color 0.10s, transform 0.08s;
   touch-action:manipulation;
+  color:rgba(218,165,32,0.35);
+  font-size:9px;
+  font-family:'DM Mono',monospace;
+  letter-spacing:0;
 }
-.joy-zone:hover ~ #joy-circle,
-.joy-zone:active ~ #joy-circle { stroke-opacity: 0.6; }
-/* Individual arm highlights */
-.joy-arm{
-  stroke:rgba(218,165,32,0.22);
-  stroke-width:1;
-  transition:stroke 0.15s, stroke-opacity 0.15s;
+/* Diamond: 26px keys, 8px gap between */
+#joy-up   { top:0;   left:27px; }
+#joy-down { bottom:0;left:27px; }
+#joy-left { top:27px;left:0;    }
+#joy-right{ top:27px;right:0;   }
+.dkey:hover{
+  background:rgba(218,165,32,0.10);
+  border-color:rgba(218,165,32,0.38);
+  color:rgba(218,165,32,0.75);
 }
-.joy-zone:active + .joy-arm { stroke:rgba(218,165,32,0.85); }
-#joy-circle{
-  fill:none;
-  stroke:rgba(218,165,32,0.18);
-  stroke-width:0.75;
-  transition:stroke-opacity 0.2s;
+.dkey.pressed,.dkey:active{
+  background:rgba(218,165,32,0.16);
+  border-color:rgba(218,165,32,0.60);
+  color:#daa520;
+  transform:scale(0.93) translateY(1px);
+  transition:transform 0.05s;
 }
-#joy-square{
-  fill:none;
-  stroke:rgba(218,165,32,0.09);
-  stroke-width:0.75;
-}
-#joy-dot{
-  fill:rgba(218,165,32,0.30);
-  transition:fill 0.15s;
-}
-body.light #joy-circle{stroke:rgba(80,40,0,0.22);}
-body.light #joy-square{stroke:rgba(80,40,0,0.12);}
-body.light .joy-arm{stroke:rgba(80,40,0,0.28);}
-body.light #joy-dot{fill:rgba(80,40,0,0.35);}
+body.light .dkey{background:rgba(100,60,0,0.04);border-color:rgba(100,60,0,0.18);color:rgba(100,60,0,0.38);}
+body.light .dkey:hover{background:rgba(100,60,0,0.09);border-color:rgba(100,60,0,0.40);color:rgba(80,40,0,0.80);}
+body.light .dkey.pressed{background:rgba(100,60,0,0.14);border-color:rgba(100,60,0,0.65);color:rgba(60,25,0,0.95);}
 </style>
 </head>
 <body>
@@ -432,8 +494,26 @@ body.light #joy-dot{fill:rgba(80,40,0,0.35);}
 <canvas id="canvas"></canvas>
 
 <div id="brand">
-  <div id="brand-name">Wolfgang &amp; Co.</div>
-  <div id="brand-sub">Roadmap · Sentence as Primitive</div>
+  <div id="brand-logo">
+    <!-- Saturn + moons logo: orbit ring, planet, 4 node-dots -->
+    <svg id="brand-saturn" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" fill="none">
+      <!-- Orbit ring (tilted ellipse) -->
+      <ellipse cx="18" cy="18" rx="16" ry="5.5" stroke="rgba(218,165,32,0.38)" stroke-width="0.75" transform="rotate(-22,18,18)"/>
+      <!-- Planet body -->
+      <circle cx="18" cy="18" r="5.5" stroke="rgba(218,165,32,0.55)" stroke-width="0.75"/>
+      <!-- Node moons on orbit -->
+      <circle class="node" cx="5"  cy="15" r="1.4" fill="rgba(218,165,32,0.70)"/>
+      <circle class="node" cx="12" cy="10" r="1.1" fill="rgba(218,165,32,0.50)"/>
+      <circle class="node" cx="26" cy="11" r="1.0" fill="rgba(218,165,32,0.45)"/>
+      <circle class="node" cx="31" cy="19" r="1.3" fill="rgba(218,165,32,0.60)"/>
+    </svg>
+    <div id="brand-text">
+      <div id="brand-name">Wolfgang &amp; Co.</div>
+      <div id="brand-sub">Roadmap · Sentence as Primitive</div>
+    </div>
+  </div>
+  <!-- Hover ghost: full dab.cx acronym -->
+  <div id="brand-dab">dab.cx &nbsp;·&nbsp; Design (for agentic) &nbsp;·&nbsp; Architecture (& Human) &nbsp;·&nbsp; Bridges</div>
 </div>
 
 <div id="era-label">
@@ -453,30 +533,12 @@ body.light #joy-dot{fill:rgba(80,40,0,0.35);}
   <button class="hud-btn" id="theme-toggle-hud">LIGHT</button>
 </div>
 
-<!-- JOYSTICK — vitruvian circle-in-square -->
+<!-- D-PAD — four keys, PlayStation / arrow-key diamond -->
 <div id="joystick">
-  <svg id="joy-svg" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
-    <!-- Outer square -->
-    <rect id="joy-square" x="6" y="6" width="76" height="76"/>
-    <!-- Circle inscribed in square -->
-    <circle id="joy-circle" cx="44" cy="44" r="38"/>
-    <!-- Cardinal arms — short ticks at circle edge -->
-    <!-- Up arm -->
-    <line class="joy-arm" id="joy-arm-up"    x1="44" y1="6"  x2="44" y2="18"/>
-    <!-- Down arm -->
-    <line class="joy-arm" id="joy-arm-down"  x1="44" y1="70" x2="44" y2="82"/>
-    <!-- Left arm -->
-    <line class="joy-arm" id="joy-arm-left"  x1="6"  y1="44" x2="18" y2="44"/>
-    <!-- Right arm -->
-    <line class="joy-arm" id="joy-arm-right" x1="70" y1="44" x2="82" y2="44"/>
-    <!-- Center dot -->
-    <circle id="joy-dot" cx="44" cy="44" r="2.5"/>
-    <!-- Hit zones (invisible, on top) -->
-    <rect class="joy-zone" id="joy-up"    x="28" y="4"  width="32" height="30" data-joy="up"/>
-    <rect class="joy-zone" id="joy-down"  x="28" y="54" width="32" height="30" data-joy="down"/>
-    <rect class="joy-zone" id="joy-left"  x="4"  y="28" width="30" height="32" data-joy="left"/>
-    <rect class="joy-zone" id="joy-right" x="54" y="28" width="30" height="32" data-joy="right"/>
-  </svg>
+  <div class="dkey" id="joy-up"    data-joy="up">    &#8593;</div>
+  <div class="dkey" id="joy-left"  data-joy="left">  &#8592;</div>
+  <div class="dkey" id="joy-right" data-joy="right"> &#8594;</div>
+  <div class="dkey" id="joy-down"  data-joy="down">  &#8595;</div>
 </div>
 
 <!-- hidden stubs so JS refs don't break -->
@@ -1026,7 +1088,7 @@ function addLabel(text, pos, dkColor, fs) {
 
 function redrawLabels() {
   allLabels.forEach(({ spr, text, darkColor, fs }) => {
-    const color = isLight ? 'rgba(60,30,0,0.65)' : darkColor;
+    const color = isLight ? 'rgba(0,0,0,0.82)' : darkColor;
     const c = makeLabelCanvas(text, color, fs);
     spr.material.map.dispose();
     spr.material.map = new THREE.CanvasTexture(c);
@@ -1040,7 +1102,7 @@ function redrawLabels() {
 function makeMoonLabelCanvas(text, hexColor) {
   const c = document.createElement('canvas'); c.width = 320; c.height = 40;
   const ctx = c.getContext('2d');
-  ctx.fillStyle = isLight ? 'rgba(60,30,0,0.75)' : hexColor + 'cc';
+  ctx.fillStyle = isLight ? 'rgba(0,0,0,0.80)' : hexColor + 'cc';
   ctx.font = 'italic 600 15px "Crimson Text", serif';
   ctx.fillText(text, 6, 28);
   return { canvas: c, w: 320, h: 40 };
@@ -1791,34 +1853,18 @@ function joyRelease() { clearInterval(joyInterval); joyInterval = null; }
   const el = document.getElementById(id);
   if (!el) return;
   const dir = el.dataset.joy;
-  const arm = document.getElementById('joy-arm-' + dir);
-  const fn = dir === 'up'    ? () => joyZoom(-1) :
-             dir === 'down'  ? () => joyZoom(1)  :
-             dir === 'left'  ? navPrev : navNext;
+  const fn = dir === 'up'   ? () => joyZoom(-1) :
+             dir === 'down' ? () => joyZoom(1)  :
+             dir === 'left' ? navPrev : navNext;
   const repeats = (dir === 'up' || dir === 'down');
-
-  function activate() {
-    if (arm) arm.style.stroke = 'rgba(218,165,32,0.90)';
-    if (arm) arm.style.strokeWidth = '1.5';
-  }
-  function deactivate() {
-    if (arm) arm.style.stroke = '';
-    if (arm) arm.style.strokeWidth = '';
-  }
 
   el.addEventListener('pointerdown', e => {
     e.preventDefault();
-    activate();
+    el.classList.add('pressed');
     if (repeats) joyHold(fn); else fn();
   });
-  el.addEventListener('pointerup',    () => { deactivate(); if (repeats) joyRelease(); });
-  el.addEventListener('pointerleave', () => { deactivate(); if (repeats) joyRelease(); });
-  el.addEventListener('pointerenter', () => {
-    if (arm) arm.style.stroke = 'rgba(218,165,32,0.50)';
-  });
-  el.addEventListener('pointerout', () => {
-    if (!el.matches(':active')) deactivate();
-  });
+  el.addEventListener('pointerup',    () => { el.classList.remove('pressed'); if (repeats) joyRelease(); });
+  el.addEventListener('pointerleave', () => { el.classList.remove('pressed'); if (repeats) joyRelease(); });
 });
 
 // Theme toggle in HUD
@@ -1989,6 +2035,9 @@ function focusEra(era) {
   camTarget.theta  = preset.theta;
   camTarget.radius = preset.radius;
 
+  // Set per-node nebula
+  activeNodeNebulaIdx = ERAS.findIndex(e => e.id === era.id);
+
   openPanel(era);
   highlightConnections(era);
 }
@@ -2134,6 +2183,7 @@ cvs.addEventListener('pointerup', e => {
       hideSentGhost();
       focusedEra = null; isFocused = false;
       swoop.active = false;
+      activeNodeNebulaIdx = -1;
       scenePivotTgt.set(0, 0, 0);
       camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
       resetHighlights();
@@ -2243,10 +2293,10 @@ function applyTheme() {
   });
   nodeObjects.forEach(({ mesh }) => {
     if (isLight) {
-      mesh.material.color.setHex(0x3a1a00);
+      mesh.material.color.setHex(0x000000);
       mesh.material.emissive.setHex(0x000000);
       mesh.material.emissiveIntensity = 0;
-      mesh.material.metalness = 0.1; mesh.material.roughness = 0.6;
+      mesh.material.metalness = 0; mesh.material.roughness = 0.9;
     } else {
       const ud = mesh.userData;
       mesh.material.color.setHex(ud.origColor);
@@ -2261,8 +2311,8 @@ function applyTheme() {
   warmTop.intensity = isLight ? 0 : 3;
   ambLight.intensity = isLight ? 1.1 : 0.12;
   pMat.opacity = isLight ? 0 : 0.12;
-  scene.fog.color.setHex(isLight ? 0xf5f1ea : 0x000000);
-  renderer.setClearColor(isLight ? 0xf5f1ea : 0x000000, 0);
+  scene.fog.color.setHex(isLight ? 0xffffff : 0x000000);
+  renderer.setClearColor(isLight ? 0xffffff : 0x000000, 0);
   // Galaxy cluster theme update
   galaxyObjects.forEach(obj => {
     if (obj.type === 'cluster') {
@@ -2309,11 +2359,26 @@ const BGL = [
   { x:0.20,y:0.82,vx:0.00006,vy:-0.00005,r:0.52,col:[200,190,240] },
 ];
 const BL = [
-  { x:0.12,y:0.22,vx:0.00007,vy:0.00005,r:0.65,col:[220,200,170] },
-  { x:0.78,y:0.70,vx:-0.00005,vy:0.00007,r:0.55,col:[210,185,150] },
-  { x:0.85,y:0.15,vx:-0.00006,vy:-0.00006,r:0.45,col:[230,215,185] },
-  { x:0.20,y:0.82,vx:0.00006,vy:-0.00005,r:0.50,col:[215,195,165] },
+  { x:0.12,y:0.22,vx:0.00007,vy:0.00005,r:0.65,col:[220,220,220] },
+  { x:0.78,y:0.70,vx:-0.00005,vy:0.00007,r:0.55,col:[200,200,200] },
+  { x:0.85,y:0.15,vx:-0.00006,vy:-0.00006,r:0.45,col:[235,235,235] },
+  { x:0.20,y:0.82,vx:0.00006,vy:-0.00005,r:0.50,col:[210,210,210] },
 ];
+
+// Per-node nebula palettes — indexed by ERAS order
+// Each is [r,g,b] for the dominant nebula blob, dark theme
+const NODE_NEBULA_DARK = [
+  [[80,55,5],[60,35,2],[90,50,8],[50,30,2]],      // origin: gold
+  [[85,70,10],[70,55,5],[95,80,12],[65,50,5]],     // wolfie.love: warm amber
+  [[55,35,75],[45,25,65],[65,42,80],[40,20,60]],   // wolfie.life: violet
+  [[70,50,10],[55,38,5],[80,58,12],[50,32,5]],     // intoview: gold-amber
+  [[40,30,8],[30,22,4],[50,35,10],[28,18,4]],      // emdash: deep bronze
+  [[20,45,90],[15,35,80],[25,55,95],[12,30,75]],   // rsp: blue
+  [[65,35,15],[50,25,8],[75,42,18],[45,20,8]],     // reasonandresolution: copper
+  [[55,38,10],[42,28,5],[65,45,12],[38,22,5]],     // ifimaybefrank: amber
+  [[80,60,8],[65,45,4],[90,68,10],[55,38,3]],      // dab: gold
+];
+let activeNodeNebulaIdx = -1;  // -1 = default
 function lerpBlobSets(setA, setB, t) {
   return setA.map((a, i) => {
     const b = setB[i];
@@ -2328,7 +2393,15 @@ function drawMesh() {
   const w = bgCanvas.width, h = bgCanvas.height;
   bgCtx.clearRect(0, 0, w, h);
   const ga = typeof galaxyAlpha !== 'undefined' ? galaxyAlpha : 0;
-  const baseSet = isLight ? BL : BD;
+  let baseSet = isLight ? BL : BD;
+  // Blend toward active node nebula when focused (dark mode only)
+  if (!isLight && activeNodeNebulaIdx >= 0 && ga < 0.1) {
+    const nc = NODE_NEBULA_DARK[activeNodeNebulaIdx];
+    if (nc) {
+      const nodeSet = BD.map((b, i) => ({ ...b, col: nc[i] || b.col }));
+      baseSet = lerpBlobSets(BD, nodeSet, 0.65);
+    }
+  }
   const galaxySet = isLight ? BGL : BG;
   const blobs = ga > 0.01 ? lerpBlobSets(baseSet, galaxySet, ga) : baseSet;
   const bgBase = isLight ? '#f5f1ea' : '#05030a';
@@ -2429,8 +2502,19 @@ function animate(ts) {
   tickMoons(elapsed);
   updateGalaxyAlpha();
 
-  gold1.intensity = (isLight ? 0 : 5) + Math.sin(elapsed * 0.8) * 0.5;
-  gold2.intensity = (isLight ? 0 : 4) + Math.sin(elapsed * 0.6 + 1.2) * 0.4;
+  // Blend point lights toward focused node color
+  const _ni = activeNodeNebulaIdx;
+  const _nc = (!isLight && _ni >= 0 && NODE_NEBULA_DARK[_ni]) ? NODE_NEBULA_DARK[_ni][0] : null;
+  if (_nc) {
+    const _hex = (_nc[0]<<16)|(_nc[1]<<8)|_nc[2];
+    gold1.color.setHex(_hex); gold2.color.setHex(_hex);
+    gold1.intensity = 5 + Math.sin(elapsed * 0.8) * 0.5;
+    gold2.intensity = 4 + Math.sin(elapsed * 0.6 + 1.2) * 0.4;
+  } else {
+    gold1.color.setHex(0xdaa520); gold2.color.setHex(0xb87333);
+    gold1.intensity = (isLight ? 0 : 5) + Math.sin(elapsed * 0.8) * 0.5;
+    gold2.intensity = (isLight ? 0 : 4) + Math.sin(elapsed * 0.6 + 1.2) * 0.4;
+  }
   if (typeof galaxyAlpha !== 'undefined') {
     const ga = galaxyAlpha;
     galaxyLight1.intensity = isLight ? 0 : ga * (6 + Math.sin(elapsed * 0.4) * 1.0);
