@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:#05030a;transition:background 0.6s;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;}
+html,body{width:100%;height:100%;overflow:hidden;background:#05030a;transition:background 0.6s;user-select:none;-webkit-user-select:none;}
 body.light{background:#ffffff;}
 canvas{display:block;width:100vw;height:100vh;position:relative;z-index:1;}
 #bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;}
@@ -323,44 +323,53 @@ body.light .gc-moon-pill:hover{background:rgba(0,0,0,0.05);color:#000;}
   background:rgba(5,3,10,0.97);
   border-top:1px solid rgba(218,165,32,0.12);
   backdrop-filter:blur(20px);
-  align-items:center;justify-content:space-between;
-  padding:0 20px;
+  align-items:stretch;
+  padding:0;
 }
 @media(max-width:768px){
   #mobile-nav-bar{display:flex;}
 }
-.ms-nav{display:flex;gap:6px;}
 .ms-navbtn{
-  background:none;border:1px solid rgba(218,165,32,0.16);
+  flex:1;
+  background:none;border:none;
   color:rgba(218,165,32,0.45);
-  height:30px;padding:0 14px;
-  border-radius:3px;cursor:pointer;font-size:9px;
-  letter-spacing:0.14em;text-transform:uppercase;
+  font-family:'DM Mono',monospace;font-size:8px;
+  letter-spacing:0.18em;text-transform:uppercase;
   display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;
+  cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
+  transition:color 0.15s,background 0.15s;
+  border-right:1px solid rgba(218,165,32,0.08);
 }
-.ms-navbtn:hover:not(:disabled){color:#f5ecd5;border-color:rgba(218,165,32,0.55);}
-.ms-navbtn:disabled{opacity:0.18;}
+.ms-navbtn:last-child{border-right:none;}
+.ms-navbtn:hover{color:rgba(218,165,32,0.85);background:rgba(218,165,32,0.05);}
+.ms-navbtn:active{color:#daa520;background:rgba(218,165,32,0.10);}
+.ms-navbtn:disabled{opacity:0.18;pointer-events:none;}
 .msclose{
-  background:none;border:1px solid rgba(218,165,32,0.16);
-  color:rgba(218,165,32,0.40);
-  width:30px;height:30px;border-radius:3px;
-  cursor:pointer;font-size:13px;
+  flex:0 0 48px;
+  background:none;border:none;
+  border-left:1px solid rgba(218,165,32,0.08);
+  border-right:1px solid rgba(218,165,32,0.08);
+  color:rgba(218,165,32,0.35);
+  font-family:'DM Mono',monospace;font-size:12px;
   display:flex;align-items:center;justify-content:center;
-  font-family:'DM Mono',monospace;
+  cursor:pointer;
   -webkit-tap-highlight-color:transparent;
+  transition:color 0.15s,background 0.15s;
 }
-.msclose:hover{color:#f5ecd5;border-color:rgba(218,165,32,0.55);}
+.msclose:hover{color:rgba(218,165,32,0.80);background:rgba(218,165,32,0.05);}
+.msclose:active{color:#daa520;}
 /* hide the old msft footer inside the sheet */
 .msft{display:none;}
+.ms-nav{display:none;}
 
 /* Light theme mobile nav bar */
-body.light #mobile-nav-bar{background:rgba(255,255,255,0.97);border-top-color:rgba(0,0,0,0.10);}
-body.light .ms-navbtn{border-color:rgba(0,0,0,0.14);color:rgba(0,0,0,0.45);}
-body.light .ms-navbtn:hover:not(:disabled){color:#000;border-color:rgba(0,0,0,0.55);}
-body.light .msclose{border-color:rgba(0,0,0,0.14);color:rgba(0,0,0,0.40);}
+body.light #mobile-nav-bar{background:rgba(255,255,255,0.97);border-top-color:rgba(0,0,0,0.09);}
+body.light .ms-navbtn{color:rgba(0,0,0,0.45);border-right-color:rgba(0,0,0,0.07);}
+body.light .ms-navbtn:hover{color:#000;background:rgba(0,0,0,0.04);}
+body.light .msclose{color:rgba(0,0,0,0.35);border-color:rgba(0,0,0,0.07);}
+body.light .msclose:hover{color:#000;background:rgba(0,0,0,0.04);}
 body.light #msheet{background:rgba(255,255,255,0.99);border-top-color:rgba(0,0,0,0.08);}
 body.light .msera{color:rgba(0,0,0,0.42);}
 body.light .mstitle{color:#000;}
@@ -611,11 +620,11 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
   <div class="msbody" id="ms-body"></div>
 </div>
 
-<!-- Fixed mobile nav bar: prev/next always at bottom:0, close when panel open -->
+<!-- Fixed mobile nav bar: PREV | ✕ | NEXT full-width -->
 <div id="mobile-nav-bar">
   <button class="ms-navbtn" id="ms-prev" onclick="navPrev()">&#8592; Prev</button>
+  <button class="msclose" id="mobile-close-btn" onclick="closePanel()">✕</button>
   <button class="ms-navbtn" id="ms-next" onclick="navNext()">Next &#8594;</button>
-  <button class="msclose" id="mobile-close-btn" onclick="closePanel()" style="display:none">✕</button>
 </div>
 
 <!-- moon ghost disabled -->
@@ -1946,8 +1955,6 @@ function openPanel(era) {
   document.getElementById('ms-prev').disabled = idx === 0;
   document.getElementById('ms-next').disabled = idx === ERAS.length - 1;
   document.getElementById('msheet').classList.add('on');
-  const _mcb = document.getElementById('mobile-close-btn');
-  if (_mcb) _mcb.style.display = '';
 
   document.getElementById('era-year').textContent = era.year;
   document.getElementById('era-name').textContent = era.era;
@@ -1961,8 +1968,6 @@ window.closePanel = function () {
   document.getElementById('ghost').classList.remove('on');
   document.getElementById('msheet').classList.remove('on');
   hideSentGhost();
-  const _mcb2 = document.getElementById('mobile-close-btn');
-  if (_mcb2) _mcb2.style.display = 'none';
   // Leave focusedEra, isFocused, scenePivot, camTarget all untouched.
 };
 
@@ -1977,17 +1982,20 @@ function eraPreset(era) {
   // theta: azimuth (which direction camera approaches from)
   // phi:   elevation (π*0.5 = horizon, lower = looking up more steeply)
   // radius: intimacy (smaller = closer)
+  // phi 0.28-0.35π: camera 27-45° above horizon, looks DOWN at node.
+  // Node naturally appears in upper ~40% of canvas without any Y offset.
+  // Sheet covers bottom 45% of screen, so upper 55% is the canvas zone.
+  // Lower phi = more overhead = node lower in frame (more centered).
   const presets = {
-    //              theta              phi                radius
-    'origin':       { theta: Math.PI*0.60, phi: Math.PI*0.38, radius: 16 },
-    'wolfie-love':  { theta: Math.PI*0.52, phi: Math.PI*0.37, radius: 20 },
-    'wolfie-life':  { theta: Math.PI*0.68, phi: Math.PI*0.36, radius: 22 },
-    'intoview':     { theta: Math.PI*0.58, phi: Math.PI*0.38, radius: 19 },
-    'emdash':       { theta: Math.PI*0.72, phi: Math.PI*0.35, radius: 24 },
-    'rsp':          { theta: Math.PI*0.55, phi: Math.PI*0.37, radius: 21 },
-    'reasonandresolution': { theta: Math.PI*0.64, phi: Math.PI*0.37, radius: 20 },
-    'ifimaybefrank':{ theta: Math.PI*0.50, phi: Math.PI*0.39, radius: 17 },
-    'dab':          { theta: Math.PI*0.60, phi: Math.PI*0.38, radius: 15 },
+    'origin':              { theta: Math.PI*0.60, phi: Math.PI*0.30, radius: 16 },
+    'wolfie-love':         { theta: Math.PI*0.52, phi: Math.PI*0.28, radius: 20 },
+    'wolfie-life':         { theta: Math.PI*0.68, phi: Math.PI*0.27, radius: 22 },
+    'intoview':            { theta: Math.PI*0.58, phi: Math.PI*0.30, radius: 18 },
+    'emdash':              { theta: Math.PI*0.72, phi: Math.PI*0.26, radius: 24 },
+    'rsp':                 { theta: Math.PI*0.55, phi: Math.PI*0.28, radius: 20 },
+    'reasonandresolution': { theta: Math.PI*0.64, phi: Math.PI*0.29, radius: 19 },
+    'ifimaybefrank':       { theta: Math.PI*0.50, phi: Math.PI*0.31, radius: 16 },
+    'dab':                 { theta: Math.PI*0.60, phi: Math.PI*0.30, radius: 14 },
   };
   return presets[era.id] || { theta: Math.PI*0.60, phi: Math.PI*0.48, radius: 14 };
 }
@@ -2010,14 +2018,8 @@ function focusEra(era) {
   const panelShift = isMobileView ? 0 : 3.5;
   const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
   const targetPivot = era._pos.clone().addScaledVector(screenRight, panelShift);
-  if (isMobileView) {
-    // Camera is near-horizontal (phi~0.38π). Screen-vertical ≈ world-Y at this angle.
-    // Shift pivot UP in world Y so node appears in upper-center, clear of bottom sheet.
-    // Bottom sheet covers ~45% of screen. Need node in top ~35%.
-    // At radius~20 and phi~0.38π, 1 world unit ≈ ~4% screen height.
-    // Target: node at ~30% from top → shift up ~3 units from center.
-    targetPivot.y += 3.5;
-  }
+  // No Y shift — pivot stays at node position.
+  // Camera phi (elevation) handles vertical placement: lower phi = camera higher up = node lower in frame.
   scenePivotTgt.copy(targetPivot);
 
   // Fire the swoop: outward arc, sweep, close in
@@ -2156,11 +2158,9 @@ cvs.addEventListener('pointermove', e => {
   posTooltip(e.clientX, e.clientY);
 
   if (e.buttons && e.button !== 2) {
-    // Mobile: no drag-to-orbit — that's handled by swipe-to-navigate on pointerup
-    if (isMobileDevice()) return;
-
     const dx = e.clientX - pointerDownX, dy = e.clientY - pointerDownY;
-    if (!drag && Math.sqrt(dx*dx + dy*dy) > 4) {
+    const dragThreshold = isMobileDevice() ? 12 : 4; // slightly more resistant on mobile
+    if (!drag && Math.sqrt(dx*dx + dy*dy) > dragThreshold) {
       drag = true;
       if (swoop.active) {
         swoop.active = false;
@@ -2171,8 +2171,9 @@ cvs.addEventListener('pointermove', e => {
     }
     if (drag) {
       isDragging = true;
-      camTarget.theta -= (e.clientX - lastDragX) * 0.005;
-      camTarget.phi = Math.max(0.04, Math.min(Math.PI * 0.48, camTarget.phi + (e.clientY - lastDragY) * 0.005));
+      const sensitivity = isMobileDevice() ? 0.004 : 0.005;
+      camTarget.theta -= (e.clientX - lastDragX) * sensitivity;
+      camTarget.phi = Math.max(0.04, Math.min(Math.PI * 0.48, camTarget.phi + (e.clientY - lastDragY) * sensitivity));
     }
     lastDragX = e.clientX; lastDragY = e.clientY;
   } else {
@@ -2204,16 +2205,31 @@ cvs.addEventListener('pointerup', e => {
       return;
     }
 
-    // Short tap — treat as node tap or long-press-less-than-threshold
-    if (dist < 12) {
+    // Short tap: open panel for current focused node, or jump to tapped node
+    if (dist < 16) {
       if (handleGalaxyClick(mouse)) return;
       raycaster.setFromCamera(mouse, cam);
       const hits = raycaster.intersectObjects(getAllHittable());
       if (hits.length) {
         const nodeObj = nodeObjects.find(o => o.mesh === hits[0].object || o.hitMesh === hits[0].object);
-        if (nodeObj) focusEra(nodeObj.era);
+        if (nodeObj) {
+          if (focusedEra && nodeObj.era.id === focusedEra.id) {
+            // Tap on focused node = open its panel
+            openPanel(focusedEra);
+          } else {
+            // Tap on different node = navigate to it
+            focusEra(nodeObj.era);
+          }
+        }
+      } else if (focusedEra) {
+        // Tap on empty canvas = toggle panel
+        const sheet = document.getElementById('msheet');
+        if (sheet.classList.contains('on')) {
+          document.getElementById('msheet').classList.remove('on');
+        } else {
+          openPanel(focusedEra);
+        }
       }
-      // On mobile, tapping empty space does NOT exit focus — keeps the tour lock
     }
     return;
   }
@@ -2251,7 +2267,7 @@ function lockPivotToFocus() {
   const panelShift = isMobileView ? 0 : 3.5;
   const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
   const p = focusedEra._pos.clone().addScaledVector(screenRight, panelShift);
-  if (isMobileView) p.y += 3.5;
+  // No Y shift on mobile — pivot stays at node
   scenePivotTgt.copy(p);
   scenePivot.copy(p);
 }
@@ -2538,9 +2554,28 @@ function tickMesh() {
 drawMesh(); tickMesh();
 applyTheme(); // init with default theme (light)
 
-// Mobile: auto-enter tour at node 0 so camera is always in a preset position
+// Mobile: position camera at first node preset without opening the panel
+// This gives a "pseudo-focused" state — node is framed, panel is closed
 if (window.innerWidth <= 768) {
-  requestAnimationFrame(() => focusEra(ERAS[0]));
+  requestAnimationFrame(() => {
+    const era = ERAS[0];
+    const preset = eraPreset(era);
+    isFocused = true;
+    focusedEra = era;
+    activeNodeNebulaIdx = 0;
+    const THETA = preset.theta;
+    const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
+    const targetPivot = era._pos.clone();
+    scenePivotTgt.copy(targetPivot);
+    swoopTo(preset.phi, preset.theta, preset.radius, targetPivot);
+    camTarget.phi    = preset.phi;
+    camTarget.theta  = preset.theta;
+    camTarget.radius = preset.radius;
+    highlightConnections(era);
+    // Update era label but do NOT open the panel sheet
+    document.getElementById('era-year').textContent = era.year;
+    document.getElementById('era-name').textContent = era.era;
+  });
 }
 
 // ─────────────────────────────────────────────────────────
