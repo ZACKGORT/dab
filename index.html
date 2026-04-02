@@ -925,7 +925,7 @@ ERAS.forEach(e => { ERA_BY_ID[e.id] = e; });
 // ─────────────────────────────────────────────────────────
 // THREE.JS SETUP
 // ─────────────────────────────────────────────────────────
-let isLight = true;
+let isLight = false;
 const cvs = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({ canvas: cvs, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -1855,7 +1855,24 @@ function toggleTheme() {
   const thb = document.getElementById('theme-toggle-hud');
   if (thb) thb.textContent = isLight ? 'DARK' : 'LIGHT';
 }
-document.getElementById('brand').addEventListener('click', () => {
+// Brand: tap = overview, long-press = theme toggle (mobile)
+let brandLongPressTimer = null;
+const brandEl = document.getElementById('brand');
+brandEl.addEventListener('pointerdown', () => {
+  brandLongPressTimer = setTimeout(() => {
+    brandLongPressTimer = null;
+    toggleTheme();
+    // Brief visual flash on the brand to confirm
+    brandEl.style.opacity = '0.4';
+    setTimeout(() => brandEl.style.opacity = '', 180);
+  }, 500);
+});
+brandEl.addEventListener('pointerup',    () => clearTimeout(brandLongPressTimer));
+brandEl.addEventListener('pointerleave', () => clearTimeout(brandLongPressTimer));
+brandEl.addEventListener('click', () => {
+  if (!brandLongPressTimer && brandLongPressTimer !== null) return; // was a long-press, skip click
+  clearTimeout(brandLongPressTimer);
+  brandLongPressTimer = null;
   // Close any open panel and zoom out to a side view of the full spiral
   closePanel();
   if (currentLayer === LAYER_GALAXY) switchLayer(LAYER_ORRERY);
