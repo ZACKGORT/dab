@@ -1688,7 +1688,7 @@ function handleGalaxyClick(mouseVec) {
 
 // Stubs for old tl-prev/tl-next (hidden but referenced)
 document.getElementById('tl-prev').addEventListener('click', () => {
-  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 1;
+  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 0;
   if (idx > 0) focusEra(ERAS[idx - 1]);
 });
 document.getElementById('tl-next').addEventListener('click', () => {
@@ -1828,7 +1828,7 @@ function switchView(view) {
 document.querySelectorAll('.hud-btn[data-view]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
 // ─── NAVIGATION ─────────────────────────────────────────
 function navPrev() {
-  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 1;
+  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 0;
   focusEra(idx > 0 ? ERAS[idx - 1] : ERAS[ERAS.length - 1]);
 }
 function navNext() {
@@ -1976,7 +1976,10 @@ window.resetView = function () {
   swoop.active = false;
   activeNodeNebulaIdx = -1;
   scenePivotTgt.set(0, 0, 0);
+  scenePivot.set(0, 0, 0);
+  // Set both target AND current so the reset is immediate, not a slow drift
   camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
+  camState.radius  = 68; camState.phi  = Math.PI * 0.28; camState.theta  = Math.PI * 0.1;
   resetHighlights();
   tooltip.classList.remove('vis');
   updateMobileCloseBtn();
@@ -2282,7 +2285,9 @@ cvs.addEventListener('pointerup', e => {
       swoop.active = false;
       activeNodeNebulaIdx = -1;
       scenePivotTgt.set(0, 0, 0);
+      scenePivot.set(0, 0, 0);
       camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
+      camState.radius  = 68; camState.phi  = Math.PI * 0.28; camState.theta  = Math.PI * 0.1;
       resetHighlights();
     }
   }
