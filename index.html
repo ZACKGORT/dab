@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>dab.cx · design (for agentic) architecture (& human) bridges · client experience</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><text y='28' font-size='24' font-family='monospace' font-weight='300' fill='%23daa520'>&lt;/</text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><text x='2' y='26' font-size='22' font-family='monospace' font-weight='300' fill='%23daa520bf' letter-spacing='-1'>&lt;/</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -591,7 +591,7 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
       <div class="gchead-nav">
         <button class="gcnav-btn" id="gc-prev" title="Previous">&#8592;</button>
         <button class="gcnav-btn" id="gc-next" title="Next">&#8594;</button>
-        <button class="gcclose" onclick="closePanel()">✕</button>
+        <button class="gcclose" onclick="smartClose()" title="Close panel · Reset view">✕</button>
       </div>
     </div>
     <!-- IFRAME HERO -->
@@ -623,7 +623,7 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
 <!-- Fixed mobile nav bar: PREV | ✕ | NEXT full-width -->
 <div id="mobile-nav-bar">
   <button class="ms-navbtn" id="ms-prev" onclick="navPrev()">&#8592; Prev</button>
-  <button class="msclose" id="mobile-close-btn" onclick="closePanel()">✕</button>
+  <button class="msclose" id="mobile-close-btn" onclick="smartClose()">✕</button>
   <button class="ms-navbtn" id="ms-next" onclick="navNext()">Next &#8594;</button>
 </div>
 
@@ -1962,13 +1962,30 @@ function openPanel(era) {
 }
 
 window.closePanel = function () {
-  // Dismiss the overlay — but keep focus, camera, and pivot exactly where they are.
-  // isFocused stays true; the user can keep zooming/orbiting around the active node.
-  // Focus is only released when the user navigates away or taps empty space.
   document.getElementById('ghost').classList.remove('on');
   document.getElementById('msheet').classList.remove('on');
   hideSentGhost();
-  // Leave focusedEra, isFocused, scenePivot, camTarget all untouched.
+};
+
+window.resetView = function () {
+  document.getElementById('ghost').classList.remove('on');
+  document.getElementById('msheet').classList.remove('on');
+  hideSentGhost();
+  focusedEra = null; isFocused = false;
+  swoop.active = false;
+  activeNodeNebulaIdx = -1;
+  scenePivotTgt.set(0, 0, 0);
+  camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
+  resetHighlights();
+  tooltip.classList.remove('vis');
+};
+
+window.smartClose = function () {
+  if (isFocused && focusedEra) {
+    closePanel();
+  } else {
+    resetView();
+  }
 };
 
 // ─────────────────────────────────────────────────────────
@@ -2157,7 +2174,7 @@ cvs.addEventListener('pointermove', e => {
 
   if (e.buttons && e.button !== 2) {
     const dx = e.clientX - pointerDownX, dy = e.clientY - pointerDownY;
-    const dragThreshold = isMobileDevice() ? 12 : 4; // slightly more resistant on mobile
+    const dragThreshold = isMobileDevice() ? 6 : 4; // low on mobile so swipes win early
     if (!drag && Math.sqrt(dx*dx + dy*dy) > dragThreshold) {
       drag = true;
       if (swoop.active) {
@@ -2188,8 +2205,8 @@ cvs.addEventListener('pointerup', e => {
 
   if (isMobileDevice()) {
     // ── MOBILE: swipe-to-navigate tour ──
-    const SWIPE_THRESHOLD = 48;   // px — minimum horizontal swipe distance
-    const AXIS_RATIO = 1.4;       // horizontal must dominate vertical by this factor
+    const SWIPE_THRESHOLD = 24;   // px — very easy to trigger
+    const AXIS_RATIO = 1.1;       // barely needs to be horizontal — diagonal swipes work
 
     if (dist > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * AXIS_RATIO) {
       // Horizontal swipe detected
@@ -2204,7 +2221,7 @@ cvs.addEventListener('pointerup', e => {
     }
 
     // Short tap: open panel for current focused node, or jump to tapped node
-    if (dist < 16) {
+    if (dist < 12) {
       if (handleGalaxyClick(mouse)) return;
       raycaster.setFromCamera(mouse, cam);
       const hits = raycaster.intersectObjects(getAllHittable());
@@ -2307,7 +2324,7 @@ cvs.addEventListener('touchmove', e => {
 cvs.addEventListener('touchend', () => { clearTimeout(longPressTimer); });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { if (tocVisible) { closeTOC(); } else if (gridVisible) { closeGridView(); switchView('spiral'); } else { closePanel(); } }
+  if (e.key === 'Escape') { if (tocVisible) { closeTOC(); } else if (gridVisible) { closeGridView(); switchView('spiral'); } else { smartClose(); } }
   if (e.code === 'Space') { e.preventDefault(); orbitPaused = !orbitPaused; }
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
     e.preventDefault();
