@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>dab.cx · design (for agentic) architecture (& human) bridges · client experience</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><text y='28' font-size='24' font-family='monospace' font-weight='300' fill='%23daa520'>&lt;/</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><text y='28' font-size='24' font-family='monospace' font-weight='300' fill='%23daa520'>&lt;/</text></svg>">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:#05030a;transition:background 0.6s;}
@@ -55,16 +55,7 @@ body.light #era-name{color:rgba(0,0,0,0.55);}
   transition:background 0.5s,border-color 0.5s;
 }
 @media(max-width:768px){
-  #hud{right:auto;left:0;right:0;top:auto;bottom:24px;
-    justify-content:center;border-radius:0;
-    border-left:none;border-right:none;border-bottom:none;
-    background:rgba(5,3,10,0.92);backdrop-filter:blur(16px);}
-  /* Mobile: only show prev/next — hide views, separators, theme */
-  #hud .hud-btn[data-view],
-  #hud #theme-toggle-hud,
-  #hud .hud-sep{display:none;}
-  #hud #hud-prev-btn,
-  #hud #hud-next-btn{display:flex;padding:10px 28px;font-size:9px;letter-spacing:0.20em;}
+  #hud{display:none;}  /* Mobile: nav handled by #mobile-nav-bar */
 }
 .hud-btn{
   background:none;border:none;cursor:pointer;
@@ -296,7 +287,21 @@ body.light .gc-moon-pill{color:rgba(0,0,0,0.50);border-color:rgba(0,0,0,0.18);}
 body.light .gc-moon-pill:hover{background:rgba(0,0,0,0.05);color:#000;}
 
 /* MOBILE SHEET */
-#msheet{display:none;position:fixed;bottom:0;left:0;right:0;z-index:700;background:rgba(5,3,10,0.98);border-top:1px solid rgba(218,165,32,0.10);border-radius:14px 14px 0 0;max-height:72vh;overflow-y:auto;scrollbar-width:none;transform:translateY(100%);transition:transform 0.38s cubic-bezier(0.22,1,0.36,1);backdrop-filter:blur(28px);}
+/* Mobile sheet — slides up behind the fixed nav bar */
+#msheet{
+  display:none;position:fixed;
+  bottom:48px;  /* sits above the fixed mobile nav bar */
+  left:0;right:0;
+  z-index:700;
+  background:rgba(5,3,10,0.98);
+  border-top:1px solid rgba(218,165,32,0.10);
+  border-radius:14px 14px 0 0;
+  max-height:calc(72vh - 48px);
+  overflow-y:auto;scrollbar-width:none;
+  transform:translateY(calc(100% + 48px));
+  transition:transform 0.38s cubic-bezier(0.22,1,0.36,1);
+  backdrop-filter:blur(28px);
+}
 #msheet::-webkit-scrollbar{display:none;}
 #msheet.on{transform:translateY(0);}
 .mshandle{width:36px;height:4px;background:rgba(218,165,32,0.20);border-radius:2px;margin:12px auto 6px;}
@@ -307,13 +312,60 @@ body.light .gc-moon-pill:hover{background:rgba(0,0,0,0.05);color:#000;}
 .ms-images::-webkit-scrollbar{display:none;}
 .ms-img-frame{width:80px;height:60px;flex-shrink:0;border-radius:3px;overflow:hidden;background:rgba(218,165,32,0.06);border:1px solid rgba(218,165,32,0.10);}
 .ms-img-frame img{width:100%;height:100%;object-fit:cover;opacity:0.80;}
-.msbody{padding:13px 20px 14px;font-family:'Crimson Text',serif;font-size:15px;line-height:1.72;color:rgba(245,236,213,0.60);}
-.msft{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 14px;}
-.ms-nav{display:flex;gap:4px;}
-.ms-navbtn{background:none;border:1px solid rgba(218,165,32,0.16);color:rgba(218,165,32,0.35);width:26px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;}
+.msbody{padding:13px 20px 20px;font-family:'Crimson Text',serif;font-size:15px;line-height:1.72;color:rgba(245,236,213,0.60);}
+
+/* Fixed mobile nav bar — always at bottom:0, z above sheet */
+#mobile-nav-bar{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  height:48px;
+  z-index:800;
+  background:rgba(5,3,10,0.97);
+  border-top:1px solid rgba(218,165,32,0.12);
+  backdrop-filter:blur(20px);
+  align-items:center;justify-content:space-between;
+  padding:0 20px;
+}
+@media(max-width:768px){
+  #mobile-nav-bar{display:flex;}
+}
+.ms-nav{display:flex;gap:6px;}
+.ms-navbtn{
+  background:none;border:1px solid rgba(218,165,32,0.16);
+  color:rgba(218,165,32,0.45);
+  height:30px;padding:0 14px;
+  border-radius:3px;cursor:pointer;font-size:9px;
+  letter-spacing:0.14em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
 .ms-navbtn:hover:not(:disabled){color:#f5ecd5;border-color:rgba(218,165,32,0.55);}
-.ms-navbtn:disabled{opacity:0.2;}
-.msclose{background:none;border:1px solid rgba(218,165,32,0.16);color:rgba(218,165,32,0.35);width:22px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;}
+.ms-navbtn:disabled{opacity:0.18;}
+.msclose{
+  background:none;border:1px solid rgba(218,165,32,0.16);
+  color:rgba(218,165,32,0.40);
+  width:30px;height:30px;border-radius:3px;
+  cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;
+  -webkit-tap-highlight-color:transparent;
+}
+.msclose:hover{color:#f5ecd5;border-color:rgba(218,165,32,0.55);}
+/* hide the old msft footer inside the sheet */
+.msft{display:none;}
+
+/* Light theme mobile nav bar */
+body.light #mobile-nav-bar{background:rgba(255,255,255,0.97);border-top-color:rgba(0,0,0,0.10);}
+body.light .ms-navbtn{border-color:rgba(0,0,0,0.14);color:rgba(0,0,0,0.45);}
+body.light .ms-navbtn:hover:not(:disabled){color:#000;border-color:rgba(0,0,0,0.55);}
+body.light .msclose{border-color:rgba(0,0,0,0.14);color:rgba(0,0,0,0.40);}
+body.light #msheet{background:rgba(255,255,255,0.99);border-top-color:rgba(0,0,0,0.08);}
+body.light .msera{color:rgba(0,0,0,0.42);}
+body.light .mstitle{color:#000;}
+body.light .msbody{color:rgba(0,0,0,0.75);}
+
 @media(max-width:768px){#ghost{display:none;}#msheet{display:block;}}
 
 /* TIMELINE SPINE INDICATOR */
@@ -464,7 +516,6 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
 
 <div id="brand">
   <div id="brand-logo">
-    <!-- Saturn + moons logo: orbit ring, planet, 4 node-dots -->
     <svg id="brand-saturn" width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" fill="none">
       <text x="2" y="26" 
         font-family="DM Mono, monospace" 
@@ -498,8 +549,7 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
   <button class="hud-btn" data-view="grid">GRID</button>
   <button class="hud-btn" data-view="galaxy">GALAXY</button>
   <div class="hud-sep"></div>
-  <button class="hud-btn" id="hud-prev-btn">&#8592; PREV</button>
-  <button class="hud-btn" id="hud-next-btn">NEXT &#8594;</button>
+  <button class="hud-btn" id="theme-toggle-hud">DARK</button>
 </div>
 
 <!-- hidden stubs so JS refs don't break -->
@@ -559,13 +609,13 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
   </div>
   <div class="ms-images" id="ms-images"></div>
   <div class="msbody" id="ms-body"></div>
-  <div class="msft">
-    <div class="ms-nav">
-      <button class="ms-navbtn" id="ms-prev">&#8592;</button>
-      <button class="ms-navbtn" id="ms-next">&#8594;</button>
-    </div>
-    <button class="msclose" onclick="closePanel()">✕</button>
-  </div>
+</div>
+
+<!-- Fixed mobile nav bar: prev/next always at bottom:0, close when panel open -->
+<div id="mobile-nav-bar">
+  <button class="ms-navbtn" id="ms-prev" onclick="navPrev()">&#8592; Prev</button>
+  <button class="ms-navbtn" id="ms-next" onclick="navNext()">Next &#8594;</button>
+  <button class="msclose" id="mobile-close-btn" onclick="closePanel()" style="display:none">✕</button>
 </div>
 
 <!-- moon ghost disabled -->
@@ -627,7 +677,7 @@ const ERAS = [
       { label: 'Format shapes attention', desc: 'The medium is the message, sentence-by-sentence.' },
       { label: 'dab.cx', desc: 'Design (for agentic) Architecture (& Human) Bridges.' },
     ],
-    color: 0xdaa520, hex: '#daa520'
+    color: 0xf5d020, hex: '#f5d020'
   },
   {
     id: 'wolfie-love',
@@ -652,7 +702,7 @@ const ERAS = [
       { label: 'Four themes', desc: 'Proof that format shapes attention.' },
       { label: 'Wolfgang', desc: 'Blind. Rescue. Poodle. The reason for all of it.' },
     ],
-    color: 0xf5c842, hex: '#f5c842'
+    color: 0xffe066, hex: '#ffe066'
   },
   {
     id: 'wolfie-life',
@@ -676,7 +726,7 @@ const ERAS = [
       { label: '/food', desc: 'wolfie.life/food — culinary vertical.' },
       { label: '/job', desc: 'wolfie.life/job — employment vertical.' },
     ],
-    color: 0xc49a2e, hex: '#c49a2e'
+    color: 0x00e5cc, hex: '#00e5cc'
   },
   {
     id: 'intoview',
@@ -703,7 +753,7 @@ const ERAS = [
       { label: 'Analytics Layer', desc: 'Bespoke narrative-as-nodes telemetry engine & interface' },
       { label: 'Intentional Friction', desc: 'Atomic approach agnostic to template-typical thinking.' },
     ],
-    color: 0xdaa520, hex: '#daa520'
+    color: 0x4db8ff, hex: '#4db8ff'
   },
   {
     id: 'emdash',
@@ -725,7 +775,7 @@ const ERAS = [
       { label: 'Editorial', desc: 'Writing as interface design.' },
       { label: 'Punctuation', desc: 'The em dash as navigation primitive.' },
     ],
-    color: 0x9a7820, hex: '#9a7820'
+    color: 0xb388ff, hex: '#b388ff'
   },
   {
     id: 'rsp',
@@ -749,7 +799,7 @@ const ERAS = [
       { label: 'Telemetry', desc: 'Live behavioral data inside the reading experience.' },
       { label: 'Three themes', desc: 'Dark · LinkedIn · Raw — the system applied to policy.' },
     ],
-    color: 0x6a9fe0, hex: '#6a9fe0'
+    color: 0x6699ff, hex: '#6699ff'
   },
   {
     id: 'reasonandresolution',
@@ -770,9 +820,9 @@ const ERAS = [
     moons: [
       { label: 'The argument', desc: 'Not a portfolio — a philosophy with evidence.' },
       { label: 'Studio presence', desc: 'Wolfgang & Co. in its most considered form.' },
-      { label: 'Method', desc: 'dab.cx: Design. Architect. Bridge.' },
+      { label: 'Method', desc: 'dab.cx: Design. Architect. Build.' },
     ],
-    color: 0xb87333, hex: '#b87333'
+    color: 0x8fff6e, hex: '#8fff6e'
   },
   {
     id: 'ifimaybefrank',
@@ -797,7 +847,7 @@ const ERAS = [
       { label: 'Session stats', desc: 'Writing telemetry as interface.' },
       { label: 'Wolfgang gallery', desc: 'The photographs. The reason for the words.' },
     ],
-    color: 0xc49a2e, hex: '#c49a2e'
+    color: 0xff6ecf, hex: '#ff6ecf'
   },
   {
     id: 'dab',
@@ -809,19 +859,19 @@ const ERAS = [
     url: 'https://dab.cx',
     body: 'dab.cx embodies the approach in three words: Design (for agentic) Architecture (& Human) Bridges. — a conviction held by one person who enjoys thinking at the extreme edge of intentionality.',
     sentences: [
-      'Design. Architect. Bridge.',
+      'Design. Architect. Build.',
       'Not design then hand off. Not design then wait.',
       'dab.cx embodies the approach',
       'I think at the extreme edge of intentionality.',
       'The constraint is the argument.',
     ],
     moons: [
-      { label: 'design', desc: 'Not decoration — systems thinking made visible.' },
-      { label: 'architect', desc: 'Structure before surface, always.' },
-      { label: 'bridge', desc: 'Vanilla HTML/CSS/JS. The single file as constraint and argument.' },
-      { label: 'agency', desc: 'No handoff. No translation loss. Continuous.' },
+      { label: 'Design', desc: 'Not decoration — systems thinking made visible.' },
+      { label: 'Architect', desc: 'Structure before surface, always.' },
+      { label: 'Build', desc: 'Vanilla HTML/CSS/JS. The single file as constraint and argument.' },
+      { label: 'One motion', desc: 'No handoff. No translation loss. Continuous.' },
     ],
-    color: 0xdaa520, hex: '#daa520'
+    color: 0xffd700, hex: '#ffd700'
   },
 ];
 
@@ -860,7 +910,7 @@ ERAS.forEach(e => { ERA_BY_ID[e.id] = e; });
 // ─────────────────────────────────────────────────────────
 // THREE.JS SETUP
 // ─────────────────────────────────────────────────────────
-let isLight = false;
+let isLight = true;
 const cvs = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({ canvas: cvs, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -1279,7 +1329,7 @@ const CLUSTERS = [
     id: 'genesis',
     name: 'Genesis\n& Soul',
     sub: 'The Sentence · wolfie.love · The Origin',
-    color: 0xf5c842, hex: '#f5c842',
+    color: 0xffe066, hex: '#ffe066',
     pos: new THREE.Vector3(-42, 0, -16),
     nodeIds: ['origin', 'wolfie-love'],
     size: 5.5
@@ -1288,7 +1338,7 @@ const CLUSTERS = [
     id: 'platforms',
     name: 'Living\nPlatforms',
     sub: 'wolfie.life · intoview.pro',
-    color: 0xdaa520, hex: '#daa520',
+    color: 0x00e5cc, hex: '#00e5cc',
     pos: new THREE.Vector3(16, 0, -42),
     nodeIds: ['wolfie-life', 'intoview'],
     size: 5.0
@@ -1297,7 +1347,7 @@ const CLUSTERS = [
     id: 'editorial',
     name: 'Editorial\nSurfaces',
     sub: 'emdash.click · ifimaybefrank.com',
-    color: 0xc49a2e, hex: '#c49a2e',
+    color: 0xb388ff, hex: '#b388ff',
     pos: new THREE.Vector3(48, 0, 8),
     nodeIds: ['emdash', 'ifimaybefrank'],
     size: 4.6
@@ -1306,7 +1356,7 @@ const CLUSTERS = [
     id: 'argument',
     name: 'The\nArgument',
     sub: 'reasonandresolution.com · RSP',
-    color: 0x6a9fe0, hex: '#6a9fe0',
+    color: 0x6699ff, hex: '#6699ff',
     pos: new THREE.Vector3(-12, 0, 48),
     nodeIds: ['rsp', 'reasonandresolution'],
     size: 4.8
@@ -1315,7 +1365,7 @@ const CLUSTERS = [
     id: 'method',
     name: 'The\nMethod',
     sub: 'dab.cx · Design. Architect. Build.',
-    color: 0xb87333, hex: '#b87333',
+    color: 0xffd700, hex: '#ffd700',
     pos: new THREE.Vector3(26, 0, 52),
     nodeIds: ['dab'],
     size: 4.2
@@ -1777,16 +1827,21 @@ function navNext() {
   focusEra(idx < ERAS.length - 1 ? ERAS[idx + 1] : ERAS[0]);
 }
 
-document.getElementById('hud-prev-btn').addEventListener('click', navPrev);
-document.getElementById('hud-next-btn').addEventListener('click', navNext);
+// prev/next handled by mobile-nav-bar onclick
 
 // Theme toggle in HUD
-// Theme toggle: click the brand logo
-document.getElementById('brand').addEventListener('click', () => {
+// Theme toggle: brand logo or HUD button
+function toggleTheme() {
   isLight = !isLight;
   applyTheme();
   document.getElementById('theme-toggle').textContent = isLight ? 'Dark' : 'Light';
-});
+  const _thb = document.getElementById('theme-toggle-hud');
+  if (_thb) _thb.textContent = isLight ? 'DARK' : 'LIGHT';
+  const thb = document.getElementById('theme-toggle-hud');
+  if (thb) thb.textContent = isLight ? 'DARK' : 'LIGHT';
+}
+document.getElementById('brand').addEventListener('click', toggleTheme);
+document.getElementById('theme-toggle-hud').addEventListener('click', toggleTheme);
 
 // ─────────────────────────────────────────────────────────
 // PANEL
@@ -1891,6 +1946,8 @@ function openPanel(era) {
   document.getElementById('ms-prev').disabled = idx === 0;
   document.getElementById('ms-next').disabled = idx === ERAS.length - 1;
   document.getElementById('msheet').classList.add('on');
+  const _mcb = document.getElementById('mobile-close-btn');
+  if (_mcb) _mcb.style.display = '';
 
   document.getElementById('era-year').textContent = era.year;
   document.getElementById('era-name').textContent = era.era;
@@ -1904,6 +1961,8 @@ window.closePanel = function () {
   document.getElementById('ghost').classList.remove('on');
   document.getElementById('msheet').classList.remove('on');
   hideSentGhost();
+  const _mcb2 = document.getElementById('mobile-close-btn');
+  if (_mcb2) _mcb2.style.display = 'none';
   // Leave focusedEra, isFocused, scenePivot, camTarget all untouched.
 };
 
@@ -1914,13 +1973,23 @@ let isFocused = false;
 
 // Compute the preset camera for a given era (pure, no side effects)
 function eraPreset(era) {
-  // Fixed world-space angle. Camera sits front-left, looks across right.
-  const theta  = Math.PI * 0.6;
-  // Low elevation — phi near horizon (π/2 = flat). Node sits slightly above
-  // camera eyeline giving the "looking up to center" feel.
-  const phi    = Math.PI * 0.44;  // ~21° above horizon
-  const radius = 20;
-  return { phi, theta, radius };
+  // Per-node camera presets — each a distinct angle, elevation, and distance
+  // theta: azimuth (which direction camera approaches from)
+  // phi:   elevation (π*0.5 = horizon, lower = looking up more steeply)
+  // radius: intimacy (smaller = closer)
+  const presets = {
+    //              theta              phi                radius
+    'origin':       { theta: Math.PI*0.60, phi: Math.PI*0.38, radius: 16 },
+    'wolfie-love':  { theta: Math.PI*0.52, phi: Math.PI*0.37, radius: 20 },
+    'wolfie-life':  { theta: Math.PI*0.68, phi: Math.PI*0.36, radius: 22 },
+    'intoview':     { theta: Math.PI*0.58, phi: Math.PI*0.38, radius: 19 },
+    'emdash':       { theta: Math.PI*0.72, phi: Math.PI*0.35, radius: 24 },
+    'rsp':          { theta: Math.PI*0.55, phi: Math.PI*0.37, radius: 21 },
+    'reasonandresolution': { theta: Math.PI*0.64, phi: Math.PI*0.37, radius: 20 },
+    'ifimaybefrank':{ theta: Math.PI*0.50, phi: Math.PI*0.39, radius: 17 },
+    'dab':          { theta: Math.PI*0.60, phi: Math.PI*0.38, radius: 15 },
+  };
+  return presets[era.id] || { theta: Math.PI*0.60, phi: Math.PI*0.48, radius: 14 };
 }
 
 function focusEra(era) {
@@ -1934,9 +2003,21 @@ function focusEra(era) {
   // Screen-right at theta=0.6π is (cos θ, 0, -sin θ) in world XZ.
   // Moving pivot by +screenRight shifts node leftward in the frame.
   const THETA = preset.theta;
-  const panelShift = window.innerWidth > 768 ? 3.5 : 0;
+  const isMobileView = window.innerWidth <= 768;
+  // Desktop: shift pivot right in screen-space so node clears the right panel
+  // Mobile: shift pivot down in world-Y so node renders in upper 40% of screen,
+  //         clear of the bottom sheet drawer
+  const panelShift = isMobileView ? 0 : 3.5;
   const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
   const targetPivot = era._pos.clone().addScaledVector(screenRight, panelShift);
+  if (isMobileView) {
+    // Camera is near-horizontal (phi~0.38π). Screen-vertical ≈ world-Y at this angle.
+    // Shift pivot UP in world Y so node appears in upper-center, clear of bottom sheet.
+    // Bottom sheet covers ~45% of screen. Need node in top ~35%.
+    // At radius~20 and phi~0.38π, 1 world unit ≈ ~4% screen height.
+    // Target: node at ~30% from top → shift up ~3 units from center.
+    targetPivot.y += 3.5;
+  }
   scenePivotTgt.copy(targetPivot);
 
   // Fire the swoop: outward arc, sweep, close in
@@ -2036,7 +2117,25 @@ function checkHover(clientX, clientY) {
 }
 
 function posTooltip(cx, cy) {
-  tooltip.style.transform = `translate(${cx + 18}px,${cy - 10}px)`;
+  // Clamp so tooltip never overflows viewport edge
+  // On mobile (touch): appear above and to the left of the finger
+  const isMobile = window.innerWidth <= 768;
+  const ttEl = document.getElementById('tt-inner');
+  const ttW = ttEl ? ttEl.offsetWidth || 220 : 220;
+  const ttH = ttEl ? ttEl.offsetHeight || 80 : 80;
+  let x, y;
+  if (isMobile) {
+    // Left of and above the touch point
+    x = cx - ttW - 12;
+    y = cy - ttH - 12;
+  } else {
+    x = cx + 18;
+    y = cy - 10;
+  }
+  // Clamp within viewport
+  x = Math.max(8, Math.min(window.innerWidth  - ttW - 8, x));
+  y = Math.max(8, Math.min(window.innerHeight - ttH - 8, y));
+  tooltip.style.transform = `translate(${x}px,${y}px)`;
 }
 
 let pointerDownX = 0, pointerDownY = 0;
@@ -2104,8 +2203,23 @@ cvs.addEventListener('pointerup', e => {
   if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; }
 });
 
+// Re-lock orbit pivot to the focused node so zoom never drifts off-center
+function lockPivotToFocus() {
+  if (!focusedEra || !isFocused) return;
+  const preset = eraPreset(focusedEra);
+  const THETA = preset.theta;
+  const isMobileView = window.innerWidth <= 768;
+  const panelShift = isMobileView ? 0 : 3.5;
+  const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
+  const p = focusedEra._pos.clone().addScaledVector(screenRight, panelShift);
+  if (isMobileView) p.y += 3.5;
+  scenePivotTgt.copy(p);
+  scenePivot.copy(p);
+}
+
 cvs.addEventListener('wheel', e => {
   if (swoop.active) { swoop.active = false; camTarget.phi = camState.phi; camTarget.theta = camState.theta; camTarget.radius = camState.radius; }
+  lockPivotToFocus();
   const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
   const mn = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MIN : ORRERY_RADIUS_MIN;
   const sensitivity = Math.max(0.012, camTarget.radius * 0.0018);
@@ -2138,6 +2252,7 @@ cvs.addEventListener('touchmove', e => {
     const mx = currentLayer === LAYER_GALAXY ? GALAXY_RADIUS_MAX : ORRERY_RADIUS_MAX;
     const pinchSens = Math.max(0.03, camTarget.radius * 0.004);
     camTarget.radius = Math.max(mn, Math.min(mx, camTarget.radius + delta * pinchSens));
+    lockPivotToFocus();
     pinchDist = dist;
   }
 }, { passive: true });
@@ -2199,6 +2314,8 @@ document.getElementById('toc').addEventListener('click', e => {
 function applyTheme() {
   document.body.classList.toggle('light', isLight);
   document.getElementById('theme-toggle').textContent = isLight ? 'Dark' : 'Light';
+  const _thb = document.getElementById('theme-toggle-hud');
+  if (_thb) _thb.textContent = isLight ? 'DARK' : 'LIGHT';
   allLines.forEach(({ line, darkColor, lightColor, darkOp, lightOp }) => {
     line.material.color.setHex(isLight ? (lightColor || 0x5a3000) : darkColor);
     line.material.opacity = isLight ? lightOp : darkOp;
@@ -2303,15 +2420,15 @@ const BL = [
 // Per-node nebula palettes — indexed by ERAS order
 // Each is [r,g,b] for the dominant nebula blob, dark theme
 const NODE_NEBULA_DARK = [
-  [[80,55,5],[60,35,2],[90,50,8],[50,30,2]],      // origin: gold
-  [[85,70,10],[70,55,5],[95,80,12],[65,50,5]],     // wolfie.love: warm amber
-  [[55,35,75],[45,25,65],[65,42,80],[40,20,60]],   // wolfie.life: violet
-  [[70,50,10],[55,38,5],[80,58,12],[50,32,5]],     // intoview: gold-amber
-  [[40,30,8],[30,22,4],[50,35,10],[28,18,4]],      // emdash: deep bronze
-  [[20,45,90],[15,35,80],[25,55,95],[12,30,75]],   // rsp: blue
-  [[65,35,15],[50,25,8],[75,42,18],[45,20,8]],     // reasonandresolution: copper
-  [[55,38,10],[42,28,5],[65,45,12],[38,22,5]],     // ifimaybefrank: amber
-  [[80,60,8],[65,45,4],[90,68,10],[55,38,3]],      // dab: gold
+  [[90,75,0],[70,60,0],[100,85,5],[60,50,0]],       // origin: electric gold
+  [[95,85,0],[80,70,0],[100,95,10],[70,60,0]],       // wolfie.love: solar yellow
+  [[0,85,78],[0,65,60],[5,95,88],[0,50,45]],         // wolfie.life: cyan-teal
+  [[0,60,100],[0,45,80],[5,70,100],[0,35,70]],       // intoview: electric blue
+  [[55,20,100],[42,12,85],[65,28,100],[35,8,75]],    // emdash: violet
+  [[20,40,100],[12,28,85],[25,52,100],[8,20,80]],    // rsp: indigo-blue
+  [[30,100,15],[20,80,8],[38,100,20],[15,70,5]],     // reasonandresolution: lime
+  [[100,20,75],[85,10,60],[100,30,85],[70,8,55]],    // ifimaybefrank: fuchsia
+  [[100,82,0],[85,68,0],[100,90,5],[70,55,0]],       // dab: bright gold
 ];
 let activeNodeNebulaIdx = -1;  // -1 = default
 function lerpBlobSets(setA, setB, t) {
@@ -2380,6 +2497,7 @@ function tickMesh() {
   requestAnimationFrame(tickMesh);
 }
 drawMesh(); tickMesh();
+applyTheme(); // init with default theme (light)
 
 // ─────────────────────────────────────────────────────────
 // NODE MORPH (spiral ↔ arc)
