@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>dab.cx · design (for agentic) architecture (& human) bridges · client experience</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><text x='2' y='26' font-size='22' font-family='monospace' font-weight='300' fill='%23daa520bf' letter-spacing='-1'>&lt;/</text></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><text y='28' font-size='24' font-family='monospace' font-weight='300' fill='%23daa520'>&lt;/</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -356,15 +356,13 @@ body.light .gc-moon-pill:hover{background:rgba(0,0,0,0.05);color:#000;}
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  overflow:hidden;
-  transition:color 0.15s, background 0.15s, flex 0.22s ease, border-color 0.22s;
-}
-.msclose.hidden{
-  flex:0 0 0px;
-  border-left-color:transparent;
-  border-right-color:transparent;
+  /* Hidden by default — fades in when panel is open */
+  opacity:0;
+  transform:scale(0.7);
   pointer-events:none;
+  transition:color 0.15s, background 0.15s, opacity 0.20s, transform 0.20s;
 }
+body.panel-open .msclose{opacity:1;transform:scale(1);pointer-events:all;}
 .msclose:hover{color:rgba(218,165,32,0.80);background:rgba(218,165,32,0.05);}
 .msclose:active{color:#daa520;}
 /* hide the old msft footer inside the sheet */
@@ -376,6 +374,7 @@ body.light #mobile-nav-bar{background:rgba(255,255,255,0.97);border-top-color:rg
 body.light .ms-navbtn{color:rgba(0,0,0,0.45);border-right-color:rgba(0,0,0,0.07);}
 body.light .ms-navbtn:hover{color:#000;background:rgba(0,0,0,0.04);}
 body.light .msclose{color:rgba(0,0,0,0.35);border-color:rgba(0,0,0,0.07);}
+body.light.panel-open .msclose{opacity:1;transform:scale(1);pointer-events:all;}
 body.light .msclose:hover{color:#000;background:rgba(0,0,0,0.04);}
 body.light #msheet{background:rgba(255,255,255,0.99);border-top-color:rgba(0,0,0,0.08);}
 body.light .msera{color:rgba(0,0,0,0.42);}
@@ -544,11 +543,11 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
     </svg>
     <div id="brand-text">
       <div id="brand-name">dab.cx</div>
-      <div id="brand-sub">by Zack Gort</div>
+      <div id="brand-sub">design • architecture • bridge • client • experience</div>
     </div>
   </div>
   <!-- Hover ghost: full dab.cx acronym -->
-  <div id="brand-dab">design [for] agentic architecture, bridging [the human] client experience.</div>
+  <div id="brand-dab">design (for agentic) architecture (& human) bridges · client experience</div>
 </div>
 
 <div id="era-label">
@@ -598,7 +597,7 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
       <div class="gchead-nav">
         <button class="gcnav-btn" id="gc-prev" title="Previous">&#8592;</button>
         <button class="gcnav-btn" id="gc-next" title="Next">&#8594;</button>
-        <button class="gcclose" onclick="smartClose()" title="Close panel · Reset view">✕</button>
+        <button class="gcclose" onclick="closePanel()">✕</button>
       </div>
     </div>
     <!-- IFRAME HERO -->
@@ -630,7 +629,7 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
 <!-- Fixed mobile nav bar: PREV | ✕ | NEXT full-width -->
 <div id="mobile-nav-bar">
   <button class="ms-navbtn" id="ms-prev" onclick="navPrev()">&#8592; Prev</button>
-  <button class="msclose hidden" id="mobile-close-btn" onclick="smartClose()">✕</button>
+  <button class="msclose" id="mobile-close-btn" onclick="closePanel()">✕</button>
   <button class="ms-navbtn" id="ms-next" onclick="navNext()">Next &#8594;</button>
 </div>
 
@@ -1695,7 +1694,7 @@ function handleGalaxyClick(mouseVec) {
 
 // Stubs for old tl-prev/tl-next (hidden but referenced)
 document.getElementById('tl-prev').addEventListener('click', () => {
-  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 0;
+  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 1;
   if (idx > 0) focusEra(ERAS[idx - 1]);
 });
 document.getElementById('tl-next').addEventListener('click', () => {
@@ -1835,7 +1834,7 @@ function switchView(view) {
 document.querySelectorAll('.hud-btn[data-view]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
 // ─── NAVIGATION ─────────────────────────────────────────
 function navPrev() {
-  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 0;
+  const idx = focusedEra ? ERAS.findIndex(e => e.id === focusedEra.id) : 1;
   focusEra(idx > 0 ? ERAS[idx - 1] : ERAS[ERAS.length - 1]);
 }
 function navNext() {
@@ -1856,7 +1855,22 @@ function toggleTheme() {
   const thb = document.getElementById('theme-toggle-hud');
   if (thb) thb.textContent = isLight ? 'DARK' : 'LIGHT';
 }
-document.getElementById('brand').addEventListener('click', toggleTheme);
+document.getElementById('brand').addEventListener('click', () => {
+  // Close any open panel and zoom out to a side view of the full spiral
+  closePanel();
+  if (currentLayer === LAYER_GALAXY) switchLayer(LAYER_ORRERY);
+  isFocused = false; focusedEra = null;
+  swoop.active = false;
+  activeNodeNebulaIdx = -1;
+  resetHighlights();
+  scenePivotTgt.set(0, 0, 0);
+  // Side view: theta=0 looks along -Z, slight tilt to see Y spread of spiral
+  // radius=58 fits all 9 nodes comfortably within FOV 52°
+  swoopTo(Math.PI * 0.22, Math.PI * 0.08, 58, new THREE.Vector3(0, 0, 0));
+  camTarget.phi    = Math.PI * 0.22;
+  camTarget.theta  = Math.PI * 0.08;
+  camTarget.radius = 58;
+});
 document.getElementById('theme-toggle-hud').addEventListener('click', toggleTheme);
 
 // ─────────────────────────────────────────────────────────
@@ -1962,51 +1976,23 @@ function openPanel(era) {
   document.getElementById('ms-prev').disabled = idx === 0;
   document.getElementById('ms-next').disabled = idx === ERAS.length - 1;
   document.getElementById('msheet').classList.add('on');
+  document.body.classList.add('panel-open');
 
   document.getElementById('era-year').textContent = era.year;
   document.getElementById('era-name').textContent = era.era;
-  updateMobileCloseBtn();
+
 }
 
 window.closePanel = function () {
+  // Dismiss the overlay — but keep focus, camera, and pivot exactly where they are.
+  // isFocused stays true; the user can keep zooming/orbiting around the active node.
+  // Focus is only released when the user navigates away or taps empty space.
   document.getElementById('ghost').classList.remove('on');
   document.getElementById('msheet').classList.remove('on');
+  document.body.classList.remove('panel-open');
   hideSentGhost();
-  updateMobileCloseBtn();
+  // Leave focusedEra, isFocused, scenePivot, camTarget all untouched.
 };
-
-window.resetView = function () {
-  document.getElementById('ghost').classList.remove('on');
-  document.getElementById('msheet').classList.remove('on');
-  hideSentGhost();
-  focusedEra = null; isFocused = false;
-  swoop.active = false;
-  activeNodeNebulaIdx = -1;
-  scenePivotTgt.set(0, 0, 0);
-  scenePivot.set(0, 0, 0);
-  // Set both target AND current so the reset is immediate, not a slow drift
-  camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
-  camState.radius  = 68; camState.phi  = Math.PI * 0.28; camState.theta  = Math.PI * 0.1;
-  resetHighlights();
-  tooltip.classList.remove('vis');
-  updateMobileCloseBtn();
-};
-
-window.smartClose = function () {
-  if (isFocused && focusedEra) {
-    closePanel();
-  } else {
-    resetView();
-  }
-};
-
-// Show/hide mobile ✕ based on panel state
-function updateMobileCloseBtn() {
-  const btn = document.getElementById('mobile-close-btn');
-  if (!btn) return;
-  const panelOpen = document.getElementById('msheet').classList.contains('on');
-  btn.classList.toggle('hidden', !panelOpen);
-}
 
 // ─────────────────────────────────────────────────────────
 // FOCUS
@@ -2194,7 +2180,7 @@ cvs.addEventListener('pointermove', e => {
 
   if (e.buttons && e.button !== 2) {
     const dx = e.clientX - pointerDownX, dy = e.clientY - pointerDownY;
-    const dragThreshold = isMobileDevice() ? 6 : 4; // low on mobile so swipes win early
+    const dragThreshold = isMobileDevice() ? 12 : 4; // slightly more resistant on mobile
     if (!drag && Math.sqrt(dx*dx + dy*dy) > dragThreshold) {
       drag = true;
       if (swoop.active) {
@@ -2206,7 +2192,7 @@ cvs.addEventListener('pointermove', e => {
     }
     if (drag) {
       isDragging = true;
-      const sensitivity = isMobileDevice() ? 0.012 : 0.005; // 3x more responsive on mobile
+      const sensitivity = isMobileDevice() ? 0.004 : 0.005;
       camTarget.theta -= (e.clientX - lastDragX) * sensitivity;
       camTarget.phi = Math.max(0.04, Math.min(Math.PI * 0.48, camTarget.phi + (e.clientY - lastDragY) * sensitivity));
     }
@@ -2225,8 +2211,8 @@ cvs.addEventListener('pointerup', e => {
 
   if (isMobileDevice()) {
     // ── MOBILE: swipe-to-navigate tour ──
-    const SWIPE_THRESHOLD = 24;   // px — very easy to trigger
-    const AXIS_RATIO = 1.1;       // barely needs to be horizontal — diagonal swipes work
+    const SWIPE_THRESHOLD = 48;   // px — minimum horizontal swipe distance
+    const AXIS_RATIO = 1.4;       // horizontal must dominate vertical by this factor
 
     if (dist > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * AXIS_RATIO) {
       // Horizontal swipe detected
@@ -2240,8 +2226,8 @@ cvs.addEventListener('pointerup', e => {
       return;
     }
 
-    // Short tap: focus tapped node, or free roam if empty space
-    if (dist < 12) {
+    // Short tap: open panel for current focused node, or jump to tapped node
+    if (dist < 16) {
       if (handleGalaxyClick(mouse)) return;
       raycaster.setFromCamera(mouse, cam);
       const hits = raycaster.intersectObjects(getAllHittable());
@@ -2249,20 +2235,27 @@ cvs.addEventListener('pointerup', e => {
         const nodeObj = nodeObjects.find(o => o.mesh === hits[0].object || o.hitMesh === hits[0].object);
         if (nodeObj) {
           if (focusedEra && nodeObj.era.id === focusedEra.id) {
+            // Tap on focused node = open its panel
             openPanel(focusedEra);
           } else {
+            // Tap on different node = navigate to it
             focusEra(nodeObj.era);
           }
         }
-      } else {
-        // Tap empty space = release focus, free roam
-        resetView();
+      } else if (focusedEra) {
+        // Tap on empty canvas = toggle panel
+        const sheet = document.getElementById('msheet');
+        if (sheet.classList.contains('on')) {
+          document.getElementById('msheet').classList.remove('on');
+        } else {
+          openPanel(focusedEra);
+        }
       }
     }
     return;
   }
 
-  // ── DESKTOP ──
+  // ── DESKTOP: existing behavior ──
   if (!drag) {
     if (handleGalaxyClick(mouse)) { if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; } return; }
     raycaster.setFromCamera(mouse, cam);
@@ -2272,7 +2265,15 @@ cvs.addEventListener('pointerup', e => {
       const nodeObj = nodeObjects.find(o => o.mesh === hit || o.hitMesh === hit);
       if (nodeObj) focusEra(nodeObj.era);
     } else if (isFocused) {
-      resetView();
+      document.getElementById('ghost').classList.remove('on');
+      document.getElementById('msheet').classList.remove('on');
+      hideSentGhost();
+      focusedEra = null; isFocused = false;
+      swoop.active = false;
+      activeNodeNebulaIdx = -1;
+      scenePivotTgt.set(0, 0, 0);
+      camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
+      resetHighlights();
     }
   }
   if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; }
@@ -2329,7 +2330,7 @@ cvs.addEventListener('touchmove', e => {
 cvs.addEventListener('touchend', () => { clearTimeout(longPressTimer); });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { if (tocVisible) { closeTOC(); } else if (gridVisible) { closeGridView(); switchView('spiral'); } else { smartClose(); } }
+  if (e.key === 'Escape') { if (tocVisible) { closeTOC(); } else if (gridVisible) { closeGridView(); switchView('spiral'); } else { closePanel(); } }
   if (e.code === 'Space') { e.preventDefault(); orbitPaused = !orbitPaused; }
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
     e.preventDefault();
@@ -2621,10 +2622,9 @@ function animate(ts) {
     tickSwoop(dt);
     // Suppress auto-orbit and user drag during swoop
   } else {
-    const camLerp = isMobileDevice() ? 0.18 : 0.08; // snappier on mobile
-    camState.phi   += (camTarget.phi   - camState.phi)   * camLerp;
-    camState.theta += (camTarget.theta - camState.theta) * camLerp;
-    camState.radius+= (camTarget.radius- camState.radius)* camLerp;
+    camState.phi   += (camTarget.phi   - camState.phi)   * 0.08;
+    camState.theta += (camTarget.theta - camState.theta) * 0.08;
+    camState.radius+= (camTarget.radius- camState.radius)* 0.08;
     const pivotLerpSpeed = isFocused ? 0.22 : 0.08;
     scenePivot.lerp(scenePivotTgt, pivotLerpSpeed);
     if (!isFocused && !isDragging && !orbitPaused) camTarget.theta += dt * 0.015;
