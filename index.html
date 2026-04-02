@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>dab.cx · design (for agentic) architecture (& humans) bridges · to client experiences</title>
+<title>dab.cx · design (for agentic) architecture (& human) bridges · client experience</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><text y='28' font-size='24' font-family='monospace' font-weight='300' fill='%23daa520'>&lt;/</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -2139,6 +2139,7 @@ function posTooltip(cx, cy) {
 }
 
 let pointerDownX = 0, pointerDownY = 0;
+const isMobileDevice = () => window.innerWidth <= 768;
 
 cvs.addEventListener('pointerdown', e => {
   if (e.button === 2) return;
@@ -2153,12 +2154,14 @@ cvs.addEventListener('pointermove', e => {
   mouse.x = (e.clientX - rect.left) / rect.width * 2 - 1;
   mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
   posTooltip(e.clientX, e.clientY);
+
   if (e.buttons && e.button !== 2) {
+    // Mobile: no drag-to-orbit — that's handled by swipe-to-navigate on pointerup
+    if (isMobileDevice()) return;
+
     const dx = e.clientX - pointerDownX, dy = e.clientY - pointerDownY;
-    const dragThreshold = e.pointerType === 'mouse' ? 4 : 10;
-    if (!drag && Math.sqrt(dx*dx + dy*dy) > dragThreshold) {
+    if (!drag && Math.sqrt(dx*dx + dy*dy) > 4) {
       drag = true;
-      // Cancel swoop so user takes control immediately
       if (swoop.active) {
         swoop.active = false;
         camTarget.phi    = camState.phi;
@@ -2179,6 +2182,43 @@ cvs.addEventListener('pointermove', e => {
 
 cvs.addEventListener('pointerup', e => {
   if (e.button === 2) return;
+
+  const dx = e.clientX - pointerDownX;
+  const dy = e.clientY - pointerDownY;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (isMobileDevice()) {
+    // ── MOBILE: swipe-to-navigate tour ──
+    const SWIPE_THRESHOLD = 48;   // px — minimum horizontal swipe distance
+    const AXIS_RATIO = 1.4;       // horizontal must dominate vertical by this factor
+
+    if (dist > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * AXIS_RATIO) {
+      // Horizontal swipe detected
+      if (dx < 0) {
+        // Swipe LEFT → next node
+        navNext();
+      } else {
+        // Swipe RIGHT → prev node
+        navPrev();
+      }
+      return;
+    }
+
+    // Short tap — treat as node tap or long-press-less-than-threshold
+    if (dist < 12) {
+      if (handleGalaxyClick(mouse)) return;
+      raycaster.setFromCamera(mouse, cam);
+      const hits = raycaster.intersectObjects(getAllHittable());
+      if (hits.length) {
+        const nodeObj = nodeObjects.find(o => o.mesh === hits[0].object || o.hitMesh === hits[0].object);
+        if (nodeObj) focusEra(nodeObj.era);
+      }
+      // On mobile, tapping empty space does NOT exit focus — keeps the tour lock
+    }
+    return;
+  }
+
+  // ── DESKTOP: existing behavior ──
   if (!drag) {
     if (handleGalaxyClick(mouse)) { if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; } return; }
     raycaster.setFromCamera(mouse, cam);
@@ -2188,7 +2228,6 @@ cvs.addEventListener('pointerup', e => {
       const nodeObj = nodeObjects.find(o => o.mesh === hit || o.hitMesh === hit);
       if (nodeObj) focusEra(nodeObj.era);
     } else if (isFocused) {
-      // Tap on empty space = full release: dismiss overlay AND exit focus
       document.getElementById('ghost').classList.remove('on');
       document.getElementById('msheet').classList.remove('on');
       hideSentGhost();
@@ -2498,6 +2537,11 @@ function tickMesh() {
 }
 drawMesh(); tickMesh();
 applyTheme(); // init with default theme (light)
+
+// Mobile: auto-enter tour at node 0 so camera is always in a preset position
+if (window.innerWidth <= 768) {
+  requestAnimationFrame(() => focusEra(ERAS[0]));
+}
 
 // ─────────────────────────────────────────────────────────
 // NODE MORPH (spiral ↔ arc)
