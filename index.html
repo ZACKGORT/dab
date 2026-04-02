@@ -1978,26 +1978,39 @@ let isFocused = false;
 
 // Compute the preset camera for a given era (pure, no side effects)
 function eraPreset(era) {
-  // Per-node camera presets — each a distinct angle, elevation, and distance
-  // theta: azimuth (which direction camera approaches from)
-  // phi:   elevation (π*0.5 = horizon, lower = looking up more steeply)
-  // radius: intimacy (smaller = closer)
-  // phi 0.28-0.35π: camera 27-45° above horizon, looks DOWN at node.
-  // Node naturally appears in upper ~40% of canvas without any Y offset.
-  // Sheet covers bottom 45% of screen, so upper 55% is the canvas zone.
-  // Lower phi = more overhead = node lower in frame (more centered).
-  const presets = {
-    'origin':              { theta: Math.PI*0.60, phi: Math.PI*0.30, radius: 16 },
-    'wolfie-love':         { theta: Math.PI*0.52, phi: Math.PI*0.28, radius: 20 },
-    'wolfie-life':         { theta: Math.PI*0.68, phi: Math.PI*0.27, radius: 22 },
-    'intoview':            { theta: Math.PI*0.58, phi: Math.PI*0.30, radius: 18 },
-    'emdash':              { theta: Math.PI*0.72, phi: Math.PI*0.26, radius: 24 },
-    'rsp':                 { theta: Math.PI*0.55, phi: Math.PI*0.28, radius: 20 },
-    'reasonandresolution': { theta: Math.PI*0.64, phi: Math.PI*0.29, radius: 19 },
-    'ifimaybefrank':       { theta: Math.PI*0.50, phi: Math.PI*0.31, radius: 16 },
-    'dab':                 { theta: Math.PI*0.60, phi: Math.PI*0.30, radius: 14 },
-  };
-  return presets[era.id] || { theta: Math.PI*0.60, phi: Math.PI*0.48, radius: 14 };
+  const pos = era._pos;
+  const isMobile = window.innerWidth <= 768;
+
+  // ── Derived theta: approach from the outside of the spiral.
+  // The node's XZ position tells us which direction it faces outward.
+  // Camera should sit on the far side — opposite the origin — so we're
+  // looking inward toward the spiral center, with the node between us and it.
+  const nodeAngle = Math.atan2(pos.z, pos.x); // world angle of node from center
+  const theta = nodeAngle + Math.PI * 0.55;    // offset: approach from ~100° off the node's bearing
+
+  // ── Derived radius: proportional to node's distance from center.
+  // Nodes further out on the spiral get slightly more distance so context is visible.
+  const nodeR = Math.sqrt(pos.x * pos.x + pos.z * pos.z);
+  const baseRadius = 12 + nodeR * 0.55;
+  const radius = isMobile
+    ? Math.max(10, baseRadius * 0.85)   // tighter on mobile
+    : Math.max(14, baseRadius);
+
+  // ── Derived phi: camera elevation.
+  // Desktop: moderate elevation — node in upper-center, panel on right is clear.
+  // Mobile: lower elevation (camera higher, looks more downward at node),
+  //         placing node in top ~40% of canvas above the bottom sheet.
+  const phi = isMobile
+    ? Math.PI * 0.25   // ~45° above horizontal — camera well above, looks down
+    : Math.PI * 0.34;  // ~29° — desktop, slight upward look
+
+  // ── Panel shift: on desktop push pivot left so node clears the right panel.
+  // Derived from theta so it always shifts in true screen-right direction.
+  const panelShift = isMobile ? 0 : 3.5;
+  const screenRight = new THREE.Vector3(Math.cos(theta), 0, -Math.sin(theta));
+  const pivot = pos.clone().addScaledVector(screenRight, panelShift);
+
+  return { theta, phi, radius, pivot };
 }
 
 function focusEra(era) {
@@ -2006,26 +2019,11 @@ function focusEra(era) {
   isFocused = true; focusedEra = era;
 
   const preset = eraPreset(era);
-
-  // Shift pivot left on screen so node clears the right-side panel.
-  // Screen-right at theta=0.6π is (cos θ, 0, -sin θ) in world XZ.
-  // Moving pivot by +screenRight shifts node leftward in the frame.
-  const THETA = preset.theta;
-  const isMobileView = window.innerWidth <= 768;
-  // Desktop: shift pivot right in screen-space so node clears the right panel
-  // Mobile: shift pivot down in world-Y so node renders in upper 40% of screen,
-  //         clear of the bottom sheet drawer
-  const panelShift = isMobileView ? 0 : 3.5;
-  const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
-  const targetPivot = era._pos.clone().addScaledVector(screenRight, panelShift);
-  // No Y shift — pivot stays at node position.
-  // Camera phi (elevation) handles vertical placement: lower phi = camera higher up = node lower in frame.
+  const targetPivot = preset.pivot;
   scenePivotTgt.copy(targetPivot);
 
-  // Fire the swoop: outward arc, sweep, close in
   swoopTo(preset.phi, preset.theta, preset.radius, targetPivot);
 
-  // Also set camTarget so user input after swoop continues from correct base
   camTarget.phi    = preset.phi;
   camTarget.theta  = preset.theta;
   camTarget.radius = preset.radius;
@@ -2262,14 +2260,8 @@ cvs.addEventListener('pointerup', e => {
 function lockPivotToFocus() {
   if (!focusedEra || !isFocused) return;
   const preset = eraPreset(focusedEra);
-  const THETA = preset.theta;
-  const isMobileView = window.innerWidth <= 768;
-  const panelShift = isMobileView ? 0 : 3.5;
-  const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
-  const p = focusedEra._pos.clone().addScaledVector(screenRight, panelShift);
-  // No Y shift on mobile — pivot stays at node
-  scenePivotTgt.copy(p);
-  scenePivot.copy(p);
+  scenePivotTgt.copy(preset.pivot);
+  scenePivot.copy(preset.pivot);
 }
 
 cvs.addEventListener('wheel', e => {
@@ -2563,16 +2555,12 @@ if (window.innerWidth <= 768) {
     isFocused = true;
     focusedEra = era;
     activeNodeNebulaIdx = 0;
-    const THETA = preset.theta;
-    const screenRight = new THREE.Vector3(Math.cos(THETA), 0, -Math.sin(THETA));
-    const targetPivot = era._pos.clone();
-    scenePivotTgt.copy(targetPivot);
-    swoopTo(preset.phi, preset.theta, preset.radius, targetPivot);
+    scenePivotTgt.copy(preset.pivot);
+    swoopTo(preset.phi, preset.theta, preset.radius, preset.pivot);
     camTarget.phi    = preset.phi;
     camTarget.theta  = preset.theta;
     camTarget.radius = preset.radius;
     highlightConnections(era);
-    // Update era label but do NOT open the panel sheet
     document.getElementById('era-year').textContent = era.year;
     document.getElementById('era-name').textContent = era.era;
   });
