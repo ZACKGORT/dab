@@ -356,7 +356,14 @@ body.light .gc-moon-pill:hover{background:rgba(0,0,0,0.05);color:#000;}
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:color 0.15s,background 0.15s;
+  overflow:hidden;
+  transition:color 0.15s, background 0.15s, flex 0.22s ease, border-color 0.22s;
+}
+.msclose.hidden{
+  flex:0 0 0px;
+  border-left-color:transparent;
+  border-right-color:transparent;
+  pointer-events:none;
 }
 .msclose:hover{color:rgba(218,165,32,0.80);background:rgba(218,165,32,0.05);}
 .msclose:active{color:#daa520;}
@@ -623,7 +630,7 @@ body.light #brand-saturn circle.node{fill:rgba(0,0,0,0.65)!important;stroke:none
 <!-- Fixed mobile nav bar: PREV | ✕ | NEXT full-width -->
 <div id="mobile-nav-bar">
   <button class="ms-navbtn" id="ms-prev" onclick="navPrev()">&#8592; Prev</button>
-  <button class="msclose" id="mobile-close-btn" onclick="smartClose()">✕</button>
+  <button class="msclose hidden" id="mobile-close-btn" onclick="smartClose()">✕</button>
   <button class="ms-navbtn" id="ms-next" onclick="navNext()">Next &#8594;</button>
 </div>
 
@@ -1993,18 +2000,12 @@ window.smartClose = function () {
   }
 };
 
-// Update mobile ✕ / ↺ button based on current state
+// Show/hide mobile ✕ based on panel state
 function updateMobileCloseBtn() {
   const btn = document.getElementById('mobile-close-btn');
   if (!btn) return;
   const panelOpen = document.getElementById('msheet').classList.contains('on');
-  if (panelOpen) {
-    btn.textContent = '✕';
-    btn.title = 'Close panel';
-  } else {
-    btn.innerHTML = '↺';
-    btn.title = 'Reset view';
-  }
+  btn.classList.toggle('hidden', !panelOpen);
 }
 
 // ─────────────────────────────────────────────────────────
@@ -2239,7 +2240,7 @@ cvs.addEventListener('pointerup', e => {
       return;
     }
 
-    // Short tap: open panel for current focused node, or jump to tapped node
+    // Short tap: focus tapped node, or free roam if empty space
     if (dist < 12) {
       if (handleGalaxyClick(mouse)) return;
       raycaster.setFromCamera(mouse, cam);
@@ -2248,27 +2249,20 @@ cvs.addEventListener('pointerup', e => {
         const nodeObj = nodeObjects.find(o => o.mesh === hits[0].object || o.hitMesh === hits[0].object);
         if (nodeObj) {
           if (focusedEra && nodeObj.era.id === focusedEra.id) {
-            // Tap on focused node = open its panel
             openPanel(focusedEra);
           } else {
-            // Tap on different node = navigate to it
             focusEra(nodeObj.era);
           }
         }
-      } else if (focusedEra) {
-        // Tap on empty canvas = toggle panel
-        const sheet = document.getElementById('msheet');
-        if (sheet.classList.contains('on')) {
-          document.getElementById('msheet').classList.remove('on');
-        } else {
-          openPanel(focusedEra);
-        }
+      } else {
+        // Tap empty space = release focus, free roam
+        resetView();
       }
     }
     return;
   }
 
-  // ── DESKTOP: existing behavior ──
+  // ── DESKTOP ──
   if (!drag) {
     if (handleGalaxyClick(mouse)) { if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; } return; }
     raycaster.setFromCamera(mouse, cam);
@@ -2278,17 +2272,7 @@ cvs.addEventListener('pointerup', e => {
       const nodeObj = nodeObjects.find(o => o.mesh === hit || o.hitMesh === hit);
       if (nodeObj) focusEra(nodeObj.era);
     } else if (isFocused) {
-      document.getElementById('ghost').classList.remove('on');
-      document.getElementById('msheet').classList.remove('on');
-      hideSentGhost();
-      focusedEra = null; isFocused = false;
-      swoop.active = false;
-      activeNodeNebulaIdx = -1;
-      scenePivotTgt.set(0, 0, 0);
-      scenePivot.set(0, 0, 0);
-      camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
-      camState.radius  = 68; camState.phi  = Math.PI * 0.28; camState.theta  = Math.PI * 0.1;
-      resetHighlights();
+      resetView();
     }
   }
   if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; }
