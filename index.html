@@ -1958,13 +1958,14 @@ function openPanel(era) {
 
   document.getElementById('era-year').textContent = era.year;
   document.getElementById('era-name').textContent = era.era;
-
+  updateMobileCloseBtn();
 }
 
 window.closePanel = function () {
   document.getElementById('ghost').classList.remove('on');
   document.getElementById('msheet').classList.remove('on');
   hideSentGhost();
+  updateMobileCloseBtn();
 };
 
 window.resetView = function () {
@@ -1978,6 +1979,7 @@ window.resetView = function () {
   camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
   resetHighlights();
   tooltip.classList.remove('vis');
+  updateMobileCloseBtn();
 };
 
 window.smartClose = function () {
@@ -1987,6 +1989,20 @@ window.smartClose = function () {
     resetView();
   }
 };
+
+// Update mobile ✕ / ↺ button based on current state
+function updateMobileCloseBtn() {
+  const btn = document.getElementById('mobile-close-btn');
+  if (!btn) return;
+  const panelOpen = document.getElementById('msheet').classList.contains('on');
+  if (panelOpen) {
+    btn.textContent = '✕';
+    btn.title = 'Close panel';
+  } else {
+    btn.innerHTML = '↺';
+    btn.title = 'Reset view';
+  }
+}
 
 // ─────────────────────────────────────────────────────────
 // FOCUS
@@ -2186,7 +2202,7 @@ cvs.addEventListener('pointermove', e => {
     }
     if (drag) {
       isDragging = true;
-      const sensitivity = isMobileDevice() ? 0.004 : 0.005;
+      const sensitivity = isMobileDevice() ? 0.012 : 0.005; // 3x more responsive on mobile
       camTarget.theta -= (e.clientX - lastDragX) * sensitivity;
       camTarget.phi = Math.max(0.04, Math.min(Math.PI * 0.48, camTarget.phi + (e.clientY - lastDragY) * sensitivity));
     }
@@ -2616,9 +2632,10 @@ function animate(ts) {
     tickSwoop(dt);
     // Suppress auto-orbit and user drag during swoop
   } else {
-    camState.phi   += (camTarget.phi   - camState.phi)   * 0.08;
-    camState.theta += (camTarget.theta - camState.theta) * 0.08;
-    camState.radius+= (camTarget.radius- camState.radius)* 0.08;
+    const camLerp = isMobileDevice() ? 0.18 : 0.08; // snappier on mobile
+    camState.phi   += (camTarget.phi   - camState.phi)   * camLerp;
+    camState.theta += (camTarget.theta - camState.theta) * camLerp;
+    camState.radius+= (camTarget.radius- camState.radius)* camLerp;
     const pivotLerpSpeed = isFocused ? 0.22 : 0.08;
     scenePivot.lerp(scenePivotTgt, pivotLerpSpeed);
     if (!isFocused && !isDragging && !orbitPaused) camTarget.theta += dt * 0.015;
