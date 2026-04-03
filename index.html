@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Zack Gort · Experience Architect · Wolfgang & Co.</title>
+<title>dab.cx · Design Architect Build · Wolfgang & Co.</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'><text y='28' font-size='24' font-family='monospace' font-weight='300' fill='%23daa520'>&lt;/</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -900,8 +900,8 @@ body.light #mf-close:hover{color:#000;}
       <circle class="node" cx="31" cy="19" r="1.3" fill="rgba(218,165,32,0.60)"/>
     </svg>
     <div id="brand-text">
-      <div id="brand-name">ZACK.CX</div>
-      <div id="brand-sub">Sentence as Primitive · Wolfgang &amp; Co.</div>
+      <div id="brand-name">DAB.CX</div>
+      <div id="brand-sub">Design · Architect · Build · Wolfgang &amp; Co.</div>
     </div>
   </div>
   <!-- Hover ghost: full dab.cx acronym -->
@@ -2481,7 +2481,7 @@ function activeList(era) {
 // ─────────────────────────────────────────────────────────
 // THREE.JS SETUP
 // ─────────────────────────────────────────────────────────
-let isLight = false;
+let isLight = true;
 const cvs = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({ canvas: cvs, antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -2491,7 +2491,7 @@ const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x000000, 0.0015); // reduced for multi-galaxy scene scale
 const cam = new THREE.PerspectiveCamera(52, innerWidth / innerHeight, 0.1, 2000);
 
-let camState = { phi: Math.PI * 0.28, theta: Math.PI * 0.1, radius: 68 };
+let camState = { phi: Math.PI * 0.28, theta: Math.PI * 1.1, radius: 68 };
 let camTarget = { ...camState };
 // scenePivot initialised to CAREER_OFFSET after that constant is defined (post-spiralPos)
 const scenePivot = new THREE.Vector3();
@@ -2583,9 +2583,9 @@ function applyCam() {
   );
   cam.lookAt(c);
 }
-// Init pivot to career orrery so the opening view shows career nodes, not black hole
-scenePivot.copy(CAREER_OFFSET);
-scenePivotTgt.copy(CAREER_OFFSET);
+// Init pivot to sentence primitive galaxy — dab.cx entry point
+scenePivot.copy(SENTENCE_CENTER);
+scenePivotTgt.copy(SENTENCE_CENTER);
 applyCam();
 
 const ambLight = new THREE.AmbientLight(0xffffff, 0.12); scene.add(ambLight);
@@ -3957,13 +3957,13 @@ function switchView(view) {
 document.querySelectorAll('.hud-btn[data-view]').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
 // ─── NAVIGATION ─────────────────────────────────────────
 function navPrev() {
-  if (!focusedEra) { focusEra(ERAS[0]); return; }
+  if (!focusedEra) { focusEra(PLATFORM_ERAS[0]); return; }
   const list = activeList(focusedEra);
   const idx = list.findIndex(e => e.id === focusedEra.id);
   if (idx > 0) focusEra(list[idx - 1]);
 }
 function navNext() {
-  if (!focusedEra) { focusEra(ERAS[0]); return; }
+  if (!focusedEra) { focusEra(PLATFORM_ERAS[0]); return; }
   const list = activeList(focusedEra);
   const idx = list.findIndex(e => e.id === focusedEra.id);
   if (idx < list.length - 1) focusEra(list[idx + 1]);
@@ -4000,17 +4000,15 @@ brandEl.addEventListener('click', () => {
   if (!brandLongPressTimer && brandLongPressTimer !== null) return; // was a long-press, skip click
   clearTimeout(brandLongPressTimer);
   brandLongPressTimer = null;
-  // Close any open panel and zoom out to a side view of the full spiral
+  // Close any open panel and zoom out to sentence galaxy home view
   closePanel();
   
   isFocused = false; focusedEra = null;
   swoop.active = false;
   activeNodeNebulaIdx = -1;
   resetHighlights();
-  scenePivotTgt.copy(CAREER_OFFSET);
-  // Side view: theta=0 looks along -Z, slight tilt to see Y spread of spiral
-  // radius=58 fits all 9 nodes comfortably within FOV 52°
-  swoopTo(Math.PI * 0.22, Math.PI * 0.08, 58, new THREE.Vector3(0, 0, 0));
+  scenePivotTgt.copy(SENTENCE_CENTER);
+  swoopTo(Math.PI * 0.22, Math.PI * 0.08, 58, SENTENCE_CENTER.clone());
   camTarget.phi    = Math.PI * 0.22;
   camTarget.theta  = Math.PI * 0.08;
   camTarget.radius = 58;
@@ -4631,8 +4629,8 @@ cvs.addEventListener('pointerup', e => {
       focusedEra = null; isFocused = false;
       swoop.active = false;
       activeNodeNebulaIdx = -1;
-      scenePivotTgt.copy(CAREER_OFFSET);
-      camTarget.radius = 68; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
+      scenePivotTgt.copy(SENTENCE_CENTER);
+      camTarget.radius = 58; camTarget.phi = Math.PI * 0.28; camTarget.theta = Math.PI * 0.1;
       resetHighlights();
     }
   }
@@ -4706,18 +4704,18 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { if (tesseractOpen) { closeTesseract(); } else if (tocVisible) { closeTOC(); } else if (gridVisible) { closeGridView(); switchView('spiral'); } else { closePanel(); } }
   if (e.code === 'Space') { e.preventDefault(); orbitPaused = !orbitPaused; }
 
-  // In galaxy view: arrow keys orbit smoothly around the ring to cycle through galaxies
-  if (galaxyAlpha > 0.5) {
+  // In galaxy view (and not focused on a node): arrow keys orbit the ring
+  if (galaxyAlpha > 0.5 && !isFocused) {
     if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
       e.preventDefault();
       const dir = e.key === 'ArrowRight' ? 1 : -1;
-      camTarget.theta += dir * Math.PI * 0.45; // ~80 degree sweep to next galaxy
+      camTarget.theta += dir * Math.PI * 0.45;
     }
     return;
   }
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
     e.preventDefault();
-    if (!focusedEra) { focusEra(ERAS[0]); return; }
+    if (!focusedEra) { focusEra(PLATFORM_ERAS[0]); return; }
     const list = activeList(focusedEra);
     const idx = list.findIndex(er => er.id === focusedEra.id);
     if (idx < list.length - 1) focusEra(list[idx + 1]);
@@ -4992,17 +4990,16 @@ function tickMesh() {
   requestAnimationFrame(tickMesh);
 }
 drawMesh(); tickMesh();
-applyTheme(); // init with default theme (light)
+applyTheme(); // init with light theme — dab.cx
 
-// Mobile: position camera at first node preset without opening the panel
-// This gives a "pseudo-focused" state — node is framed, panel is closed
+// Mobile: position camera at first sentence galaxy node
 if (window.innerWidth <= 768) {
   requestAnimationFrame(() => {
-    const era = ERAS[0];
+    const era = PLATFORM_ERAS[0];
     const preset = eraPreset(era);
     isFocused = true;
     focusedEra = era;
-    activeNodeNebulaIdx = 0;
+    activeNodeNebulaIdx = -1;
     scenePivotTgt.copy(preset.pivot);
     swoopTo(preset.phi, preset.theta, preset.radius, preset.pivot);
     camTarget.phi    = preset.phi;
