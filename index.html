@@ -55,7 +55,7 @@ body.light #era-name{color:rgba(0,0,0,0.55);}
   transition:background 0.5s,border-color 0.5s;
 }
 @media(max-width:768px){
-  #hud{display:none;}  /* Mobile: nav handled by #mobile-nav-bar */
+  /* HUD visible on mobile */
 }
 .hud-btn{
   background:none;border:none;cursor:pointer;
@@ -1041,6 +1041,59 @@ body.light .toast-role{color:rgba(0,0,0,0.40);}
 .tess-grid-era { font-family: 'DM Mono',monospace; font-size: 7px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(218,165,32,0.40); margin-bottom: 4px; }
 .tess-grid-title { font-family: 'Crimson Text',serif; font-size: 14px; color: #f5ecd5; line-height: 1.2; }
 .tess-grid-domain { font-family: 'DM Mono',monospace; font-size: 6px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(218,165,32,0.28); margin-top: 4px; }
+
+/* HUD mobile sizing — centered top bar */
+@media(max-width:768px){
+  #hud {
+    top: 0; left: 0; right: 0;
+    border-radius: 0;
+    border-top: none; border-left: none; border-right: none;
+    border-bottom: 1px solid rgba(218,165,32,0.14);
+    background: rgba(5,3,10,0.92);
+    backdrop-filter: blur(12px);
+    justify-content: center;
+    gap: 0;
+    z-index: 150;
+  }
+  #hud .hud-sep { margin: 6px 0; }
+  .hud-btn { font-size:7px; padding:10px 14px; letter-spacing:0.14em; }
+  /* Push brand below the HUD bar */
+  #brand { top: 52px; }
+  #era-label { display: none; }
+}
+body.light #hud { background: rgba(255,255,255,0.96) !important; }
+
+/* Right contextual HUD — visible when in sol (orrery) view */
+#right-hud {
+  position: fixed; right: 12px; top: 50%; transform: translateY(-50%);
+  display: none; flex-direction: column; gap: 2px;
+  z-index: 100;
+  background: rgba(5,3,10,0.88);
+  border: 1px solid rgba(218,165,32,0.12);
+  border-radius: 4px; overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+#right-hud.vis { display: flex; }
+.rhud-btn {
+  background: none; border: none; cursor: pointer;
+  color: rgba(218,165,32,0.40);
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.10em;
+  padding: 10px 12px; border-bottom: 1px solid rgba(218,165,32,0.08);
+  transition: color 0.15s, background 0.15s;
+  text-align: center; min-width: 38px;
+}
+.rhud-btn:last-child { border-bottom: none; }
+.rhud-btn:hover, .rhud-btn:active { color: #daa520; background: rgba(218,165,32,0.07); }
+.rhud-btn.active { color: #daa520; }
+.rhud-sep { height: 1px; background: rgba(218,165,32,0.10); margin: 1px 0; }
+@media(max-width:768px){
+  #right-hud { right: 8px; }
+  .rhud-btn { padding: 12px 14px; font-size: 10px; }
+}
+body.light #right-hud { background: rgba(255,255,255,0.96); border-color: rgba(0,0,0,0.10); }
+body.light .rhud-btn { color: rgba(0,0,0,0.45); }
+body.light .rhud-btn:hover { color: #000; }
+body.light .rhud-btn.active { color: #000; }
 </style>
 </head>
 <body>
@@ -1118,6 +1171,15 @@ body.light .toast-role{color:rgba(0,0,0,0.40);}
   <button class="hud-btn" id="theme-toggle-hud">LGHT</button>
 </div>
   <button class="hud-btn" id="theme-toggle-hud" title="Toggle light/dark">READ</button>
+</div>
+
+<!-- Right contextual HUD: zoom + layout toggle -->
+<div id="right-hud">
+  <button class="rhud-btn" id="rhud-zoom-in"  title="Zoom in">+</button>
+  <button class="rhud-btn" id="rhud-zoom-out" title="Zoom out">−</button>
+  <div class="rhud-sep"></div>
+  <button class="rhud-btn active" id="rhud-spiral"   title="Spiral view">↺</button>
+  <button class="rhud-btn"        id="rhud-timeline" title="Timeline view">⇢</button>
 </div>
 
 <!-- hidden stubs so JS refs don't break -->
@@ -3464,6 +3526,27 @@ const galaxyLayout = {
 // Each era gets _spiralPos, _flatPos, _gridPos, _listPos
 // ─────────────────────────────────────────────────────────────
 
+// Swoop camera to a galaxy's orrery overview (centered on the galaxy star)
+function swoopToGalaxyOverview(galaxyId) {
+  const centerMap = { career: CAREER_OFFSET, sentence: SENTENCE_CENTER, claude: CLAUDE_CENTER };
+  const p = (centerMap[galaxyId] || CAREER_OFFSET).clone();
+  const angle = Math.atan2(p.z, p.x);
+  const theta  = angle + Math.PI * 0.55;
+  const phi    = Math.PI * 0.28;
+  const radius = 52;
+  galaxyMode = false;
+  swoopTo(phi, theta, radius, p);
+  camTarget.phi = phi; camTarget.theta = theta; camTarget.radius = radius;
+  scenePivotTgt.copy(p);
+  isFocused = false; focusedEra = null;
+  // Set star as focused so second click opens tesseract
+  focusedStarGalaxyId = galaxyId;
+  document.querySelectorAll('#hud .hud-btn').forEach(b => b.classList.remove('active'));
+  const idMap = { career: 'hud-sol-1', sentence: 'hud-sol-2', claude: 'hud-sol-3' };
+  const btn = document.getElementById(idMap[galaxyId]);
+  if (btn) btn.classList.add('active');
+}
+
 // Returns true if era belongs to the currently focused galaxy (or any if unfocused)
 function isInActiveGalaxy(era) {
   if (!isFocused || !focusedEra) return true;
@@ -3668,20 +3751,30 @@ buildScene();
 // PLATFORM SCENE — Wolfgang & Co. ecosystem spiral
 // ─────────────────────────────────────────────────────────
 function buildPlatformScene() {
+  // ── Spiral tube ─────────────────────────────────────────────
   const pts = PLATFORM_ERAS.map(e => e._spiralPos.clone());
   const curve = new THREE.CatmullRomCurve3(pts);
-  const tubePts = curve.getPoints(140);
+  const tubePts = curve.getPoints(160);
   const tube = new THREE.Line(new THREE.BufferGeometry().setFromPoints(tubePts),
-    new THREE.LineBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.10 }));
+    new THREE.LineBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.08 }));
   scene.add(tube);
-  allLines.push({ line: tube, darkOp: 0.10, lightOp: 0.25, darkColor: 0xffe066, lightColor: 0x000000, galaxy: 'sentence' });
-
+  allLines.push({ line: tube, darkOp: 0.08, lightOp: 0.22, darkColor: 0xffe066, lightColor: 0x000000, galaxy: 'sentence' });
   const inner = new THREE.Line(new THREE.BufferGeometry().setFromPoints(tubePts),
     new THREE.LineBasicMaterial({ color: 0xffd700, transparent: true, opacity: 0.04 }));
   scene.add(inner);
   allLines.push({ line: inner, darkOp: 0.04, lightOp: 0.10, darkColor: 0xffd700, lightColor: 0x000000, galaxy: 'sentence' });
 
-  // Ellipse rings for orrery mode
+  // ── Spine axis ──────────────────────────────────────────────
+  const spinePts = [
+    new THREE.Vector3(SENTENCE_CENTER.x, -14, SENTENCE_CENTER.z),
+    new THREE.Vector3(SENTENCE_CENTER.x,  14, SENTENCE_CENTER.z),
+  ];
+  const spine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(spinePts),
+    new THREE.LineBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.04 }));
+  scene.add(spine);
+  allLines.push({ line: spine, darkOp: 0.04, lightOp: 0.08, darkColor: 0xffe066, lightColor: 0x000000, galaxy: 'sentence' });
+
+  // ── Ellipse rings ───────────────────────────────────────────
   Object.keys(SENTENCE_ELLIPSES).forEach(tier => {
     drawGalaxyEllipse(SENTENCE_CENTER, SENTENCE_ELLIPSES, tier, scene, allLines, 'sentence');
   });
@@ -3692,36 +3785,34 @@ function buildPlatformScene() {
       SENTENCE_CENTER.x + lx * Math.cos(TILT) - lz * Math.sin(TILT) + 0.4, (e.y||0) + 0.1,
       SENTENCE_CENTER.z + lx * Math.sin(TILT) + lz * Math.cos(TILT)
     );
-    addLabel(e.label, lp, 'rgba(' + [(e.color>>16)&255,(e.color>>8)&255,e.color&255].join(',') + ',0.30)', 5.8);
+    addLabel(e.label, lp, 'rgba('+[(e.color>>16)&255,(e.color>>8)&255,e.color&255].join(',')+',0.30)', 5.8);
   });
 
   PLATFORM_ERAS.forEach((era) => {
     era._flatPos = ellipsePos(SENTENCE_CENTER, SENTENCE_ELLIPSES, era.tier || 'mid', era.angle || era._t);
-
     const pos = era._spiralPos;
     era._pos.copy(pos);
-    const nodeSize = 0.16 + era._t * 0.09;
+    const nodeSize = era.id === 'p-origin' ? 0.28 : 0.16 + era._t * 0.08;
 
-    const center = new THREE.Vector3(SENTENCE_CENTER.x, pos.y, SENTENCE_CENTER.z);
-    const spoke = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([center, pos.clone()]),
-      new THREE.LineBasicMaterial({ color: era.color, transparent: true, opacity: 0.07 }));
+    const spokeY = new THREE.Vector3(SENTENCE_CENTER.x, pos.y, SENTENCE_CENTER.z);
+    const spoke = new THREE.Line(new THREE.BufferGeometry().setFromPoints([spokeY, pos.clone()]),
+      new THREE.LineBasicMaterial({ color: era.color, transparent: true, opacity: 0.06 }));
     scene.add(spoke);
-    allLines.push({ line: spoke, darkOp: 0.07, lightOp: 0.16, darkColor: era.color, lightColor: 0x000000, galaxy: 'sentence' });
+    allLines.push({ line: spoke, darkOp: 0.06, lightOp: 0.15, darkColor: era.color, lightColor: 0x000000, galaxy: 'sentence' });
 
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(nodeSize, 16, 16),
       new THREE.MeshPhysicalMaterial({
-        color: era.color, emissive: era.color, emissiveIntensity: 1.5,
+        color: era.color, emissive: era.color,
+        emissiveIntensity: era.id === 'p-origin' ? 2.4 : 1.4,
         metalness: 0.3, roughness: 0.08, clearcoat: 1.0, transparent: true, opacity: 0.92
       })
     );
     mesh.position.copy(pos);
-    mesh.userData = { era, origColor: era.color, origEI: 1.5, isMoon: false, isPlatform: true };
+    mesh.userData = { era, origColor: era.color, origEI: era.id === 'p-origin' ? 2.4 : 1.4, isMoon: false, isPlatform: true };
     scene.add(mesh);
 
-    const hitMesh = new THREE.Mesh(
-      new THREE.SphereGeometry(nodeSize * 3.5, 8, 8),
+    const hitMesh = new THREE.Mesh(new THREE.SphereGeometry(nodeSize * 3.5, 8, 8),
       new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
     hitMesh.position.copy(pos);
     hitMesh.userData = { era, isHitProxy: true, isPlatform: true };
@@ -3732,29 +3823,23 @@ function buildPlatformScene() {
     gs.position.copy(pos); gs.material.opacity = 0.65;
     scene.add(gs); glowSprites.push(gs);
 
-    addLabel(era.title.length > 28 ? era.title.slice(0,26)+'…' : era.title, pos, era.hex + 'bb', 6.5);
+    const shortTitle = era.title.length > 28 ? era.title.slice(0,26)+'…' : era.title;
+    addLabel(shortTitle, pos, era.hex + 'bb', 6.5);
     addLabel(era.year, new THREE.Vector3(SENTENCE_CENTER.x - 0.8, pos.y, SENTENCE_CENTER.z), 'rgba(255,224,102,0.30)', 5.5);
     buildMoons(era, pos, nodeSize);
+    if (era.caseStudy) buildCaseStudyMoon(era, pos, nodeSize);
   });
 
-  // Directed arcs
-  const sentArcPairs = [
-    ['p-origin','p-wolfie-love'],['p-wolfie-love','p-ifimaybefrank'],
-    ['p-wolfie-love','p-wolfie-life'],['p-wolfie-love','p-emdash'],
-    ['p-ifimaybefrank','p-reasonandresolution'],['p-reasonandresolution','p-rsp'],
-    ['p-wolfie-life','p-intoview'],['p-intoview','p-dab'],['p-reasonandresolution','p-dab'],
-  ];
-  sentArcPairs.forEach(([fromId, toId]) => {
-    const a = ERA_BY_ID[fromId], b = ERA_BY_ID[toId];
-    if (!a || !b) return;
-    const mid = a._spiralPos.clone().add(b._spiralPos).multiplyScalar(0.5); mid.y += 2.2;
+  for (let i = 0; i < PLATFORM_ERAS.length - 1; i++) {
+    const a = PLATFORM_ERAS[i], b = PLATFORM_ERAS[i+1];
+    const mid = a._spiralPos.clone().add(b._spiralPos).multiplyScalar(0.5); mid.y += 0.5;
     const pts = new THREE.QuadraticBezierCurve3(a._spiralPos, mid, b._spiralPos).getPoints(16);
-    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
-      new THREE.LineBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.20 }));
-    scene.add(line);
-    allLines.push({ line, darkOp: 0.20, lightOp: 0.32, darkColor: 0xffe066, lightColor: 0x000000, galaxy: 'sentence' });
-    registerConnection(line, a, b);
-  });
+    const conn = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({ color: 0xffe066, transparent: true, opacity: 0.22 }));
+    scene.add(conn);
+    allLines.push({ line: conn, darkOp: 0.22, lightOp: 0.35, darkColor: 0xffe066, lightColor: 0x000000, galaxy: 'sentence' });
+    registerConnection(conn, a, b);
+  }
 }
 buildPlatformScene();
 
@@ -3769,64 +3854,59 @@ function buildManifestoScene() {
   const tubeMat = new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0.09 });
   const tube = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(100)), tubeMat);
   scene.add(tube);
-  allLines.push({ line: tube, darkOp: 0.09, lightOp: 0.20, darkColor: 0xdaa520, lightColor: 0x000000, galaxy: 'claude' });
+  allLines.push({ line: tube, darkOp: 0.09, lightOp: 0.20, darkColor: 0xdaa520, lightColor: 0x000000, galaxy: 'manifesto' });
 
   MANIFESTO_ERAS.forEach((era) => {
     const pos = era._spiralPos;
+    era._pos = era._pos || pos.clone();
+    era._pos.copy(pos);
     const nodeSize = 0.17 + era._t * 0.09;
 
     const spokeMat = new THREE.LineBasicMaterial({ color: era.color, transparent: true, opacity: 0.07 });
     const spoke = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, pos.y, 0), pos.clone()]),
-      spokeMat
-    );
+      new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, pos.y, 0), pos.clone()]), spokeMat);
     scene.add(spoke);
-    allLines.push({ line: spoke, darkOp: 0.07, lightOp: 0.16, darkColor: era.color, lightColor: 0x000000, galaxy: 'claude' });
+    allLines.push({ line: spoke, darkOp: 0.07, lightOp: 0.16, darkColor: era.color, lightColor: 0x000000, galaxy: 'manifesto' });
 
-    const geo = new THREE.SphereGeometry(nodeSize, 16, 16);
-    const mat = new THREE.MeshPhysicalMaterial({
-      color: era.color, emissive: era.color, emissiveIntensity: 1.6,
-      metalness: 0.3, roughness: 0.08, clearcoat: 1.0,
-      transparent: true, opacity: 0.92
-    });
-    const mesh = new THREE.Mesh(geo, mat);
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(nodeSize, 16, 16),
+      new THREE.MeshPhysicalMaterial({
+        color: era.color, emissive: era.color, emissiveIntensity: 1.6,
+        metalness: 0.3, roughness: 0.08, clearcoat: 1.0, transparent: true, opacity: 0.92
+      })
+    );
     mesh.position.copy(pos);
     mesh.userData = { era, origColor: era.color, origEI: 1.6, isMoon: false, isManifesto: true };
     scene.add(mesh);
 
-    const hitGeo = new THREE.SphereGeometry(nodeSize * 3.5, 8, 8);
-    const hitMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
-    const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+    const hitMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(nodeSize * 3.5, 8, 8),
+      new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
     hitMesh.position.copy(pos);
     hitMesh.userData = { era, isHitProxy: true, isManifesto: true };
     scene.add(hitMesh);
     nodeObjects.push({ mesh, hitMesh, era, isManifesto: true });
 
     const gs = makeGlowSprite(era.color, nodeSize);
-    gs.position.copy(pos);
-    gs.material.opacity = 0.65;
-    scene.add(gs);
-    glowSprites.push(gs);
+    gs.position.copy(pos); gs.material.opacity = 0.65;
+    scene.add(gs); glowSprites.push(gs);
 
-    const shortTitle = era.title.length > 28 ? era.title.slice(0, 26) + '…' : era.title;
-    addLabel(shortTitle, pos, era.hex + 'cc', 6.5);
+    addLabel(era.title.length > 28 ? era.title.slice(0,26)+'…' : era.title, pos, era.hex + 'cc', 6.5);
     addLabel(era.year, new THREE.Vector3(-0.8, pos.y, 0), 'rgba(218,165,32,0.35)', 5.5);
-
     buildMoons(era, pos, nodeSize);
   });
 
   for (let i = 0; i < MANIFESTO_ERAS.length - 1; i++) {
     const a = MANIFESTO_ERAS[i], b = MANIFESTO_ERAS[i+1];
     const mid = a._spiralPos.clone().add(b._spiralPos).multiplyScalar(0.5); mid.y += 0.5;
-    const pts = new THREE.QuadraticBezierCurve3(a._spiralPos, mid, b._spiralPos).getPoints(20);
-    const conn = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints(pts),
-      new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0.22 })
-    );
+    const pts = new THREE.QuadraticBezierCurve3(a._spiralPos, mid, b._spiralPos).getPoints(16);
+    const conn = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({ color: 0xdaa520, transparent: true, opacity: 0.22 }));
     scene.add(conn);
-    allLines.push({ line: conn, darkOp: 0.22, lightOp: 0.35, darkColor: 0xdaa520, lightColor: 0x000000, galaxy: 'claude' });
+    allLines.push({ line: conn, darkOp: 0.22, lightOp: 0.35, darkColor: 0xdaa520, lightColor: 0x000000, galaxy: 'manifesto' });
   }
 }
+
 buildManifestoScene();
 
 // ─────────────────────────────────────────────────────────
@@ -3834,16 +3914,30 @@ buildManifestoScene();
 // pipeline (inner) → memory (mid) → permission (outer) → experimental (outermost)
 // ─────────────────────────────────────────────────────────
 function buildClaudeScene() {
-  // CLAUDE_ERAS already have ellipse-based _spiralPos from their init
-  // Draw spiral tube through them
+  // ── Spiral tube ─────────────────────────────────────────────
   const pts = CLAUDE_ERAS.map(e => e._spiralPos.clone());
   const curve = new THREE.CatmullRomCurve3(pts);
-  const tube = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(200)),
-    new THREE.LineBasicMaterial({ color: 0x88aaff, transparent: true, opacity: 0.08 }));
+  const tubePts = curve.getPoints(200);
+  const tube = new THREE.Line(new THREE.BufferGeometry().setFromPoints(tubePts),
+    new THREE.LineBasicMaterial({ color: 0x6699ff, transparent: true, opacity: 0.08 }));
   scene.add(tube);
-  allLines.push({ line: tube, darkOp: 0.08, lightOp: 0.20, darkColor: 0x88aaff, lightColor: 0x000000, galaxy: 'claude' });
+  allLines.push({ line: tube, darkOp: 0.08, lightOp: 0.20, darkColor: 0x6699ff, lightColor: 0x000000, galaxy: 'claude' });
+  const inner = new THREE.Line(new THREE.BufferGeometry().setFromPoints(tubePts),
+    new THREE.LineBasicMaterial({ color: 0x4466cc, transparent: true, opacity: 0.04 }));
+  scene.add(inner);
+  allLines.push({ line: inner, darkOp: 0.04, lightOp: 0.10, darkColor: 0x4466cc, lightColor: 0x000000, galaxy: 'claude' });
 
-  // Ellipse rings for orrery mode
+  // ── Spine axis ──────────────────────────────────────────────
+  const spinePts = [
+    new THREE.Vector3(CLAUDE_CENTER.x, -14, CLAUDE_CENTER.z),
+    new THREE.Vector3(CLAUDE_CENTER.x,  14, CLAUDE_CENTER.z),
+  ];
+  const spine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(spinePts),
+    new THREE.LineBasicMaterial({ color: 0x6699ff, transparent: true, opacity: 0.04 }));
+  scene.add(spine);
+  allLines.push({ line: spine, darkOp: 0.04, lightOp: 0.08, darkColor: 0x6699ff, lightColor: 0x000000, galaxy: 'claude' });
+
+  // ── Ellipse rings ───────────────────────────────────────────
   Object.keys(CLAUDE_ELLIPSES).forEach(tier => {
     drawGalaxyEllipse(CLAUDE_CENTER, CLAUDE_ELLIPSES, tier, scene, allLines, 'claude');
   });
@@ -3854,39 +3948,34 @@ function buildClaudeScene() {
       CLAUDE_CENTER.x + lx * Math.cos(TILT) - lz * Math.sin(TILT) + 0.4, (e.y||0) + 0.1,
       CLAUDE_CENTER.z + lx * Math.sin(TILT) + lz * Math.cos(TILT)
     );
-    addLabel(e.label, lp, 'rgba(' + [(e.color>>16)&255,(e.color>>8)&255,e.color&255].join(',') + ',0.30)', 5.8);
+    addLabel(e.label, lp, 'rgba('+[(e.color>>16)&255,(e.color>>8)&255,e.color&255].join(',')+',0.30)', 5.8);
   });
 
   CLAUDE_ERAS.forEach((era) => {
     const tier = era.tier || { pipeline:'inner', memory:'mid', permission:'outer', experimental:'outer2' }[era.solarSystem] || 'inner';
     era._flatPos = ellipsePos(CLAUDE_CENTER, CLAUDE_ELLIPSES, tier, era.angle || era._t);
-
     const pos = era._spiralPos;
     era._pos.copy(pos);
-    const nodeSize = 0.13 + era._t * 0.06;
+    const nodeSize = 0.15 + era._t * 0.07;
 
-    const ellipseData = CLAUDE_ELLIPSES[tier];
-    const color = ellipseData ? ellipseData.color : era.color;
-
-    const spoke = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([CLAUDE_CENTER.clone(), pos.clone()]),
-      new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.04 }));
+    const spokeY = new THREE.Vector3(CLAUDE_CENTER.x, pos.y, CLAUDE_CENTER.z);
+    const spoke = new THREE.Line(new THREE.BufferGeometry().setFromPoints([spokeY, pos.clone()]),
+      new THREE.LineBasicMaterial({ color: era.color, transparent: true, opacity: 0.06 }));
     scene.add(spoke);
-    allLines.push({ line: spoke, darkOp: 0.04, lightOp: 0.14, darkColor: color, lightColor: 0x000000, galaxy: 'claude' });
+    allLines.push({ line: spoke, darkOp: 0.06, lightOp: 0.14, darkColor: era.color, lightColor: 0x000000, galaxy: 'claude' });
 
     const mesh = new THREE.Mesh(
       new THREE.SphereGeometry(nodeSize, 16, 16),
       new THREE.MeshPhysicalMaterial({
-        color: era.color, emissive: era.color, emissiveIntensity: 1.5,
+        color: era.color, emissive: era.color, emissiveIntensity: 1.4,
         metalness: 0.2, roughness: 0.08, clearcoat: 1.0, transparent: true, opacity: 0.92
       })
     );
     mesh.position.copy(pos);
-    mesh.userData = { era, origColor: era.color, origEI: 1.5, isMoon: false, isClaude: true };
+    mesh.userData = { era, origColor: era.color, origEI: 1.4, isMoon: false, isClaude: true };
     scene.add(mesh);
 
-    const hitMesh = new THREE.Mesh(
-      new THREE.SphereGeometry(nodeSize * 3.5, 8, 8),
+    const hitMesh = new THREE.Mesh(new THREE.SphereGeometry(nodeSize * 3.5, 8, 8),
       new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
     hitMesh.position.copy(pos);
     hitMesh.userData = { era, isHitProxy: true, isClaude: true };
@@ -3897,24 +3986,22 @@ function buildClaudeScene() {
     gs.position.copy(pos); gs.material.opacity = 0.55;
     scene.add(gs); glowSprites.push(gs);
 
-    addLabel(era.title.length > 26 ? era.title.slice(0,24)+'…' : era.title, pos, era.hex + 'bb', 6.5);
+    const shortTitle = era.title.length > 28 ? era.title.slice(0,26)+'…' : era.title;
+    addLabel(shortTitle, pos, era.hex + 'bb', 6.5);
+    addLabel(era.year, new THREE.Vector3(CLAUDE_CENTER.x - 0.8, pos.y, CLAUDE_CENTER.z), 'rgba(102,153,255,0.30)', 5.5);
     buildMoons(era, pos, nodeSize);
   });
 
-  const tierNodes = {};
-  CLAUDE_ERAS.forEach(e => { if (!tierNodes[e.solarSystem]) tierNodes[e.solarSystem]=[]; tierNodes[e.solarSystem].push(e); });
-  Object.values(tierNodes).forEach(group => {
-    for (let i = 0; i < group.length-1; i++) {
-      const a = group[i], b = group[i+1];
-      const mid = a._spiralPos.clone().add(b._spiralPos).multiplyScalar(0.5); mid.y += 0.3;
-      const pts = new THREE.QuadraticBezierCurve3(a._spiralPos, mid, b._spiralPos).getPoints(16);
-      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
-        new THREE.LineBasicMaterial({ color: a.color, transparent: true, opacity: 0.12 }));
-      scene.add(line);
-      allLines.push({ line, darkOp: 0.12, lightOp: 0.24, darkColor: a.color, lightColor: 0x000000, galaxy: 'claude' });
-      registerConnection(line, a, b);
-    }
-  });
+  for (let i = 0; i < CLAUDE_ERAS.length - 1; i++) {
+    const a = CLAUDE_ERAS[i], b = CLAUDE_ERAS[i+1];
+    const mid = a._spiralPos.clone().add(b._spiralPos).multiplyScalar(0.5); mid.y += 0.4;
+    const pts = new THREE.QuadraticBezierCurve3(a._spiralPos, mid, b._spiralPos).getPoints(16);
+    const conn = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({ color: 0x6699ff, transparent: true, opacity: 0.22 }));
+    scene.add(conn);
+    allLines.push({ line: conn, darkOp: 0.22, lightOp: 0.35, darkColor: 0x6699ff, lightColor: 0x000000, galaxy: 'claude' });
+    registerConnection(conn, a, b);
+  }
 }
 buildClaudeScene();
 
@@ -4411,6 +4498,8 @@ function updateGalaxyAlpha() {
     if (galaxyAlpha > 0.5) { hud.classList.add('galaxy-view'); hud.classList.remove('orrery-view'); }
     else { hud.classList.add('orrery-view'); hud.classList.remove('galaxy-view'); }
   }
+  // Show right HUD when in sol (orrery) view
+  if (window._showRightHud) window._showRightHud(galaxyAlpha < 0.5);
   // Close panel once as galaxy fades in past threshold (not while user is dragging)
   if (prevGa < 0.25 && galaxyAlpha >= 0.25 && isFocused && !drag && !isDragging) {
     closePanel();
@@ -4628,6 +4717,7 @@ let galaxyMode = true;  // start in galaxy overview
 
 function switchView(view) {
   if (view === 'overview') {
+    focusedStarGalaxyId = null; // reset star focus on overview
     // Overview = zoom out to see all three orreries around the black hole
     // Focus on the orbital ring with a tilted-down angle for comfortable viewing
     closeGridView();
@@ -4692,11 +4782,33 @@ function handleStarClick(mouseVec) {
   if (!star) return false;
 
   const gid = star.def.galaxyId;
-
-  // Single click on any galaxy star → open that galaxy's tesseract directly
   isBlackHoleFocused = false;
+
+  // ── STAR CLICK LOGIC ──────────────────────────────────────
+  // Rule: must focus the star's galaxy BEFORE the tesseract is accessible.
+  // First click (not yet focused) → swoop to orrery overview.
+  // Second click (already focused in this galaxy) → open tesseract.
+
+  const alreadyFocused = focusedStarGalaxyId === gid && !galaxyMode && galaxyAlpha < 0.5;
+
+  if (alreadyFocused) {
+    // Star is already in focus — open its tesseract
+    openGalaxyTesseract(gid);
+    return true;
+  }
+
+  // Not yet focused — swoop into the orrery overview for this galaxy
   focusedStarGalaxyId = gid;
-  openGalaxyTesseract(gid);
+  const p = star.def.center;
+  const angle = Math.atan2(p.z, p.x);
+  const orreryTheta  = angle + Math.PI * 0.55;
+  const orreryPhi    = Math.PI * 0.28;
+  const orreryRadius = 52;
+  galaxyMode = false;
+  swoopTo(orreryPhi, orreryTheta, orreryRadius, p.clone());
+  camTarget.phi = orreryPhi; camTarget.theta = orreryTheta; camTarget.radius = orreryRadius;
+  scenePivotTgt.copy(p);
+  isFocused = false; focusedEra = null;
   return true;
 }
 
@@ -4704,6 +4816,7 @@ function handleStarClick(mouseVec) {
 function clearStarFocus() {
   focusedStarGalaxyId = null;
 }
+// Star focus cleared in switchView overview branch above
 
 // ─────────────────────────────────────────────────────────────
 // PER-GALAXY TESSERACT
@@ -5058,34 +5171,33 @@ function eraPreset(era) {
   const pos = era._pos;
   const isMobile = window.innerWidth <= 768;
 
-  // Use each spiral's own center for nodeR and approach angle.
-  const center = era.id.startsWith('m-') ? new THREE.Vector3(0, 0, 0)
-               : era.id.startsWith('cc-')          ? CLAUDE_CENTER.clone()
-               : era.id.startsWith('p-')           ? SENTENCE_CENTER.clone()
-               :                                     CAREER_OFFSET.clone();
+  // Galaxy center for azimuth calculation
+  const center = era.id.startsWith('m-')  ? new THREE.Vector3(0, 0, 0)
+               : era.id.startsWith('cc-') ? CLAUDE_CENTER.clone()
+               : era.id.startsWith('p-')  ? SENTENCE_CENTER.clone()
+               :                            CAREER_OFFSET.clone();
 
   const relX = pos.x - center.x;
   const relZ = pos.z - center.z;
+  // Camera angle: directly behind the node (away from center), so looking inward
   const nodeAngle = Math.atan2(relZ, relX);
-  const nodeR     = Math.sqrt(relX * relX + relZ * relZ);
+  const theta     = nodeAngle; // camera at same azimuth as node, further out
 
-  // Camera positioned BEYOND the node along the center→node radial line.
-  // theta = nodeAngle: same azimuth as node, further from center.
-  // Pivot between node and center: star visible in background behind node.
-  const theta = nodeAngle;
-  const camOffset = isMobile ? 10 : 14;
-  const radius = nodeR + camOffset;
-  const phi = isMobile ? Math.PI * 0.30 : Math.PI * 0.32;
+  // Elevation: slight tilt down so the node is well-lit and in frame
+  const phi = isMobile ? Math.PI * 0.28 : Math.PI * 0.30;
 
-  const pivotLerp = 0.6;
-  const pivotBase = new THREE.Vector3(
-    center.x + relX * pivotLerp,
-    pos.y * pivotLerp,
-    center.z + relZ * pivotLerp
-  );
-  const panelShift  = isMobile ? 0 : -4.0;
-  const screenRight = new THREE.Vector3(Math.cos(theta), 0, -Math.sin(theta));
-  const pivot       = pivotBase.clone().addScaledVector(screenRight, panelShift);
+  // Radius: fixed orbit distance around the node itself
+  // Larger for outer nodes (they have more context to show), tighter for inner
+  const nodeR  = Math.sqrt(relX * relX + relZ * relZ);
+  const radius = isMobile
+    ? Math.max(10, Math.min(18, 8 + nodeR * 0.28))
+    : Math.max(14, Math.min(26, 10 + nodeR * 0.38));
+
+  // PIVOT = exact node position so the node is CENTERED in viewport
+  // On desktop, shift slightly left (toward star) to give ghost panel room on right
+  const panelShift  = isMobile ? 0 : 3.5;  // positive = toward star (left of screen)
+  const screenLeft  = new THREE.Vector3(-Math.cos(theta + Math.PI * 0.5), 0, Math.sin(theta + Math.PI * 0.5));
+  const pivot       = pos.clone().addScaledVector(screenLeft, panelShift);
 
   return { theta, phi, radius, pivot };
 }
@@ -5232,7 +5344,7 @@ function focusBlackHole() {
 
 // Variable to track if black hole is focused
 let isBlackHoleFocused = false;
-let focusedStarGalaxyId = null;
+var focusedStarGalaxyId = null;
 var lastFocusedGalaxyId = null; // tracks which galaxy star is currently the focus
 
 // Moon image ghost — disabled
@@ -5611,16 +5723,8 @@ cvs.addEventListener('pointerup', e => {
         const cl = clHits[0].object.userData.galaxyCluster;
         if (cl) {
           tooltip.classList.remove('vis');
-          let targetEra;
-          if (cl.id === 'sentence')     { targetEra = PLATFORM_ERAS[0]; }
-          else if (cl.id === 'career')  { targetEra = ERAS[0]; }
-          else                          { targetEra = CLAUDE_ERAS[0]; }
-          isFocused = true; focusedEra = targetEra;
-          const preset = eraPreset(targetEra);
-          scenePivotTgt.copy(preset.pivot);
-          swoopTo(preset.phi, preset.theta, preset.radius, preset.pivot);
-          camTarget.phi = preset.phi; camTarget.theta = preset.theta; camTarget.radius = preset.radius;
-          setTimeout(() => { openPanel(targetEra); highlightConnections(targetEra); }, 300);
+          // Desktop: swoop to galaxy orrery overview — star becomes the entry point
+          swoopToGalaxyOverview(cl.id);
           if (!hintFaded) { document.getElementById('hint').style.opacity = '0.05'; hintFaded = true; }
           return;
         }
@@ -6032,9 +6136,10 @@ function tickMesh() {
     if (b.y<0||b.y>1) b.vy*=-1;
   });
   if (meshT % 3 === 0) drawMesh();
-  requestAnimationFrame(tickMesh);
+  if (!_tabHidden) requestAnimationFrame(tickMesh);
+  else _meshRAFRunning = false;
 }
-drawMesh(); tickMesh();
+drawMesh(); _meshRAFRunning = true; tickMesh();
 applyTheme(); // init with default theme (light)
 
 // Mobile: start in galaxy overview (same view as screenshot)
@@ -6127,6 +6232,7 @@ function tickGalaxyMoons(elapsed) {
 }
 
 function animate(ts) {
+  if (_tabHidden) { _mainRAFRunning = false; return; } // pause when tab hidden
   requestAnimationFrame(animate);
   const dt = Math.min((ts - lastTime) / 1000, 0.05);
   lastTime = ts; elapsed += dt;
@@ -6257,11 +6363,7 @@ function animate(ts) {
     const btn = document.getElementById(id);
     if (!btn) return;
     btn.addEventListener('click', () => {
-      galaxyMode = false;
-      const list = cfg.list();
-      if (list && list[0]) focusEra(list[0]);
-      document.querySelectorAll('#hud .hud-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      swoopToGalaxyOverview(cfg.galaxyId);
     });
   });
 
@@ -6286,7 +6388,28 @@ function animate(ts) {
   // (already handled in contextmenu listener)
 })();
 
-requestAnimationFrame(animate);
+// ── Page Visibility: pause all RAF loops when tab is hidden ──
+// Prevents battery drain and GPU work in background tabs.
+var _tabHidden = false;
+let _mainRAF = null;   // handle for the animate loop
+let _meshRAF = null;   // handle for the tickMesh loop
+
+// Wrap rAF calls to track handles — injected after loop starts
+document.addEventListener('visibilitychange', () => {
+  _tabHidden = document.hidden;
+  if (!_tabHidden) {
+    // Resuming — restart loops with fresh timestamp to avoid dt spike
+    lastTime = performance.now();
+    if (!_mainRAFRunning) { _mainRAFRunning = true; requestAnimationFrame(animate); }
+    if (!_meshRAFRunning) { _meshRAFRunning = true; tickMesh(); }
+  }
+  // When hidden: the animate/tickMesh guards below will stop rescheduling
+});
+
+var _mainRAFRunning = false;
+var _meshRAFRunning = false;
+
+_mainRAFRunning = true; requestAnimationFrame(animate);
 
 window.addEventListener('resize', () => {
   cam.aspect = innerWidth / innerHeight;
@@ -6786,6 +6909,7 @@ function tickTesseractMoons(elapsed) {
 }
 
 function animateTesseract(ts) {
+  if (_tabHidden) { tesseractRAF = null; return; } // pause when hidden
   if (!tesseractOpen) return;
   tesseractRAF = requestAnimationFrame(animateTesseract);
 
@@ -6813,7 +6937,8 @@ window.openTesseract = function(galaxyFilter) {
   overlay.style.display = 'block';
   requestAnimationFrame(() => overlay.classList.add('on'));
 
-  // Always rebuild scene with correct filter
+  // Dispose previous scene geometry/textures before rebuilding
+  disposeTesseractScene();
   if (tesseractRenderer) {
     tesseractRenderer.dispose();
     tesseractRenderer = null;
@@ -6825,12 +6950,34 @@ window.openTesseract = function(galaxyFilter) {
   animateTesseract(performance.now());
 };
 
+// ── Dispose all objects in a Three.js scene (geometries, materials, textures) ──
+function disposeTesseractScene() {
+  if (!tesseractScene) return;
+  tesseractScene.traverse(obj => {
+    if (obj.geometry) { obj.geometry.dispose(); }
+    if (obj.material) {
+      const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+      mats.forEach(m => {
+        if (m.map)          { m.map.dispose(); }
+        if (m.emissiveMap)  { m.emissiveMap.dispose(); }
+        m.dispose();
+      });
+    }
+  });
+  tesseractScene = null;
+  tesseractNodeObjs.length = 0;
+  if (window._tesseractMoonData) window._tesseractMoonData.length = 0;
+}
+
 window.closeTesseract = function() {
   if (!tesseractOpen) return;
   tesseractOpen = false;
   const overlay = document.getElementById('tesseract-overlay');
   overlay.classList.remove('on');
-  setTimeout(() => { overlay.style.display = 'none'; }, 520);
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    disposeTesseractScene(); // free GPU memory after fade-out
+  }, 540);
   if (tesseractRAF) { cancelAnimationFrame(tesseractRAF); tesseractRAF = null; }
 };
 
@@ -6954,11 +7101,26 @@ window.closeTesseractGrid = closeTesseractGrid;
 
   overlay.addEventListener('pointerup', e => {
     tesseractDrag = false;
-    if (!pdDragged && tesseractHovered) {
-      // Click: close tesseract and focus the era in the main scene
-      const era = tesseractHovered.node.era;
-      window.closeTesseract();
-      setTimeout(() => { focusEra(era); }, 300);
+    if (pdDragged) return;
+
+    // On touch, tesseractHovered won't be set (no hover events).
+    // Do a fresh raycast on pointer-up position instead.
+    if (!tesseractCam || !tesseractScene) return;
+    const cvs = document.getElementById('tesseract-canvas');
+    const ux = (e.clientX / cvs.clientWidth)  * 2 - 1;
+    const uy = -((e.clientY / cvs.clientHeight) * 2 - 1);
+    const uMouse = new THREE.Vector2(ux, uy);
+    const uRc = new THREE.Raycaster();
+    uRc.setFromCamera(uMouse, tesseractCam);
+    const hitMeshes = tesseractNodeObjs.map(o => o.hitMesh).filter(Boolean);
+    const hits = uRc.intersectObjects(hitMeshes);
+    if (hits.length) {
+      const obj = tesseractNodeObjs.find(o => o.hitMesh === hits[0].object);
+      if (obj) {
+        const era = obj.node.era;
+        window.closeTesseract();
+        setTimeout(() => { focusEra(era); }, 300);
+      }
     }
   });
 
