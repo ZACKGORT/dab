@@ -809,12 +809,23 @@ body.arch-strip-open #msheet {
               transform 0.45s cubic-bezier(0.22,1,0.36,1);
 }
 #arch-strip.on { opacity: 1; transform: translateY(0); pointer-events: all; }
+/* Filmstrip header row: manifesto text + close button side by side */
+#arch-strip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px 0;
+  gap: 12px;
+  min-height: 0;
+}
 #arch-strip-manifesto {
-  text-align: center; padding: 14px 64px 0;
+  flex: 1;
+  text-align: center;
   font-family: 'Crimson Text', serif;
-  font-size: clamp(13px, 1.5vw, 15px); line-height: 1.7;
+  font-size: clamp(12px, 1.4vw, 14px); line-height: 1.6;
   color: rgba(245,236,213,0.50); letter-spacing: 0.01em;
   pointer-events: none;
+  padding: 0;
 }
 #arch-strip-rail {
   display: flex; align-items: stretch; gap: 0;
@@ -825,7 +836,8 @@ body.arch-strip-open #msheet {
   border-top: 1px solid var(--arch-accent-dim, rgba(218,165,32,0.10));
   background: linear-gradient(to top, rgba(3,2,8,0.97) 55%, rgba(3,2,8,0.0));
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  /* OS-chrome: respect home indicator / taskbar */
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 6px);
   transition: background 0.3s, border-color 0.3s;
 }
 #arch-strip:hover #arch-strip-rail {
@@ -895,18 +907,24 @@ body.arch-strip-open #msheet {
   letter-spacing: 0.20em; text-transform: uppercase; text-align: center;
 }
 #arch-strip-close {
-  position: absolute; top: -34px; right: 16px;
-  background: rgba(3,2,8,0.80);
+  flex-shrink: 0;
+  background: rgba(5,3,10,0.80);
   border: 1px solid rgba(218,165,32,0.18);
-  color: rgba(218,165,32,0.40); cursor: pointer;
-  font-family: 'DM Mono', monospace; font-size: 8px; letter-spacing: 0.14em;
-  padding: 5px 12px; border-radius: 2px;
-  transition: color 0.15s, border-color 0.15s;
+  color: rgba(218,165,32,0.45); cursor: pointer;
+  font-family: 'DM Mono', monospace; font-size: 7px; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 5px 11px; border-radius: 2px;
+  backdrop-filter: blur(10px);
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
 }
-#arch-strip-close:hover { color: #daa520; border-color: rgba(218,165,32,0.50); }
+#arch-strip-close:hover { color: #daa520; border-color: rgba(218,165,32,0.55); background: rgba(218,165,32,0.06); }
+body.light #arch-strip-close { background: rgba(255,255,255,0.92); border-color: rgba(0,0,0,0.14); color: rgba(0,0,0,0.50); }
+body.light #arch-strip-close:hover { color: #000; border-color: rgba(0,0,0,0.40); }
 @media (max-width: 768px) {
   .arch-kf { width: clamp(120px, 38vw, 158px); padding: 8px 10px 14px; }
-  #arch-strip-manifesto { padding: 10px 24px 0; font-size: 12px; }
+  #arch-strip-header { padding: 8px 12px 0; }
+  #arch-strip-manifesto { font-size: 12px; }
 }
 
 #cs-panel {
@@ -1274,45 +1292,12 @@ body.light #mf-close:hover{color:#000;}
   pointer-events:none;
 }
 
-#mobile-zoom-rail {
-  display: none;
-  position: fixed;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 200;
-  flex-direction: column;
-  gap: 3px;
-  align-items: center;
-}
-@media(max-width:768px) {
-  #mobile-zoom-rail { display: flex; }
-}
-.mzr-btn {
-  width: 36px; height: 36px;
-  background: rgba(5,3,10,0.82);
-  border: 1px solid rgba(218,165,32,0.20);
-  border-radius: 4px;
-  color: rgba(218,165,32,0.65);
-  font-family: 'DM Mono', monospace;
-  font-size: 16px; line-height: 1;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  backdrop-filter: blur(10px);
-  transition: color 0.15s, background 0.15s, border-color 0.15s;
-  user-select: none; -webkit-user-select: none;
-}
-.mzr-btn:active { color: #daa520; background: rgba(218,165,32,0.12); border-color: rgba(218,165,32,0.50); }
-.mzr-sep { width: 1px; height: 10px; background: rgba(218,165,32,0.12); }
-.mzr-fit-icon { font-size: 11px; letter-spacing: 0; }
-body.light #mobile-zoom-rail .mzr-btn {
-  background: rgba(255,255,255,0.90); border-color: rgba(0,0,0,0.14); color: rgba(0,0,0,0.55);
-}
+/* mobile-zoom-rail merged into #right-rail-widget */
+#mobile-zoom-rail { display: none !important; }
 
 html, body, canvas, button, a, [onclick], .hud-btn, .gc-moon-pill,
 .cs-nav-btn, .gcclose, .gcnav-btn, .gcexpand, .toc-row, .grid-card,
+.rrw-btn, #arch-strip-close,
 #brand { cursor: none !important; }
 #cursor-outer, #cursor-inner {
   position:fixed; top:0; left:0; pointer-events:none;
@@ -1400,36 +1385,104 @@ body.light .toast-role{color:rgba(0,0,0,0.40);}
 .tess-grid-title { font-family: 'Crimson Text',serif; font-size: 14px; color: #f5ecd5; line-height: 1.2; }
 .tess-grid-domain { font-family: 'DM Mono',monospace; font-size: 6px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(218,165,32,0.28); margin-top: 4px; }
 
-#right-hud {
-  position: fixed; right: 12px; top: 50%; transform: translateY(-50%);
-  display: none; flex-direction: column; gap: 2px;
-  z-index: 100;
+/* ── UNIFIED RIGHT RAIL WIDGET ── */
+#right-hud { display: none !important; } /* old element hidden, replaced by #rrw */
+
+#rrw {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right, 0px) + 8px);
+  /* vertical center accounting for filmstrip: midpoint of available viewport */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   background: rgba(5,3,10,0.88);
-  border: 1px solid rgba(218,165,32,0.12);
-  border-radius: 4px; overflow: hidden;
-  backdrop-filter: blur(10px);
+  border: 1px solid rgba(218,165,32,0.13);
+  border-radius: 5px;
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 4px 28px rgba(0,0,0,0.65);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s, top 0.38s cubic-bezier(0.22,1,0.36,1);
 }
-#right-hud.vis { display: flex; }
-.rhud-btn {
-  background: none; border: none; cursor: pointer;
+/* When filmstrip is open, raise widget so it sits in the viewport above the strip */
+body.arch-strip-open #rrw {
+  top: calc(50% - var(--strip-h, 160px) / 2);
+}
+#rrw.vis {
+  opacity: 1;
+  pointer-events: all;
+}
+.rrw-btn {
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(218,165,32,0.08);
+  cursor: pointer;
   color: rgba(218,165,32,0.40);
-  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.10em;
-  padding: 10px 12px; border-bottom: 1px solid rgba(218,165,32,0.08);
+  font-family: 'DM Mono', monospace;
+  font-size: 15px;
+  line-height: 1;
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
   transition: color 0.15s, background 0.15s;
-  text-align: center; min-width: 38px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  position: relative;
 }
-.rhud-btn:last-child { border-bottom: none; }
-.rhud-btn:hover, .rhud-btn:active { color: #daa520; background: rgba(218,165,32,0.07); }
-.rhud-btn.active { color: #daa520; }
-.rhud-sep { height: 1px; background: rgba(218,165,32,0.10); margin: 1px 0; }
-@media(max-width:768px){
-  #right-hud { right: 8px; }
-  .rhud-btn { padding: 12px 14px; font-size: 10px; }
+.rrw-btn:last-child { border-bottom: none; }
+.rrw-btn:hover { color: #daa520; background: rgba(218,165,32,0.07); }
+.rrw-btn:active { color: #daa520; background: rgba(218,165,32,0.12); }
+.rrw-btn.active { color: #daa520; }
+.rrw-btn:disabled { opacity: 0.22; pointer-events: none; }
+/* tooltip labels — appear to the left of the widget */
+.rrw-btn::after {
+  content: attr(data-tip);
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(5,3,10,0.92);
+  border: 1px solid rgba(218,165,32,0.14);
+  border-radius: 2px;
+  font-size: 6.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(218,165,32,0.70);
+  padding: 4px 9px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
 }
-body.light #right-hud { background: rgba(255,255,255,0.96); border-color: rgba(0,0,0,0.10); }
-body.light .rhud-btn { color: rgba(0,0,0,0.45); }
-body.light .rhud-btn:hover { color: #000; }
-body.light .rhud-btn.active { color: #000; }
+.rrw-btn:hover::after { opacity: 1; }
+.rrw-sep {
+  height: 1px;
+  background: rgba(218,165,32,0.10);
+  flex-shrink: 0;
+}
+
+/* mobile: slightly larger tap targets, right-edge safe area */
+@media(max-width:768px) {
+  #rrw { right: max(8px, env(safe-area-inset-right, 0px) + 4px); }
+  .rrw-btn { padding: 13px 15px; font-size: 17px; min-width: 46px; }
+  .rrw-btn::after { display: none; } /* no tooltips on touch */
+}
+
+/* light theme */
+body.light #rrw { background: rgba(255,255,255,0.96); border-color: rgba(0,0,0,0.10); box-shadow: 0 4px 20px rgba(0,0,0,0.10); }
+body.light .rrw-btn { color: rgba(0,0,0,0.42); border-bottom-color: rgba(0,0,0,0.07); }
+body.light .rrw-btn:hover { color: #000; background: rgba(0,0,0,0.04); }
+body.light .rrw-btn.active { color: #000; }
+body.light .rrw-btn::after { background: #fff; border-color: rgba(0,0,0,0.12); color: rgba(0,0,0,0.70); }
+body.light .rrw-sep { background: rgba(0,0,0,0.08); }
 
 #musicIframeContainer {
   position: fixed; left: -9999px; top: -9999px;
@@ -1671,12 +1724,12 @@ body.arch-strip-open #flight-fab {
               opacity 0.35s ease;
 }
 
-/* Mobile brand text — shifted right to clear 96px FAB */
+/* Mobile brand text — sits below HUD bar, clear of header chrome */
 #mobile-brand-text {
   display: none;
   position: fixed;
-  top: 14px;
-  left: 116px;
+  top: 46px;
+  left: 16px;
   z-index: 850;
   font-family: 'DM Mono', monospace;
 }
@@ -1987,12 +2040,20 @@ body.light #mhud-close:hover { color:rgba(0,0,0,0.70); }
   <span class="toast-role" id="tt-role"></span>
 </div>
 
-<!-- MOBILE ZOOM RAIL -->
-<div id="mobile-zoom-rail">
-  <button class="mzr-btn" id="mzr-in"  ontouchend="mobileZoom(-1)" onclick="mobileZoom(-1)">+</button>
-  <button class="mzr-btn" id="mzr-out" ontouchend="mobileZoom(1)"  onclick="mobileZoom(1)">−</button>
-  <div class="mzr-sep"></div>
-  <button class="mzr-btn" id="mzr-fit" ontouchend="mobileFit()" onclick="mobileFit()"><span class="mzr-fit-icon">⊙</span></button>
+<!-- MOBILE ZOOM RAIL (legacy stub, hidden) -->
+<div id="mobile-zoom-rail" style="display:none!important"></div>
+
+<!-- UNIFIED RIGHT RAIL WIDGET -->
+<div id="rrw" aria-label="View controls">
+  <button class="rrw-btn" id="rrw-fit"  data-tip="Reset View"  onclick="mobileFit()"            ontouchend="mobileFit()">⊙</button>
+  <div class="rrw-sep"></div>
+  <button class="rrw-btn" id="rrw-in"   data-tip="Zoom In"     onclick="mobileZoom(-1)"         ontouchend="mobileZoom(-1)">+</button>
+  <button class="rrw-btn" id="rrw-out"  data-tip="Zoom Out"    onclick="mobileZoom(1)"          ontouchend="mobileZoom(1)">−</button>
+  <div class="rrw-sep"></div>
+  <button class="rrw-btn" id="rrw-grid" data-tip="Grid View"   onclick="toggleUniverseGrid()">⊞</button>
+  <div class="rrw-sep"></div>
+  <button class="rrw-btn" id="rrw-prev" data-tip="Previous"    onclick="navPrev()">←</button>
+  <button class="rrw-btn" id="rrw-next" data-tip="Next"        onclick="navNext()">→</button>
 </div>
 <canvas id="bg-mesh"></canvas>
 <canvas id="canvas"></canvas>
@@ -2047,13 +2108,8 @@ body.light #mhud-close:hover { color:rgba(0,0,0,0.70); }
   <button class="hud-btn" id="theme-toggle-hud">LGHT</button>
 </div>
 
-<!-- Right contextual HUD: zoom + layout toggle -->
-<div id="right-hud">
-  <button class="rhud-btn" id="rhud-nav-prev" title="Previous node">←</button>
-  <button class="rhud-btn" id="rhud-nav-next" title="Next node">→</button>
-  <div class="rhud-sep"></div>
-  <button class="rhud-btn" id="rhud-grid" title="Grid view">⊞</button>
-</div>
+<!-- Right HUD replaced by #rrw unified rail widget -->
+<div id="right-hud" style="display:none!important"></div>
 
 <!-- hidden stubs so JS refs don't break -->
 <button id="theme-toggle" style="display:none">Light</button>
@@ -4111,8 +4167,8 @@ const GALAXY_CLUSTERS = [
     nodeIds: ERAS.map(e => e.id)
   },
   {
-    id: 'claude', name: 'Wolfgang',
-    sub: 'The Chronicles of Wolfgang · wolfie.love',
+    id: 'claude', name: 'Claude Code',
+    sub: 'SOL 3 · Human & Machine Learning',
     color: 0xffe066, hex: '#ffe066',
     center: CLAUDE_CENTER, size: 5.5,
     nodeIds: CLAUDE_ERAS.map(e => e.id)
@@ -4760,10 +4816,10 @@ const SENTENCE_ELLIPSES = {
 };
 
 const CLAUDE_ELLIPSES = {
-  inner:  { rx: 9,  rz: 5,  color: 0xffe066, label: 'The Sweetest · Welcome Home',      y: 0.05 },
-  mid:    { rx: 16, rz: 9,  color: 0xf0b830, label: 'Chronicles · Found on Side of Road', y: 0.20 },
-  outer:  { rx: 23, rz: 13, color: 0xd0a8e0, label: 'Lost & Found · The King From Queens', y: 0.38 },
-  outer2: { rx: 30, rz: 17, color: 0xffe8f0, label: 'Very Last Moments · Good Night',      y: 0.58 },
+  inner:  { rx: 9,  rz: 5,  color: 0xffe066, label: 'Pipeline · Query & Routing',        y: 0.05 },
+  mid:    { rx: 16, rz: 9,  color: 0xf0b830, label: 'Context · Memory & State',           y: 0.20 },
+  outer:  { rx: 23, rz: 13, color: 0xd0a8e0, label: 'Friction · Permission & Safety',     y: 0.38 },
+  outer2: { rx: 30, rz: 17, color: 0xffe8f0, label: 'Autonomous · Experimental Modes',    y: 0.58 },
 };
 
 const EXPLORER_ELLIPSES = {
@@ -6359,6 +6415,8 @@ function openGridView() {
   document.querySelectorAll('.hud-btn[data-view]').forEach(b => b.classList.remove('active'));
   const mhubList = document.getElementById('mhub-list');
   if (mhubList) mhubList.classList.add('active');
+  const rrwGrid = document.getElementById('rrw-grid');
+  if (rrwGrid) rrwGrid.classList.add('active');
   el.addEventListener('pointerdown', function handler(ev) {
     if (!ev.target.closest('.grid-card')) {
       closeGridView();
@@ -6376,6 +6434,8 @@ function closeGridView() {
   if (mhubList) mhubList.classList.remove('active');
   const btn = document.getElementById('nc-grid');
   if (btn) btn.classList.remove('nc-active');
+  const rrwGrid = document.getElementById('rrw-grid');
+  if (rrwGrid) rrwGrid.classList.remove('active');
   setTimeout(() => { el.style.display = 'none'; }, 420);
 }
 
@@ -6539,7 +6599,7 @@ const GALAXY_TESSERACT_FILTERS = {
 const GALAXY_TESSERACT_LABELS = {
   career:   { eyebrow: 'CAREER  ·  2003 – PRESENT', title: 'Twenty Years. One Thread.', sub: 'Philadelphia  →  New York  →  Independent' },
   sentence: { eyebrow: 'PLATFORM ECOSYSTEM', title: 'The Sentence as the Primitive.', sub: 'From wolfie.love to dab.cx' },
-  claude:   { eyebrow: 'WOLFGANG  ·  SOL 3  ·  wolfie.love', title: 'The Chronicles of Wolfgang.', sub: 'A name neither chosen, nor given — but a name worth becoming.' },
+  claude:   { eyebrow: 'SOL 3  ·  CLAUDE CODE  ·  H&ML', title: 'Human & Machine Learning.', sub: 'How the model thinks — architecture made visible.' },
   manifesto:{ eyebrow: 'MANIFESTO  ·  POSITIONS', title: 'The Method.', sub: 'What I believe about how things should be made' },
   explorer: { eyebrow: 'SOL X  ·  EXPLORER ARCHETYPES', title: 'Find Your Archetype.', sub: 'Four vessels · one matched to your brief' },
 };
@@ -6564,16 +6624,32 @@ function openGalaxyTesseract(galaxyId) {
 // Opens the tesseract overlay with a specific set of eras
 
 function navPrev() {
-  if (!focusedEra) { focusEra(ERAS[0]); return; }
+  if (!focusedEra) {
+    // At overview: cycle to the previous galaxy star
+    const galaxyIds = ['career', 'sentence', 'claude', 'explorer'];
+    const cur = galaxyIds.indexOf(lastFocusedGalaxyId || focusedStarGalaxyId || 'career');
+    const prev = galaxyIds[(cur - 1 + galaxyIds.length) % galaxyIds.length];
+    swoopToGalaxyOverview(prev);
+    return;
+  }
   const list = activeList(focusedEra);
   const idx = list.findIndex(e => e.id === focusedEra.id);
-  if (idx > 0) focusEra(list[idx - 1], -1);
+  // Wrap continuously
+  focusEra(list[(idx - 1 + list.length) % list.length], -1);
 }
 function navNext() {
-  if (!focusedEra) { focusEra(ERAS[0]); return; }
+  if (!focusedEra) {
+    // At overview: cycle to the next galaxy star
+    const galaxyIds = ['career', 'sentence', 'claude', 'explorer'];
+    const cur = galaxyIds.indexOf(lastFocusedGalaxyId || focusedStarGalaxyId || 'career');
+    const next = galaxyIds[(cur + 1) % galaxyIds.length];
+    swoopToGalaxyOverview(next);
+    return;
+  }
   const list = activeList(focusedEra);
   const idx = list.findIndex(e => e.id === focusedEra.id);
-  if (idx < list.length - 1) focusEra(list[idx + 1], 1);
+  // Wrap continuously
+  focusEra(list[(idx + 1) % list.length], 1);
 }
 
 // ── MOBILE HUB FUNCTIONS ──────────────────────────────────────
@@ -6843,6 +6919,7 @@ window.closePanel = function (forceCloseStrip) {
   // Only close filmstrip if explicitly requested (not during keyframe navigation)
   if (forceCloseStrip) closeArchStrip();
   if (window._updateNavChrome) setTimeout(window._updateNavChrome, 80);
+  if (window._syncRhudNav) setTimeout(window._syncRhudNav, 80);
 };
 
 // Mobile sheet expand/collapse toggle
@@ -7057,6 +7134,7 @@ function focusEra(era, navDir) {
   highlightConnections(era); updateLineVisibility(getGalaxyFromEra(era));
   updateLayoutToggleBar(era);
   if (window._updateNavChrome) setTimeout(window._updateNavChrome, 80);
+  if (window._syncRhudNav) setTimeout(window._syncRhudNav, 80);
 }
 
 function highlightConnections(era) {
@@ -8147,6 +8225,68 @@ function _allErasMap() {
   return m;
 }
 
+// ── SOL FILMSTRIP DATA — one entry per galaxy star ────────
+const SOL_FILMSTRIP_DATA = {
+  career: {
+    accent: '#daa520',
+    manifesto: 'Twenty years. One thread. Philadelphia to New York to independent — every role a proof, not a credential.',
+    keyframes: [
+      { eraId: 'origin',         label: 'Miller Designworks', why: 'The beginning of the thread. Print, identity, suburban Philly.' },
+      { eraId: 'turn5',          label: 'Turn5',              why: 'A garage startup. $10M → $40M. Built the photo studio from nothing.' },
+      { eraId: 'leadnomics',     label: 'Leadnomics',         why: '95.8% CVR. Mobile-first before it was mandated.' },
+      { eraId: '160over90',      label: '160/90',             why: 'The culture demanded we dare. Enterprise interaction design.' },
+      { eraId: 'o3world',        label: 'O3 World',           why: 'Certified Scrum Master. Lean UX in practice.' },
+      { eraId: 'livearea',       label: 'Livearea',           why: 'IC → Manager. Invented Cards Against Bad UX.' },
+      { eraId: 'elva',           label: 'GNC',                why: 'Post-bankruptcy rebuild. ~$500M revenue recovery in 12 weeks.' },
+      { eraId: 'publicis',       label: 'BNY Mellon',         why: 'Principal lead. $2T+ AUM platform. Became the lead.' },
+      { eraId: 'wolfco',         label: 'Wolfgang & Co.',     why: 'Founder. Six verticals. One grammar. Ongoing.' },
+      { eraId: 'seek',           label: 'What\'s Next',       why: 'Director / VP / Head of Design — remote, ambitious, real.' },
+    ],
+    caseStudy: 'bny',
+  },
+  sentence: {
+    accent: '#a0c8ff',
+    manifesto: 'The sentence is the primitive. Every platform, every product, every piece of writing begins with one irreducible unit.',
+    keyframes: [
+      { eraId: 'p-origin',              label: 'The Sentence',        why: 'The thesis. The origin. The irreducible grammar.' },
+      { eraId: 'p-wolfie-love',         label: 'wolfie.love',         why: 'Progressive reading, Flow Mode, four themes. The first proof.' },
+      { eraId: 'p-wolfie-life',         label: 'wolfie.life',         why: 'Life documentation as narrative system.' },
+      { eraId: 'p-intoview',            label: 'intoview.pro',        why: 'JD → narrative journey. The thesis made interactive.' },
+      { eraId: 'p-emdash',              label: '—',                   why: 'The em-dash as product. Pause as interface.' },
+      { eraId: 'p-rsp',                 label: 'anthropic.html',      why: 'RSP 3.0 — live behavioral telemetry, editorial platform.' },
+      { eraId: 'p-reasonandresolution', label: 'Reason & Resolution', why: 'Anthropic RSP reframed as editorial artifact.' },
+      { eraId: 'p-ifimaybefrank',       label: 'ifimaybefrank',       why: 'Sentence-as-primitive writing engine. Custom everything.' },
+    ],
+    caseStudy: null,
+  },
+  claude: {
+    accent: '#ffe066',
+    manifesto: 'The source code leaked. This is what was inside — a philosophy made visible. You can work with a system you understand.',
+    keyframes: [
+      { eraId: 'cc-queryengine',       label: 'Query Engine',         why: 'The core pipeline. Intent → plan. Every prompt starts here.' },
+      { eraId: 'cc-yolo-classifier',   label: 'YOLO Classifier',      why: 'Single-pass ML permission decisions. Speed vs explainability.' },
+      { eraId: 'cc-assertiveness',     label: 'Assertiveness Weight', why: 'Deliberate friction. Asking beats guessing.' },
+      { eraId: 'cc-memory-indexing',   label: 'MEMORY.md',            why: 'Long-term memory as structured markdown. Persists across sessions.' },
+      { eraId: 'cc-skeptical-memory',  label: 'Skeptical Memory',     why: 'Trust but verify — even your own memories.' },
+      { eraId: 'cc-permission-system', label: 'Permission System',    why: 'Reasoned, not arbitrary. Legibility is the safety model.' },
+      { eraId: 'cc-autodream',         label: 'AutoDream',            why: 'Autonomous off-hours problem solving. The system thinks while you sleep.' },
+      { eraId: 'cc-into-the-void',     label: 'Into The Void',        why: 'Why this map exists. Legibility is the gift.' },
+    ],
+    caseStudy: null,
+  },
+  explorer: {
+    accent: '#c084fc',
+    manifesto: 'Four archetypes. One question: which vessel fits the mission? The Explorer galaxy maps the shape of how I work.',
+    keyframes: [
+      { eraId: 'x-orbiter',   label: 'The Orbiter',  why: 'Senior IC → Lead. The roadmap is the argument. The design is the proof.' },
+      { eraId: 'x-lunar',     label: 'The Lunar',    why: '0-to-1. Founding designer. The north star is yours to set.' },
+      { eraId: 'x-satellite', label: 'The Satellite', why: 'Systems builder. Design technologist. No framework dependency.' },
+      { eraId: 'x-station',   label: 'The Station',  why: 'Platform scale. Cross-functional. Judgment that multiplies.' },
+    ],
+    caseStudy: null,
+  },
+};
+
 // ── SOL FILMSTRIP: open for a whole sol system galaxy ─────
 function openSolFilmstrip(galaxyId, force) {
   const data = SOL_FILMSTRIP_DATA[galaxyId];
@@ -8516,31 +8656,41 @@ function animate(ts) {
   // Right-click on canvas: toggle spiral ↔ timeline
   // (already handled in contextmenu listener)
 
-  // Right HUD: prev / next node navigation
-  const rNavPrev = document.getElementById('rhud-nav-prev');
-  const rNavNext = document.getElementById('rhud-nav-next');
-  if (rNavPrev) rNavPrev.addEventListener('click', () => { if (typeof navPrev === 'function') navPrev(); });
-  if (rNavNext) rNavNext.addEventListener('click', () => { if (typeof navNext === 'function') navNext(); });
+  // ── Unified Right Rail Widget (#rrw) ──────────────────────
+  const rrw      = document.getElementById('rrw');
+  const rrwPrev  = document.getElementById('rrw-prev');
+  const rrwNext  = document.getElementById('rrw-next');
+  const rrwGrid  = document.getElementById('rrw-grid');
+  const rrwFit   = document.getElementById('rrw-fit');
+  const rrwIn    = document.getElementById('rrw-in');
+  const rrwOut   = document.getElementById('rrw-out');
 
-  // Right HUD: grid view toggle
-  const rGrid = document.getElementById('rhud-grid');
-  if (rGrid) rGrid.addEventListener('click', () => { if (typeof toggleUniverseGrid === 'function') toggleUniverseGrid(); });
+  // Nav buttons wired (onclick already set in HTML; also add listeners for robustness)
+  if (rrwPrev) rrwPrev.addEventListener('click', () => { if (typeof navPrev === 'function') navPrev(); });
+  if (rrwNext) rrwNext.addEventListener('click', () => { if (typeof navNext === 'function') navNext(); });
+  // rrw-grid: onclick attr in HTML is sufficient — no duplicate addEventListener
+  if (rrwFit)  rrwFit.addEventListener('click',  () => { if (typeof mobileFit  === 'function') mobileFit(); });
+  if (rrwIn)   rrwIn.addEventListener('click',   () => { if (typeof mobileZoom === 'function') mobileZoom(-1); });
+  if (rrwOut)  rrwOut.addEventListener('click',  () => { if (typeof mobileZoom === 'function') mobileZoom(1); });
 
-  // Keep active state in sync with focus
+  // Sync nav button dimming when focus changes
   function _syncRhudNav() {
     const hasFocus = typeof isFocused !== 'undefined' && isFocused && typeof focusedEra !== 'undefined' && focusedEra;
-    if (rNavPrev) rNavPrev.style.opacity = hasFocus ? '1' : '0.35';
-    if (rNavNext) rNavNext.style.opacity = hasFocus ? '1' : '0.35';
+    if (rrwPrev) rrwPrev.disabled = !hasFocus;
+    if (rrwNext) rrwNext.disabled = !hasFocus;
   }
   window._syncRhudNav = _syncRhudNav;
 
-  // Show right HUD only when inside a sol (orrery) view
-  const rightHud = document.getElementById('right-hud');
+  // Show/hide — visible whenever the canvas is the primary surface (galaxy or node view)
+  // Replaces the old _showRightHud(inSol) — now shown in ALL canvas states
   window._showRightHud = function(inSol) {
-    if (!rightHud) return;
-    if (inSol) rightHud.classList.add('vis');
-    else rightHud.classList.remove('vis');
+    if (!rrw) return;
+    // Always visible while canvas is active (galaxy overview AND focused node)
+    rrw.classList.add('vis');
   };
+
+  // Show immediately on load (canvas always active)
+  if (rrw) rrw.classList.add('vis');
 })();
 
 // ── Page Visibility: pause all RAF loops when tab is hidden ──
@@ -8767,8 +8917,12 @@ function mobileFit() {
       if (typeof swoopTo === 'function') swoopTo(preset.phi, preset.theta, preset.radius, preset.pivot);
       camTarget.phi = preset.phi; camTarget.theta = preset.theta; camTarget.radius = preset.radius;
     }
+  } else if (typeof galaxyMode !== 'undefined' && !galaxyMode && typeof focusedStarGalaxyId !== 'undefined' && focusedStarGalaxyId) {
+    // In sol-view with no era focused: reset to the galaxy's central sun node
+    isFocused = false; focusedEra = null;
+    swoopToGalaxyOverview(focusedStarGalaxyId);
   } else {
-    // Fit to galaxy overview
+    // Fit to universe overview
     if (typeof swoopTo === 'function') swoopTo(Math.PI*0.22, Math.PI*1.55, 260, {x:0,y:0,z:0});
     camTarget.phi = Math.PI*0.22; camTarget.theta = Math.PI*1.55; camTarget.radius = 260;
     if (typeof scenePivotTgt !== 'undefined') scenePivotTgt.set(0,0,0);
@@ -10095,8 +10249,10 @@ window.closeTesseractGrid = closeTesseractGrid;
 <!-- ═══ CASE STUDY PANEL ═══ -->
 <!-- ── ARCHETYPE FILMSTRIP ─────────────────────────────── -->
 <div id="arch-strip">
-  <button id="arch-strip-close" onclick="closeArchStrip()">✕ close</button>
-  <div id="arch-strip-manifesto"></div>
+  <div id="arch-strip-header">
+    <div id="arch-strip-manifesto"></div>
+    <button id="arch-strip-close" onclick="closeArchStrip()">✕ close</button>
+  </div>
   <div id="arch-strip-rail"></div>
 </div>
 
@@ -10134,29 +10290,6 @@ window.closeTesseractGrid = closeTesseractGrid;
 </div>
 
 <script>
-// ── MOBILE ZOOM RAIL ─────────────────────────────────────
-function mobileZoom(dir) {
-  if (typeof camTarget === 'undefined') return;
-  const step = camTarget.radius * 0.22;
-  const mn = typeof ORRERY_RADIUS_MIN !== 'undefined' ? ORRERY_RADIUS_MIN : 1;
-  camTarget.radius = Math.max(mn, Math.min(340, camTarget.radius + dir * step));
-  if (typeof lockPivotToFocus === 'function') lockPivotToFocus();
-}
-function mobileFit() {
-  if (typeof camTarget === 'undefined') return;
-  if (typeof isFocused !== 'undefined' && isFocused && typeof focusedEra !== 'undefined' && focusedEra) {
-    if (typeof eraPreset === 'function') {
-      const preset = eraPreset(focusedEra);
-      if (typeof swoopTo === 'function') swoopTo(preset.phi, preset.theta, preset.radius, preset.pivot);
-      camTarget.phi = preset.phi; camTarget.theta = preset.theta; camTarget.radius = preset.radius;
-    }
-  } else {
-    if (typeof swoopTo === 'function') swoopTo(Math.PI*0.22, Math.PI*1.55, 260, {x:0,y:0,z:0});
-    camTarget.phi = Math.PI*0.22; camTarget.theta = Math.PI*1.55; camTarget.radius = 260;
-    if (typeof scenePivotTgt !== 'undefined') scenePivotTgt.set(0,0,0);
-  }
-}
-
 // ── CUSTOM ELLIPTICAL CURSOR ─────────────────────────────
 (function() {
   var outerEl = document.getElementById('cursor-outer');
@@ -10362,78 +10495,7 @@ function mobileFit() {
 })();
 </script>
 
-<!-- ═══ FAB PROXIMITY EXPANSION ═══ -->
-<script>
-(function() {
-  'use strict';
-  var fab = document.getElementById('flight-fab');
-  if (!fab) return;
 
-  var currentScale = 1.0;
-  var targetScale  = 1.0;
-  var raf = null;
-
-  function lerp(a, b, t) { return a + (b - a) * t; }
-
-  function tick() {
-    currentScale = lerp(currentScale, targetScale, 0.12);
-    var diff = Math.abs(currentScale - targetScale);
-    // Apply via CSS custom property so it composes with the CSS :hover scale
-    fab.style.setProperty('--prox-scale', currentScale.toFixed(4));
-    if (diff > 0.0003) {
-      raf = requestAnimationFrame(tick);
-    } else {
-      raf = null;
-    }
-  }
-
-  function startTick() {
-    if (!raf) raf = requestAnimationFrame(tick);
-  }
-
-  document.addEventListener('mousemove', function(e) {
-    var rect = fab.getBoundingClientRect();
-    var cx = rect.left + rect.width  / 2;
-    var cy = rect.top  + rect.height / 2;
-    var dx = e.clientX - cx;
-    var dy = e.clientY - cy;
-    var dist = Math.sqrt(dx*dx + dy*dy);
-    // Full expansion within 60px of edge, fade out by 200px
-    var edgeDist = dist - (rect.width / 2);
-    var raw = 1 - Math.min(1, Math.max(0, (edgeDist - 8) / 170));
-    // Maps 0→1 proximity to scale 1.0→1.20
-    targetScale = 1.0 + raw * 0.20;
-    startTick();
-  }, { passive: true });
-
-  document.addEventListener('mouseleave', function() {
-    targetScale = 1.0;
-    startTick();
-  }, { passive: true });
-
-  // Inject CSS to consume the custom property alongside :hover scale
-  var style = document.createElement('style');
-  var isMob = window.innerWidth <= 768;
-  var baseT = isMob ? '' : 'translateX(-50%)';
-  style.textContent = [
-    '#flight-fab {',
-    '  transform: ' + baseT + ' scale(var(--prox-scale, 1.0));',
-    '}',
-    '#flight-fab:hover {',
-    '  transform: ' + baseT + ' scale(calc(var(--prox-scale, 1.0) * 1.10));',
-    '}',
-    '#flight-fab:active {',
-    '  transform: ' + baseT + ' scale(calc(var(--prox-scale, 1.0) * 0.95));',
-    '}',
-    '@media(max-width:768px){',
-    '  #flight-fab { transform: scale(var(--prox-scale, 1.0)); }',
-    '  #flight-fab:hover { transform: scale(calc(var(--prox-scale, 1.0) * 1.10)); }',
-    '  #flight-fab:active { transform: scale(calc(var(--prox-scale, 1.0) * 0.95)); }',
-    '}',
-  ].join('\n');
-  document.head.appendChild(style);
-})();
-</script>
 
 <!-- ── MUSIC PLAYER JS — verbatim from wolfie.love ─────── -->
 <script>
