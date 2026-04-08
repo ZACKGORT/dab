@@ -1828,6 +1828,146 @@ body.light #mf-close:hover{color:#000;}
   .tess-section { padding: 32px 20px 40px; }
 }
 
+/* ── UNIVERSE HERO PREVIEW ── */
+.tess-hero-preview {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin-bottom: 24px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.tess-hero-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  transition: opacity 0.4s, transform 0.6s cubic-bezier(0.22,1,0.36,1);
+  filter: saturate(0.9) brightness(0.95);
+}
+.tess-section:hover .tess-hero-preview-img {
+  opacity: 1;
+  transform: scale(1.03);
+  filter: saturate(1) brightness(1);
+}
+.tess-hero-preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, 
+    rgba(0,0,0,0.7) 0%, 
+    rgba(0,0,0,0.2) 30%,
+    transparent 60%);
+  pointer-events: none;
+}
+.tess-hero-preview-frame {
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+.tess-section:hover .tess-hero-preview-frame {
+  opacity: 1;
+  border-color: rgba(218,165,32,0.4);
+}
+.tess-hero-preview-label {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tess-hero-preview-label::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(218,165,32,0.9);
+  box-shadow: 0 0 8px rgba(218,165,32,0.5);
+  animation: tess-pulse 2.4s ease-in-out infinite;
+}
+@keyframes tess-pulse {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.5; }
+}
+.tess-hero-preview-coords {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 6px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+/* Section-specific hero image positioning */
+.tess-hero-preview[data-section="career"] .tess-hero-preview-img {
+  object-position: center 30%;
+}
+.tess-hero-preview[data-section="platform"] .tess-hero-preview-img {
+  object-position: center 40%;
+}
+.tess-hero-preview[data-section="claude"] .tess-hero-preview-img {
+  object-position: center 35%;
+}
+.tess-hero-preview[data-section="manifesto"] .tess-hero-preview-img {
+  object-position: center 45%;
+}
+/* Live preview animation for focused nodes */
+.tess-hero-preview.live::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation: tess-scan 3s ease-in-out infinite;
+}
+@keyframes tess-scan {
+  0% { left: -50%; }
+  100% { left: 100%; }
+}
+/* Focused state for node interaction */
+.tess-hero-preview.focused .tess-hero-preview-img {
+  filter: saturate(1.1) brightness(1.05);
+  transform: scale(1.05);
+}
+.tess-hero-preview.focused .tess-hero-preview-frame {
+  border-color: rgba(218,165,32,0.7);
+  box-shadow: 0 0 20px rgba(218,165,32,0.3);
+}
+@media(max-width:640px) {
+  .tess-hero-preview {
+    height: 140px;
+    margin-bottom: 16px;
+  }
+  .tess-hero-preview-label {
+    font-size: 6px;
+    bottom: 10px;
+    left: 12px;
+  }
+  .tess-hero-preview-coords {
+    font-size: 5px;
+    top: 10px;
+    right: 12px;
+  }
+}
+
 /* ── CARD GRID ── */
 .tess-grid {
   display: grid;
@@ -10293,6 +10433,13 @@ document.addEventListener('keydown', e => {
 
     <!-- Hero -->
     <div id="tess-hero">
+      <div class="tess-hero-preview" data-section="works" style="height:280px;margin-bottom:32px;">
+        <img class="tess-hero-preview-img" src="generated_images/generated_image_ad8c451a-de50-488e-bd8d-ac39ae6299ba_0.png" alt="Creative Works Nebula" style="object-position:center 40%;">
+        <div class="tess-hero-preview-overlay"></div>
+        <div class="tess-hero-preview-frame"></div>
+        <span class="tess-hero-preview-label">Live Universe Render · The Black Hole</span>
+        <span class="tess-hero-preview-coords">RA 14h 29m · DEC -62° 40'</span>
+      </div>
       <div id="tess-hero-eyebrow">The Black Hole · Raw Data Environment</div>
       <h1 id="tess-hero-title">Every node.<br>All galaxies.</h1>
       <p id="tess-hero-sub">The same data that powers the spatial universe, reorganised into a familiar interface. Browse, navigate, select — then return to the cosmos.</p>
@@ -10321,6 +10468,13 @@ document.addEventListener('keydown', e => {
 
     <!-- Career section — card grid -->
     <section class="tess-section" id="tess-sec-career">
+      <div class="tess-hero-preview" data-section="career">
+        <img class="tess-hero-preview-img" src="generated_images/generated_image_0588b89b-88b4-4334-a3fa-7d153cef686c_0.png" alt="Career Galaxy Cluster">
+        <div class="tess-hero-preview-overlay"></div>
+        <div class="tess-hero-preview-frame"></div>
+        <span class="tess-hero-preview-label">Live Preview · Career Trajectory</span>
+        <span class="tess-hero-preview-coords">RA 05h 34m · DEC +22° 01'</span>
+      </div>
       <div class="tess-section-header">
         <span class="tess-section-title">Career</span>
         <span class="tess-section-count" id="tess-label-career"></span>
@@ -10330,6 +10484,13 @@ document.addEventListener('keydown', e => {
 
     <!-- Platform section — card grid -->
     <section class="tess-section" id="tess-sec-platform">
+      <div class="tess-hero-preview" data-section="platform">
+        <img class="tess-hero-preview-img" src="generated_images/generated_image_ab1f6027-09ce-459c-b94d-f71dfde96165_0.png" alt="Sentence Primitive Linguistic Cosmos">
+        <div class="tess-hero-preview-overlay"></div>
+        <div class="tess-hero-preview-frame"></div>
+        <span class="tess-hero-preview-label">Live Preview · Sentence as Primitive</span>
+        <span class="tess-hero-preview-coords">RA 12h 18m · DEC +08° 12'</span>
+      </div>
       <div class="tess-section-header">
         <span class="tess-section-title">Sentence Primitive</span>
         <span class="tess-section-count" id="tess-label-platform"></span>
@@ -10339,6 +10500,13 @@ document.addEventListener('keydown', e => {
 
     <!-- Claude section — poster grid -->
     <section class="tess-section" id="tess-sec-claude">
+      <div class="tess-hero-preview" data-section="claude">
+        <img class="tess-hero-preview-img" src="generated_images/generated_image_74e7da52-e4c8-4a01-99e1-feb8a0b2eadc_0.png" alt="Claude AI Constellation">
+        <div class="tess-hero-preview-overlay"></div>
+        <div class="tess-hero-preview-frame"></div>
+        <span class="tess-hero-preview-label">Live Preview · Claude Intelligence</span>
+        <span class="tess-hero-preview-coords">RA 20h 41m · DEC +45° 17'</span>
+      </div>
       <div class="tess-section-header">
         <span class="tess-section-title">Claude</span>
         <span class="tess-section-count" id="tess-label-claude"></span>
@@ -10348,6 +10516,13 @@ document.addEventListener('keydown', e => {
 
     <!-- Manifesto section — list -->
     <section class="tess-section" id="tess-sec-manifesto">
+      <div class="tess-hero-preview" data-section="manifesto">
+        <img class="tess-hero-preview-img" src="generated_images/generated_image_2733a725-c8b3-4774-a43e-065de224ecee_0.png" alt="Archetype Geometric Formation">
+        <div class="tess-hero-preview-overlay"></div>
+        <div class="tess-hero-preview-frame"></div>
+        <span class="tess-hero-preview-label">Live Preview · Archetypal Forms</span>
+        <span class="tess-hero-preview-coords">RA 00h 42m · DEC +41° 16'</span>
+      </div>
       <div class="tess-section-header">
         <span class="tess-section-title">Manifesto</span>
         <span class="tess-section-count" id="tess-label-manifesto"></span>
@@ -10572,7 +10747,59 @@ window.openTesseract = function(galaxyFilter) {
   });
   _tessPopulate();
   _tessInitNav();
+  _initHeroPreviewInteraction();
 };
+
+// ── Hero Preview Focus Interaction ─────────────────────────────────────
+// When hovering/focusing a card, the hero preview shows a "focused" state
+// Clicking navigates to that node
+function _initHeroPreviewInteraction() {
+  // Add hover interaction to cards for hero preview focus effect
+  document.querySelectorAll('.tess-card, .tess-poster, .tess-list-row').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      const section = this.closest('.tess-section');
+      if (!section) return;
+      const preview = section.querySelector('.tess-hero-preview');
+      if (preview) {
+        preview.classList.add('focused');
+        // Add live scan effect
+        preview.classList.add('live');
+      }
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      const section = this.closest('.tess-section');
+      if (!section) return;
+      const preview = section.querySelector('.tess-hero-preview');
+      if (preview) {
+        preview.classList.remove('focused');
+        // Keep live effect for visual interest
+        setTimeout(() => {
+          if (!preview.classList.contains('focused')) {
+            preview.classList.remove('live');
+          }
+        }, 300);
+      }
+    });
+  });
+
+  // Section hover triggers live preview
+  document.querySelectorAll('.tess-section').forEach(section => {
+    section.addEventListener('mouseenter', function() {
+      const preview = this.querySelector('.tess-hero-preview');
+      if (preview && !preview.classList.contains('live')) {
+        preview.classList.add('live');
+      }
+    });
+    
+    section.addEventListener('mouseleave', function() {
+      const preview = this.querySelector('.tess-hero-preview');
+      if (preview && !preview.classList.contains('focused')) {
+        preview.classList.remove('live');
+      }
+    });
+  });
+}
 
 window.closeTesseract = function() {
   if (!tesseractOpen) return;
