@@ -92,6 +92,11 @@ body.grab .fold.cur,.fold.rzg{box-shadow:var(--s3)}body.grab .cat.cur .cb{box-sh
 @media(hover:hover){.cat:hover .cp{opacity:1;transform:translateY(calc(var(--k)*-9px));transition-delay:calc(var(--k)*40ms)}
 .cat:hover .cpi{opacity:1;transform:translate(calc(-50% + var(--x)),var(--y)) rotate(var(--r));transition:transform .52s cubic-bezier(.34,1.57,.64,1) calc(var(--i)*45ms),opacity .16s ease calc(var(--i)*45ms)}}
 .fold.rzg{transition:box-shadow .35s,border-color .25s}
+/* board/place stacking: hovered always above current (even mid-grab); a card you just left decays instead of lingering over the new one */
+.cat{z-index:0;transition:z-index .3s linear}
+.cat.cur{z-index:4}
+body.grab .cat.cur{z-index:6}
+.cat:hover{z-index:8;transition-duration:0s;transition-delay:0s}
 .fold.wide{width:380px}
 .fbody{flex:none}
 .fh{display:flex;align-items:center;gap:8px;cursor:grab;touch-action:none;flex:none}
