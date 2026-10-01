@@ -488,6 +488,8 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
 const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
 const coarse=matchMedia('(hover:none),(pointer:coarse),(max-width:768px)'),RM=matchMedia('(prefers-reduced-motion:reduce)');
+/* escape hatch: visit /?reset to wipe a broken saved state (a copy is kept in dab:recovered:v1) */
+try{if(/[?&]reset(=|&|$)/.test(location.search)){const r0=localStorage.getItem(K);if(r0)localStorage.setItem('dab:recovered:v1',r0);[K,'dab:view','dab:hud:v2'].forEach(k=>localStorage.removeItem(k));history.replaceState(null,'',location.pathname+location.hash)}}catch(_){}
 const ltk=$('ltk');let LI={},LV=coarse.matches,lvI=0,lvCat=null;
 try{const s=JSON.parse(localStorage.getItem('dab:view'));if(s){LI=s.i||{};LV=s.v==='letters'}}catch(_){}
 const QR=()=>lvOn()?ltk:world;
@@ -1029,27 +1031,47 @@ const inSubsView = () => !!subsOf() && !S_;
 const currentPool = () => !V ? C : (inSubsView() ? V.subs : F);
 const viewKey = () => S_ ? S_.id : inSubsView() ? ('subs:'+V.id) : V ? V.id : null;
 
+const fin = v => (Number.isFinite(+v) && Math.abs(+v) < 1e6) ? +v : 0;
 const nzTree = t => (Array.isArray(t)?t:[]).map(x=>({
   id:x.id||nid(),
   name:x.name||'',
-  x:+x.x||0,
-  y:+x.y||0,
+  x:fin(x.x),
+  y:fin(x.y),
   ...(isFinite(x.w)&&x.w?{w:+x.w}:{}),
   ...(isFinite(x.postedAt)?{postedAt:+x.postedAt}:{}),
   tree:conv(x.tree)
 }));
 const nzCat = c => {
-  const r = {id:c.id||nid(),name:c.name||'',x:+c.x||0,y:+c.y||0,trees:nzTree(c.trees)};
+  const r = {id:c.id||nid(),name:c.name||'',x:fin(c.x),y:fin(c.y),trees:nzTree(c.trees)};
   if(Array.isArray(c.subs)&&c.subs.length){
     r.subs = c.subs.map(s => ({
-      id:s.id||nid(),name:s.name||'',x:+s.x||0,y:+s.y||0,trees:nzTree(s.trees)
+      id:s.id||nid(),name:s.name||'',x:fin(s.x),y:fin(s.y),trees:nzTree(s.trees)
     }));
   }
   return r;
 };
 
-try{const d=JSON.parse(localStorage.getItem(K));if(d&&d.C&&d.C.length){C=d.C.map(nzCat);if(d.theme)theme=d.theme;cams=d.cams||{};rc=d.rc||rc;lastCat=d.last||null;needFit=!d.rc;if(d.open&&C.some(c=>c.id===d.open)){V=C.find(c=>c.id===d.open);F=V.trees;needFit=!cams[V.id];Object.assign(cam,cams[V.id]||{})}else Object.assign(cam,rc)}}catch(_){}
-if(!C)C=seed();
+const camOk=c=>!!c&&typeof c==='object'&&[c.x,c.y,c.s].every(v=>typeof v==='number'&&isFinite(v))&&c.s>=.05&&c.s<=4&&Math.abs(c.x)<1e6&&Math.abs(c.y)<1e6;
+let healed=null,rawSave=null;
+try{rawSave=localStorage.getItem(K)}catch(_){}
+try{
+  const d=JSON.parse(rawSave);
+  if(d&&Array.isArray(d.C)&&d.C.length){
+    C=d.C.map(nzCat);
+    if(d.theme==='dark'||d.theme==='light')theme=d.theme;
+    cams={};if(d.cams&&typeof d.cams==='object')Object.keys(d.cams).forEach(k=>{if(camOk(d.cams[k]))cams[k]=d.cams[k]});
+    const rOk=camOk(d.rc);if(rOk)rc=d.rc;
+    lastCat=typeof d.last==='string'?d.last:null;needFit=!rOk;
+    if(d.open&&C.some(c=>c.id===d.open)){V=C.find(c=>c.id===d.open);F=V.trees;needFit=!cams[V.id];if(cams[V.id])Object.assign(cam,cams[V.id])}
+    else if(rOk)Object.assign(cam,rc);
+  }
+}catch(_){
+  C=void 0;V=null;S_=null;F=[];cams={};rc={x:0,y:0,s:1};lastCat=null;needFit=true;Object.assign(cam,{x:0,y:0,s:1});
+}
+if(!C){
+  if(rawSave){healed='unreadable';try{localStorage.setItem('dab:recovered:v1',rawSave)}catch(_){}}
+  C=seed();
+}
 C.forEach(c=>{
   if(c.subs&&c.subs.length){
     c.subs.forEach(s=>{ if(!s.trees.length)s.trees.push({id:nid(),name:'',x:0,y:0,tree:[mk()]}); });
@@ -1607,14 +1629,14 @@ function packTree(t){
   };
 }
 /* reset demo - shared by the button, context menu and Cmd/Ctrl+R */
-function resetDemo(){
+function resetDemo(msg){
   rs=0;const rb=document.querySelector('#acts [data-a=reset]');if(rb)rb.textContent='reset demo';
   /* drop focus mode without flushing, so the iframe can't write old content back */
   if(typeof FX!=='undefined'&&FX){document.body.classList.remove('fxo');fxEl.classList.remove('on');fxEl.setAttribute('aria-hidden','true');fxEl.style.opacity='';fxEl.style.transform='';try{FX.ifr.remove()}catch(_){}FX=null}
   cw(false);closeMenu();closeHelp();try{closePal()}catch(_){}
   C=seed();V=null;S_=null;F=[];lastCat=null;rc={x:0,y:0,s:1};cams={};H=[];hi=0;
   Object.assign(cam,{x:0,y:0,s:1});
-  chrome();renderAll();fit();save();toast('Demo reset');
+  chrome();renderAll();fit();save();toast(typeof msg==='string'?msg:'Demo reset');
 }
 let rs=0;
 document.querySelectorAll('#acts [data-a]').forEach(b=>b.onclick=async()=>{const a=b.dataset.a;
@@ -1823,6 +1845,19 @@ coarse.addEventListener&&coarse.addEventListener('change',hall);hall();
 /* boot */
 paintTheme();chrome();renderAll();apply();
 if(needFit){fit();document.fonts&&document.fonts.ready.then(()=>fit())}
+/* self-heal: if nothing is on screen after boot, recover the camera first, then fall back to the seed (old save is kept) */
+function healCheck(final){
+  try{
+    if(lvOn()||FX)return;
+    const seen=[...world.children].some(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&r.right>0&&r.bottom>0&&r.left<innerWidth&&r.top<innerHeight});
+    if(seen)return;
+    if(!final){Object.assign(cam,{x:0,y:0,s:1});apply();fit();setTimeout(()=>healCheck(true),250);return}
+    try{const r1=localStorage.getItem(K);if(r1)localStorage.setItem('dab:recovered:v1',r1)}catch(_){}
+    resetDemo('Your saved view was broken, so dab started fresh');
+  }catch(_){}
+}
+setTimeout(()=>healCheck(false),900);
+if(healed)setTimeout(()=>toast('Your saved boards could not be read, so dab started fresh.'),600);
 if(!coarse.matches)say('click a board to open · double-click empty space to post · hold ⇧ for the wheel · right-click for actions · ? for help');
 else say('tap a board to open · long-press for actions · ? for help');
 if(!tourSeen)setTimeout(()=>openTour(),700);
