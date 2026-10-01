@@ -9,11 +9,13 @@
 <meta property="og:description" content="A board for posting and browsing. Low ceremony. Nested thinking.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dab.cx">
-
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23000%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-family=%27monospace%27 font-size=%2717%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27%23fff%27%3Edab%3C/text%3E%3C/svg%3E">
-  
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23000%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-family=%27monospace%27 font-size=%2717%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27%23fff%27%3Edab%3C/text%3E%3C/svg%3E">
+
+
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -468,11 +470,433 @@ const T=(name,x,y,...tree)=>({id:nid(),name,x,y,tree});
 const CT=(name,x,y,...trees)=>({id:nid(),name,x,y,trees});
 const nd=(text,o,...k)=>({...(o&&o.w?{w:o.w}:{}),text,color:(o&&o.c)||null,shiny:!!(o&&o.s),collapsed:!!(o&&o.z),children:k.map(x=>typeof x==='string'?nd(x):x)});
 const sc=(name,url)=>nd(name,0,url);
-const SEED_DATA = {"app":"dab","version":2,"theme":"light","categories":[{"name":"nearby","x":0,"y":0,"statements":[{"text":"free: moving boxes","x":0,"y":0,"w":300,"collapsed":false,"children":[{"text":"~20 boxes, most of them still taped.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"flattened and stacked in the hallway. dry, no water damage.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"gone by sunday or they go to recycling.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"pickup in Ridgewood, anytime after 6.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[{"text":"buzzer's broken — text when you're outside.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"looking for: an 18v drill","x":330,"y":0,"w":300,"collapsed":false,"children":[{"text":"mine died halfway through a shelf.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"need it for an afternoon. will return it cleaner than I got it.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"will trade: coffee, or a spare battery that may or may not hold a charge.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"offering: ride to philly, friday","x":660,"y":0,"w":300,"collapsed":false,"children":[{"text":"leaving around 4. one seat open. splitting gas.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"back sunday night if that helps.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"no smoking, one small bag please.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"found: one very confident cat","x":0,"y":330,"w":300,"collapsed":false,"children":[{"text":"https://picsum.photos/seed/dabcat/900/600.jpg","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"no collar, no chip, no fear.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"hanging around the back of the laundromat on 5th.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"she'll come to you if you have food. she'll come to you if you don't.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"holding her until someone claims her. reply: hi@dab.cx","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}]},{"text":"free: a couch, honestly","x":330,"y":330,"w":300,"collapsed":false,"children":[{"text":"it's fine. it's just not mine anymore.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"third floor walkup. bring two people and a van.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"you take it, you take the cushions.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]}]},{"name":"making","x":300,"y":0,"statements":[{"text":"what are you dabbling on?","x":0,"y":0,"w":300,"collapsed":false,"children":[{"text":"post it here. no pitch required.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"a half-finished thing counts.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"so does an idea you haven't started.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"feedback: a very small synth patch","x":330,"y":0,"w":300,"collapsed":false,"children":[{"text":"https://picsum.photos/seed/dabsynth/900/600.jpg","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"one oscillator, one filter, one long tail.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"sounds like a door closing in a large room.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"sounds better than that sentence makes it sound.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"patch notes here (https://example.com/patch)","color":"#0091ff","shiny":false,"collapsed":false,"children":[]}]},{"text":"looking for: someone who actually knows postgres","x":660,"y":0,"w":300,"collapsed":false,"children":[{"text":"not a consultant. a person.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"one evening of \"why is this query like this\"","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"trade: dinner, or a website, or both.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"tools I keep coming back to","x":0,"y":330,"w":300,"collapsed":true,"children":[{"text":"a text editor and a folder","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"a notebook that fits in a pocket","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"walking","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"name":"wtf is dab","x":600,"y":0,"statements":[{"text":"dab.","x":0,"y":0,"w":264,"collapsed":false,"children":[{"text":"It's a board. That's the whole pitch.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]}]},{"text":"how it works","x":292,"y":0,"w":264,"collapsed":false,"children":[{"text":"Post.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"digress.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"digress.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"digress","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"rinse & repeat","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"the rest of it","x":584,"y":0,"w":342,"collapsed":false,"children":[{"text":"how to:","color":null,"shiny":false,"collapsed":false,"children":[{"text":"right click for color options","color":null,"shiny":false,"collapsed":false,"children":[{"text":"hold shift ⇧ for menu","color":null,"shiny":false,"collapsed":false,"children":[{"text":"hold alt+scroll to re-order lines","color":null,"shiny":false,"collapsed":false,"children":[{"text":"cmd / ctrl + z → undo · + shift → redo","color":null,"shiny":false,"collapsed":false,"children":[{"text":"supports images, mp4s, and urls.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"type an email and it becomes mailto:","color":null,"shiny":false,"collapsed":false,"children":[]}]}]}]}]}]}]}]},{"text":"on boards","x":954,"y":0,"w":300,"collapsed":false,"children":[{"text":"Each board is its own space.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Rename one by clicking its name at the top.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Make a new one from the wheel: \"+ New board\".","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Delete one with the ✕ {it asks twice}.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]}]}]},{"text":"that's it.","x":1282,"y":0,"w":264,"collapsed":false,"children":[{"text":"For direct Q&A: hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Say something new or say something else.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]}]}]}],"currentCategory":"wtf is dab"};
+
+/* ══════════════════════════════════════════════════════════════
+   SEED — dab classifieds demo.
+   Seven boards: start here / for sale / housing / jobs / services / wanted / dabbling.
+   Posts are Craigslist-adjacent: real comp, real neighborhoods, real terms.
+   ══════════════════════════════════════════════════════════════ */
+const SEED_DATA={"app":"dab","version":2,"theme":"light","currentCategory":"start here","categories":[
+
+/* ══ start here ══ */
+{"name":"start here","x":0,"y":0,"statements":[
+  {"text":"dab.","x":0,"y":0,"w":300,"collapsed":false,"children":[
+    {"text":"A board for boards. Post what you mean, reply if you're interested. That's the whole thing.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]},
+    {"text":"No accounts. No algorithm. No app.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Everything lives in your browser. Export a backup if you want to keep it.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]}
+  ]},
+  {"text":"Rules (all of them)","x":330,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"1. Be a person.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"2. Post what you mean.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"3. Reply if you're interested.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"4. Don't be a jerk.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"That's the list.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[
+      {"text":"If it feels like more than this, it is.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"The moment it needs a policy, we've already lost.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]}
+  ]},
+  {"text":"How to read this","x":700,"y":0,"w":320,"collapsed":false,"children":[
+    {"text":"Each board is a place. Cards are posts. Lines are the details.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Left-click to open. Right-click for actions.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Reply to any line by branching underneath it.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Nested replies stay with the line they belong to.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"You can go as deep as you need to.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]}
+  ]},
+  {"text":"What counts as a reply","x":1050,"y":0,"w":300,"collapsed":false,"children":[
+    {"text":"Anything you'd say in an email, but shorter.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"A price. A question. A yes.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"You don't need to introduce yourself.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
+  ]}
+]},
+
+/* ══ for sale ══ */
+{"name":"for sale","x":300,"y":0,"statements":[
+  {"text":"floor lamp — $40","x":0,"y":0,"w":300,"collapsed":false,"children":[
+    {"text":"Adjustable arm, brass finish. Real brass, or at least it looks like it.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Missing the top screw on the shade. It holds fine.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Slight dent on the base, hidden by the couch.","color":null,"shiny":false,"collapsed":true,"children":[]},
+    {"text":"Works. Both bulbs are new.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Pickup in Park Slope. 4th ave, near the R.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[
+      {"text":"No delivery, no holds, no 'is this still available.'","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"If it's up, it's up.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Cash or venmo. hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"synth — $280","x":330,"y":0,"w":320,"collapsed":false,"children":[
+    {"text":"https://picsum.photos/seed/dabsynth/900/600.jpg","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Korg Minilogue XD. Bought it in 2022, used it for maybe ten hours.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Nothing wrong with it. I just don't play it.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Comes with the power supply and original box.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Price is firm-ish. $280 is what I paid half of.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Williamsburg, pick up at my place. I'll let you play it first.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"bike — $200","x":690,"y":0,"w":300,"collapsed":false,"children":[
+    {"text":"1988 Trek. Steel frame, 54cm.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"I'm 5'9\" and it fits me well.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"New chain, new brake pads, new tires last spring.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Some rust spots on the top tube. Nothing structural.","color":null,"shiny":false,"collapsed":true,"children":[]},
+    {"text":"Rides great. I just have two now.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Pickup in Bushwick. Bring a lock or a friend.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"standing desk — $150","x":0,"y":400,"w":300,"collapsed":false,"children":[
+    {"text":"Fully Jarvis, bamboo top, 60x30.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Motor works. Presets work. Leveling feet work.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"It's heavy. Bring a friend or a dolly.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Moving out, need it gone by Sunday.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Photos on request. Cash preferred.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"records — make an offer","x":330,"y":400,"w":300,"collapsed":false,"children":[
+    {"text":"~80 records. Jazz, soul, some rock.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Mostly VG+ or better.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Nothing rare. Nothing trashed.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"I'm moving and don't want to box them again.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Take all of them for $200 or come flip through.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
+    {"text":"Fort Greene.","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]}
+]},
+
+/* ══ housing ══ */
+{"name":"housing","x":600,"y":0,"statements":[
+  {"text":"1BR in Bed-Stuy — $1,850","x":0,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"Brownstone, third floor walkup. Available Nov 1.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Heat and hot water included. You pay electric + internet.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Laundry in the basement. Free.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"No broker fee. Direct from the owner.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
+    {"text":"About the apartment:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"Windows face the backyard. Quiet.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Galley kitchen, new stove last year.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Living room fits a couch + a desk + a small dining table.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Bedroom fits a queen.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"About the block:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"Two blocks from the C at Kingston-Throop.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"The bodega on the corner is very good.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Street parking is hard. Don't count on it.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"12-month lease. 1 month deposit. Credit check, references.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Cat ok. Dog maybe. No smokers.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"room in a house — Ridgewood, $1,100","x":380,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"2-bedroom house, one room open. Available now.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Two of us already live here:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"One works nights, you'll rarely see him.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"One works from home, she's around but quiet.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"The room: fits a full bed, a desk, a dresser. Window faces the yard.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"The house: shared kitchen, shared bath, yard, grill, laundry.","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"We cook. We're not precious about the kitchen but we do clean it.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Sunday dinners happen. You're welcome to join or not.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Looking for: someone calm, employed, cleans up after themselves.","color":"#0091ff","shiny":false,"collapsed":false,"children":[
+      {"text":"No couples. No pets (allergies).","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Month-to-month is fine. Prefer 6+.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"sublet — 6 months, Dec–May","x":760,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"1BR in Bushwick. Furnished.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"$1,600/month, utilities included.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"December 1 through May 31. Dates are firm.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"About the place:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"Jefferson L, two blocks.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Top floor, big windows, very bright.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Furnished: couch, bed, desk, kitchen stuff. All of it works.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"About you:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"You'll be on the sublease as a guest. Standard.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"No parties, no sub-subleasing.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Cat ok, dog no.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Photos on request. Walkthrough by appointment.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"looking for: a room, March 1","x":0,"y":420,"w":340,"collapsed":false,"children":[
+    {"text":"I'm a 30-something woman, moving back to the city after two years away.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Looking for a room in Brooklyn, $1,200-ish.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"About me:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"I work in publishing. Remote 3 days, in-office 2.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"I have a cat. She's 14, she sleeps, she's fine.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"I cook, I clean, I'm quiet.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Move-in March 1. Month-to-month or 6+.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"References available.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]}
+]},
+
+/* ══ jobs ══ */
+{"name":"jobs","x":900,"y":0,"statements":[
+  {"text":"line cook — $22/hr + meals","x":0,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"Small seasonal restaurant in Williamsburg. About 40 seats.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Full-time. Evenings, Wednesday through Sunday.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Closed Mondays and Tuesdays.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Service 5:30–10:30, plus prep and close.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"What we're looking for:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"2+ years on a line, ideally fine-ish dining.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Knife skills are non-negotiable. We'll test them.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"You read the ticket, you call the ticket, you don't guess.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"What we offer:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"$22/hr, paid weekly.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Family meal every shift. Good food, not scraps.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Two consecutive days off. We mean it.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"To apply:","color":"#0091ff","shiny":false,"collapsed":false,"children":[
+      {"text":"Email with a line about your last kitchen.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"No resume required. One line is fine.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"freelance designer — 6-week project","x":380,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"Rebrand + website for a small nonprofit in the arts.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"6 weeks. Starts when we find the right person.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Remote, ~15 hrs/week, with 2 in-person kickoff days in Manhattan.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Rate: $65–85/hr depending on experience. Firm budget of $12k.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
+    {"text":"What you'll do:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Audit the existing brand (it's 12 years old).","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Propose 2 directions, not 6.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Wireframe 5–6 pages.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Work with our dev to ship it.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"What we're looking for:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"Portfolio, obviously.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"One reference we can actually call.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Someone who has shipped, not just pitched.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"What this is not:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"Not a rebrand-plus-campaign.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Not an ongoing retainer. Six weeks, done.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Reply: hi@dab.cx with 2–3 projects and your rate.","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"moving help — Saturday, $25/hr cash","x":760,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"4 hours. 9am to 1pm.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Two flights of stairs, no elevator. Both ends.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Everything is boxed and stacked by the door.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Big stuff: a couch, a bed, a dresser, a desk.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Everything else is boxes.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Need 2 people. A truck is a plus, not required.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Lunch is on me. Cash at the end of the shift.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Text a number to set it up. hi@dab.cx","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"dog walker — part-time, $20/walk","x":0,"y":420,"w":340,"collapsed":false,"children":[
+    {"text":"Two dogs. Ridgewood, near the park.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"One is 7, one is 3. Both are friendly.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"The 3-year-old pulls. Bring a good leash.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Monday, Wednesday, Friday. Midday, 30-minute loop.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Time is flexible. Somewhere between 11 and 2.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"$20/walk, cash or venmo.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
+    {"text":"Looking for someone consistent, not a service.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"If you're sick, text. Don't send a substitute.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"The dogs get weird around new people.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Bonus if you're around on weekends — occasional longer walks.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"weekend barista — $18/hr + tips","x":380,"y":420,"w":340,"collapsed":false,"children":[
+    {"text":"Small coffee shop in Greenpoint.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Saturdays and Sundays, 7am–2pm.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"What we're looking for:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"You've pulled shots before. Even at home.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"You're ok on bar alone for an hour if it happens.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"You're nice to people who order 'a coffee'.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"What we offer:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"$18/hr plus pooled tips. Tips average $8–12/hr more.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Free drink and a pastry per shift.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Real training if you want to learn more.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Starts as a weekend thing. Could grow.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"weekend receptionist — yoga studio","x":760,"y":420,"w":340,"collapsed":false,"children":[
+    {"text":"Studio in Fort Greene. Two teachers, one room, no drama.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Saturdays 8am–1pm. Sundays 9am–2pm.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"$20/hr. Mostly checking people in and answering the phone.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"What we need:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"You're on time. Consistently.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"You can figure out the booking software. It's not hard.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"You're ok with silence. Lots of silence between classes.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Yoga experience not required. Most of us don't do it either.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]}
+]},
+
+/* ══ services ══ */
+{"name":"services","x":0,"y":300,"statements":[
+  {"text":"sourdough lessons — $60","x":0,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"I've been baking weekly for 11 years. I've made every mistake.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Two hours, your kitchen or mine.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"What we'll do:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Feed a starter and talk about why it matters.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Mix, fold, shape, score. You'll do the shaping.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Bake one loaf in my oven, one in yours.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"You leave with a jar of starter and a loaf.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Kitchen in Bushwick, or yours if you have an oven and a counter.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Weekends work best. Weeknights possible with notice.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"$60 for two. $40 if it's just you.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"houseplant rescue — sliding scale","x":380,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"I take in sad plants. I bring them back, or I tell you what's wrong.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Two ways to work with me:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"You drop the plant off. I keep it as long as it takes. $40.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"I come to you. I diagnose, repot, teach you. $60.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Sliding scale if money is tight. Ask. I mean it.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
+    {"text":"What I'm good at:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"Ficuses, monsteras, pothos, anything variegated.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Overwatering. It's the answer 80% of the time.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Pests. I've seen them all.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"What I'm not:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"Orchids. They win.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Anything that needs a greenhouse.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"I've kept a 40-year-old ficus alive for 6 years. Ask me anything.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"guitar lessons — $40/30min","x":760,"y":0,"w":340,"collapsed":false,"children":[
+    {"text":"I've played for 20 years. I teach beginners and re-beginners.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Not a shredder. Not a theory guy.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"If you want to play songs, I can get you there.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"If you want to play jazz, find someone else.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"30 minutes is enough for a lesson. 60 if you're serious.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"$40 for 30. $70 for the hour. First lesson is $20, no commitment.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
+    {"text":"Park Slope. I have two amps and one spare guitar.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"bike repair — I come to you","x":0,"y":460,"w":340,"collapsed":false,"children":[
+    {"text":"Tune-ups, flat fixes, brake adjustments, chain work.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"I come to you. Bring the bike downstairs.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Flat: $20. Tune-up: $60. Brake work: $40. Chain + cassette: $50.","color":"#0091ff","shiny":false,"collapsed":false,"children":[
+      {"text":"Parts are extra, at cost. I don't markup.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"I don't do:","color":null,"shiny":false,"collapsed":true,"children":[
+      {"text":"Full rebuilds. Internal hubs. Anything hydraulic on a Sunday.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Same-week appointments most weeks. Text a photo of the bike.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"resume + portfolio review — pay what you want","x":380,"y":460,"w":340,"collapsed":false,"children":[
+    {"text":"I hire designers. I've read thousands of resumes.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Two things I can do:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Line-edit your resume for clarity. 30 minutes.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Walk through your portfolio and tell you what's not working.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Pay what you want. $0 is fine. $100 is fine.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
+    {"text":"Not a recruiter. Not a coach. Just someone who's been on the other side.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]}
+]},
+
+/* ══ wanted ══ */
+{"name":"wanted","x":300,"y":300,"statements":[
+  {"text":"wanted: a good dentist","x":0,"y":0,"w":320,"collapsed":false,"children":[
+    {"text":"Mine retired. I need a new one.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Requirements:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Takes insurance (Aetna).","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Isn't a lecture.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Doesn't try to sell me a $4k treatment I don't need.","color":null,"shiny":false,"collapsed":false,"children":[]},
+      {"text":"Somewhere in Brooklyn. Willing to go to Manhattan for the right person.","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]},
+    {"text":"Recommendations welcome. Both directions — good and bad.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"wanted: a used monitor","x":350,"y":0,"w":300,"collapsed":false,"children":[
+    {"text":"24 or 27 inch. 1080p is fine. 4K is nicer.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Doesn't need to be fancy. Just needs to work.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Budget: $80–120.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
+    {"text":"I'm in Bed-Stuy. I can pick up anywhere on the A/C/G.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
+  ]},
+  {"text":"wanted: someone to fix a leak","x":700,"y":0,"w":300,"collapsed":false,"children":[
+    {"text":"Under the kitchen sink. Slow drip.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Not urgent but getting annoying.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"I've tried to tighten it. It doesn't want to be tightened.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Looking for a handyperson who knows what they're doing.","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Cash. Same week preferred.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
+  ]}
+]},
+
+/* ══ dabbling (meta) ══ */
+{"name":"dabbling","x":600,"y":300,"statements":[
+  {"text":"dab.","x":0,"y":0,"w":264,"collapsed":false,"children":[
+    {"text":"It's a board. That's the whole pitch.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]}
+  ]},
+  {"text":"how it works","x":292,"y":0,"w":264,"collapsed":false,"children":[
+    {"text":"Post.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"digress.","color":null,"shiny":false,"collapsed":false,"children":[
+        {"text":"digress.","color":null,"shiny":false,"collapsed":false,"children":[
+          {"text":"digress","color":null,"shiny":false,"collapsed":false,"children":[]}
+        ]}
+      ]},
+      {"text":"rinse & repeat","color":null,"shiny":false,"collapsed":false,"children":[]}
+    ]}
+  ]},
+  {"text":"the rest of it","x":584,"y":0,"w":342,"collapsed":false,"children":[
+    {"text":"how to:","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"right click for color options","color":null,"shiny":false,"collapsed":false,"children":[
+        {"text":"hold shift ⇧ for menu","color":null,"shiny":false,"collapsed":false,"children":[
+          {"text":"hold alt+scroll to re-order lines","color":null,"shiny":false,"collapsed":false,"children":[
+            {"text":"cmd / ctrl + z → undo · + shift → redo","color":null,"shiny":false,"collapsed":false,"children":[
+              {"text":"supports images, mp4s, and urls.","color":null,"shiny":false,"collapsed":false,"children":[
+                {"text":"type an email and it becomes mailto:","color":null,"shiny":false,"collapsed":false,"children":[]}
+              ]}
+            ]}
+          ]}
+        ]}
+      ]}
+    ]}
+  ]},
+  {"text":"on boards","x":954,"y":0,"w":300,"collapsed":false,"children":[
+    {"text":"Each board is its own space.","color":null,"shiny":false,"collapsed":false,"children":[
+      {"text":"Rename one by clicking its name at the top.","color":null,"shiny":false,"collapsed":false,"children":[
+        {"text":"Make a new one from the wheel: \"+ New board\".","color":null,"shiny":false,"collapsed":false,"children":[
+          {"text":"Delete one with the ✕ {it asks twice}.","color":null,"shiny":false,"collapsed":false,"children":[]}
+        ]}
+      ]}
+    ]}
+  ]},
+  {"text":"that's it.","x":1282,"y":0,"w":264,"collapsed":false,"children":[
+    {"text":"For direct Q&A: hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]},
+    {"text":"Say something new or say something else.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]}
+  ]}
+]}
+
+]};
+
 const seedDemo=()=>[
-CT('nearby',0,0,T('free: boxes',0,0,S('~20, still taped'),S('gone by sunday')),T('looking for: a drill',300,0,S('one afternoon'),S('will trade coffee'))),
-CT('making',300,0,T('what are you dabbling on?',0,0,S('no pitch required'),S('half-finished counts'))),
-CT('wtf is dab',600,0,T('dab.',0,0,S("It's a board.",S("That's the whole pitch."))))];
+  CT('start here',0,0,
+    T('dab.',0,0,S("A board for boards."),S("Post what you mean. Reply if you're interested.")),
+    T('Rules (all of them)',300,0,S('Be a person.'),S('Post what you mean.'),S('Reply if you\'re interested.'),S("That's the list."))),
+  CT('for sale',300,0,
+    T('floor lamp — $40',0,0,S('works. both bulbs new.'),S('pickup in park slope.'))),
+  CT('housing',600,0,
+    T('1BR in Bed-Stuy — $1,850',0,0,S('available Nov 1.'),S('no broker fee.'))),
+  CT('jobs',900,0,
+    T('line cook — $22/hr',0,0,S('wed–sun, evenings.'),S('email a line about your last kitchen.'))),
+  CT('services',0,300,
+    T('sourdough lessons — $60',0,0,S('you leave with starter + a loaf.'))),
+  CT('wanted',300,300,
+    T('wanted: a good dentist',0,0,S('brooklyn. takes aetna.'))),
+  CT('dabbling',600,300,
+    T('dab.',0,0,S("It's a board."),S("That's the whole pitch.")))];
+
 function seedFromExport(d){
   const L=d&&(d.categories||d.folders);
   if(!L||!L.length)return seedDemo();
@@ -608,7 +1032,7 @@ del(n){const r=loc(n.id);
   r.a.splice(r.i,1);rr(r.f,(prev||r.a[0]).id)}};
 O.shine=toggleShine;
 
-const IMG = /^(?:https?:\/\/\S+\.(?:png|jpe?g|gif|webp|avif|svg|bmp)(?:[?#]\S*)?|https?:\/\/(?:images\.unsplash\.com|i\.imgur\.com|pbs\.twimg\.com|images\.pexels\.com)\/\S+|data:image\/(?:png|jpe?g|gif|webp|avif);base64,[A-Za-z0-9+\/=]+)$/i;
+const IMG = /^(?:https?:\/\/\S+\.(?:png|jpe?g|gif|webp|avif|svg|bmp)(?:[?#]\S*)?|https?:\/\/(?:images\.unsplash\.com|i\.imgur\.com|pbs\.twimg\.com|images\.pexels\.com|picsum\.photos)\/\S+|data:image\/(?:png|jpe?g|gif|webp|avif);base64,[A-Za-z0-9+\/=]+)$/i;
 const VID = /^(?:https?:\/\/\S+\.(?:mp4|webm|mov|m4v|ogv)(?:[?#]\S*)?|data:video\/(?:mp4|webm|ogg);base64,[A-Za-z0-9+\/=]+)$/i;
 const EMAIL_RE = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
 const RICH_RE  = /(\(https?:\/\/[^\s)]+\)|[\w.+-]+@[\w-]+(?:\.[\w-]+)+)/g;
@@ -878,7 +1302,7 @@ const TOUR=[
   {t:'Welcome to dab',b:'A board of boards. Every card is a post — nested lines you can reorder, reply to, and link together. Nothing here is a mock.'},
   {t:'Open a board',b:'Click any card and the camera flies in. Click <b>dab</b> or press <kbd>Esc</kbd> to fly back out.'},
   {t:'Post something',b:'<kbd>↵</kbd> for a new line. <kbd>⇧ ↵</kbd> for a nested reply. <kbd>⇥</kbd> to indent. <kbd>⇧ ⇥</kbd> to outdent. Drag the ▦ grip to reorder.'},
-  {t:'Everything is discoverable',b:'Hold <kbd>⇧</kbd> for the wheel. Right-click for actions. <kbd>+</kbd> posts from anywhere. <kbd>?</kbd> lists every shortcut.'},
+  {t:'Everything is discoverable',b:'Hold <kbd>⇧</kbd> for the wheel. Right-click for actions — <b>search</b> lives at the top of every menu. <kbd>+</kbd> posts from anywhere.'},
   {t:'That\'s the whole thing',b:'No accounts, no servers. Your posts live in this browser. Hit <kbd>export</kbd> from the menu to keep a copy.'}
 ];
 let tourStep=0,tourSeen=false;
@@ -939,9 +1363,11 @@ const ls=s.split(/\r?\n/).map(x=>x.trim().replace(/^([-*•]|\d+[.)])\s+/,'')).f
 const r=loc(n.id);n.t=n.t.slice(0,a)+ls[0]+(ls.length>1?'':n.t.slice(b));let last=n;
 ls.slice(1).forEach((l,j)=>{const m=mk(l);r.a.splice(r.i+1+j,0,m);last=m});rr(r.f,last.id)}
 
+/* ── every context menu starts with search ── */
 function lineMenu(id){const r=loc(id);if(!r)return[];const n=r.n,ta=QR().querySelector(`li[data-id="${id}"]>.row textarea`),
 s0=ta?ta.selectionStart:n.t.length,e0=ta?ta.selectionEnd:n.t.length,sel=n.t.slice(s0,e0);
 return[
+{l:'search & commands',k:mod+'K',f:openPal},'-',
 {l:sel?'copy selection':'copy text',off:!n.t,f:()=>copy(sel||n.t)},
 {l:'paste',f:()=>pasteInto(n,s0,e0)},'-',
 {l:'new line below',k:'↵',f:()=>O.peer(n)},
@@ -956,6 +1382,7 @@ n.k.length?{l:n.z?'expand branch':'collapse branch',f:()=>{n.z=!n.z;const li=QR(
 {l:n.k.length?`delete line + ${cnt(n.k)} nested`:'delete line',danger:n.k.length>0,f:()=>O.del(n)}]}
 
 const foldMenu=f=>[
+{l:'search & commands',k:mod+'K',f:openPal},'-',
 {l:'rename',f:()=>rename(f)},
 {l:'new line',f:()=>{const m=mk();f.tree.push(m);rr(f,m.id,0)}},
 {l:'focus mode',k:mod==='⌘'?'⌘⇧F':'Ctrl+Shift+F',f:()=>openFocus(f)},lvOn()?null:{l:'zoom to post',f:()=>fly(view(f))},'-',
@@ -966,6 +1393,7 @@ f.w?{l:'reset width',f:()=>{delete f.w;const e=fel(f.id);if(e)e.style.width='';s
 {l:'delete post',danger:true,f:async()=>{const ok=await confirmModal('Delete "'+(f.name||'untitled')+'"?',{title:'Delete post?',ok:'Delete',danger:1});if(!ok)return;const el=fel(f.id);V.trees=F=F.filter(x=>x!==f);if(el)el.remove();save();lvOn()&&lvRender();toast('Post deleted')}}];
 
 const catMenu=c=>[
+{l:'search & commands',k:mod+'K',f:openPal},'-',
 {l:'open',f:()=>openCat(c)},
 {l:'rename',f:()=>{openCat(c);setTimeout(()=>{$('cn').focus();$('cn').select()},0)}},'-',
 {l:'delete board',danger:true,f:async()=>{const ok=await confirmModal('Delete "'+(c.name||'untitled')+'" and all its posts?',{title:'Delete board?',ok:'Delete',danger:1});if(!ok)return;C=C.filter(x=>x!==c);if(lastCat===c.id)lastCat=null;cur=null;renderAll();save();toast('Board deleted')}}];
@@ -1263,8 +1691,10 @@ lvSet=function(want){if(!V||LV===want)return;if(!document.startViewTransition||R
   vtTag();let t;try{t=document.startViewTransition(()=>{lvSet0(want);vtTag()})}catch(_){vtUntag();lvSet0(want);return}t.finished.then(vtUntag,vtUntag)};
 
 /* ══ letter view: actions menu, press-and-hold, first-run hint ══ */
-function lvMenu(){const ord=lvOrder(),f=ord[lvI];return[{l:'new letter',f:lvNew},{l:'focus mode',k:mod==='⌘'?'⌘⇧F':'Ctrl+Shift+F',f:()=>f&&openFocus(f)},'-',
-{l:'previous letter',k:'←',f:()=>lvGo(lvI-1)},{l:'next letter',k:'→',f:()=>lvGo(lvI+1)},'-',{l:'search & commands',k:mod+'K',f:openPal},{l:'canvas view',f:()=>sfSet('canvas')},{l:'back to boards',k:'Esc',f:closeCat},'-',
+function lvMenu(){const ord=lvOrder(),f=ord[lvI];return[
+{l:'search & commands',k:mod+'K',f:openPal},'-',
+{l:'new letter',f:lvNew},{l:'focus mode',k:mod==='⌘'?'⌘⇧F':'Ctrl+Shift+F',f:()=>f&&openFocus(f)},'-',
+{l:'previous letter',k:'←',f:()=>lvGo(lvI-1)},{l:'next letter',k:'→',f:()=>lvGo(lvI+1)},'-',{l:'canvas view',f:()=>sfSet('canvas')},{l:'back to boards',k:'Esc',f:closeCat},'-',
 {l:'undo',k:mod+'Z',f:undo},{l:'redo',k:mod+'⇧Z',f:redo},'-',{l:'help & shortcuts',k:'?',f:openHelp},'-',{l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd}]}
 {const lt=$('lt');let t0=0,px=0,py=0;
 lt.addEventListener('pointerdown',e=>{clearTimeout(t0);t0=0;if(e.pointerType!=='touch'||e.target.closest('textarea,input,button,a,.lg'))return;px=e.clientX;py=e.clientY;const tg=e.target;t0=setTimeout(()=>{t0=0;showCtx(px,py,tg)},550)});
@@ -1886,185 +2316,416 @@ const nid = () => 'n' + (++uid).toString(36) + '-' + Math.random().toString(36).
 const mk  = (t = '') => ({ id: nid(), t, c: null, s: false, z: false, k: [] });
 
 /* ══════════════════════════════════════════════════════
-   SEED — dabble demo.
+   SEED — dab classifieds demo.
+   Seven boards: start here / for sale / housing / jobs / services / wanted / dabbling.
+   Posts are Craigslist-adjacent: real comp, real neighborhoods, real terms.
+   jobs / housing / services built out in depth.
 ══════════════════════════════════════════════════════ */
 const SEED_DATA = {
-  "app": "dab",
-  "version": 2,
-  "theme": "light",
-  "currentCategory": "wtf is dab",
+  "app": "dab", "version": 2, "theme": "light", "currentCategory": "start here",
   "categories": [
-    {
-      "name": "nearby",
-      "x": 0, "y": 0,
-      "statements": [
-        {
-          "text": "free: moving boxes", "x": 0, "y": 0, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "~20 boxes, most of them still taped.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "flattened and stacked in the hallway. dry, no water damage.", "color": null, "shiny": false, "collapsed": false, "children": [] },
-                { "text": "gone by sunday or they go to recycling.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]},
-            { "text": "pickup in Ridgewood, anytime after 6.", "color": "#8e8e93", "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "buzzer's broken — text when you're outside.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]}
-          ]},
-        {
-          "text": "looking for: an 18v drill", "x": 330, "y": 0, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "mine died halfway through a shelf.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "need it for an afternoon. will return it cleaner than I got it.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]},
-            { "text": "will trade: coffee, or a spare battery that may or may not hold a charge.", "color": null, "shiny": false, "collapsed": false, "children": [] },
-            { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
-          ]},
-        {
-          "text": "offering: ride to philly, friday", "x": 660, "y": 0, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "leaving around 4. one seat open. splitting gas.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "back sunday night if that helps.", "color": null, "shiny": false, "collapsed": false, "children": [] },
-                { "text": "no smoking, one small bag please.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]}
-          ]},
-        {
-          "text": "found: one very confident cat", "x": 0, "y": 330, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "https://picsum.photos/seed/dabcat/900/600.jpg", "color": null, "shiny": false, "collapsed": false, "children": [] },
-            { "text": "no collar, no chip, no fear.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "hanging around the back of the laundromat on 5th.", "color": null, "shiny": false, "collapsed": false, "children": [] },
-                { "text": "she'll come to you if you have food. she'll come to you if you don't.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]},
-            { "text": "holding her until someone claims her. reply: hi@dab.cx", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] }
-          ]},
-        {
-          "text": "free: a couch, honestly", "x": 330, "y": 330, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "it's fine. it's just not mine anymore.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "third floor walkup. bring two people and a van.", "color": null, "shiny": false, "collapsed": false, "children": [] },
-                { "text": "you take it, you take the cushions.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]}
-          ]}
-      ]
-    },
-    {
-      "name": "making",
-      "x": 300, "y": 0,
-      "statements": [
-        {
-          "text": "what are you dabbling on?", "x": 0, "y": 0, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "post it here. no pitch required.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "a half-finished thing counts.", "color": null, "shiny": false, "collapsed": false, "children": [] },
-                { "text": "so does an idea you haven't started.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]}
-          ]},
-        {
-          "text": "feedback: a very small synth patch", "x": 330, "y": 0, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "https://picsum.photos/seed/dabsynth/900/600.jpg", "color": null, "shiny": false, "collapsed": false, "children": [] },
-            { "text": "one oscillator, one filter, one long tail.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "sounds like a door closing in a large room.", "color": null, "shiny": false, "collapsed": false, "children": [] },
-                { "text": "sounds better than that sentence makes it sound.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]},
-            { "text": "patch notes here (https://example.com/patch)", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] }
-          ]},
-        {
-          "text": "looking for: someone who actually knows postgres", "x": 660, "y": 0, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "not a consultant. a person.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "one evening of \"why is this query like this\"", "color": null, "shiny": false, "collapsed": false, "children": [] },
-                { "text": "trade: dinner, or a website, or both.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]}
-          ]},
-        {
-          "text": "tools I keep coming back to", "x": 0, "y": 330, "w": 300, "collapsed": true,
-          "children": [
-            { "text": "a text editor and a folder", "color": null, "shiny": false, "collapsed": false, "children": [] },
-            { "text": "a notebook that fits in a pocket", "color": null, "shiny": false, "collapsed": false, "children": [] },
-            { "text": "walking", "color": null, "shiny": false, "collapsed": false, "children": [] }
-          ]}
-      ]
-    },
-    {
-      "name": "wtf is dab",
-      "x": 600, "y": 0,
-      "statements": [
-        {
-          "text": "dab.", "x": 0, "y": 0, "w": 264, "collapsed": false,
-          "children": [
-            { "text": "It's a board. That's the whole pitch.", "color": "linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)", "shiny": true, "collapsed": false, "children": [] }
-          ]},
-        {
-          "text": "how it works", "x": 292, "y": 0, "w": 264, "collapsed": false,
-          "children": [
-            { "text": "Post.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "digress.", "color": null, "shiny": false, "collapsed": false,
-                  "children": [
-                    { "text": "digress.", "color": null, "shiny": false, "collapsed": false,
-                      "children": [
-                        { "text": "digress", "color": null, "shiny": false, "collapsed": false, "children": [] }
-                      ]}
-                  ]},
-                { "text": "rinse & repeat", "color": null, "shiny": false, "collapsed": false, "children": [] }
-              ]}
-          ]},
-        {
-          "text": "the rest of it", "x": 584, "y": 0, "w": 342, "collapsed": false,
-          "children": [
-            { "text": "how to:", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "right click for color options", "color": null, "shiny": false, "collapsed": false,
-                  "children": [
-                    { "text": "hold shift ⇧ for menu", "color": null, "shiny": false, "collapsed": false,
-                      "children": [
-                        { "text": "hold alt+scroll to re-order lines", "color": null, "shiny": false, "collapsed": false,
-                          "children": [
-                            { "text": "cmd / ctrl + z → undo · + shift → redo", "color": null, "shiny": false, "collapsed": false,
-                              "children": [
-                                { "text": "supports images, mp4s, and urls.", "color": null, "shiny": false, "collapsed": false,
-                                  "children": [
-                                    { "text": "type an email and it becomes mailto:", "color": null, "shiny": false, "collapsed": false, "children": [] }
-                                  ]}
-                              ]}
-                          ]}
-                      ]}
-                  ]}
-              ]}
-          ]},
-        {
-          "text": "on boards", "x": 954, "y": 0, "w": 300, "collapsed": false,
-          "children": [
-            { "text": "Each board is its own space.", "color": null, "shiny": false, "collapsed": false,
-              "children": [
-                { "text": "Rename one by clicking its name at the top.", "color": null, "shiny": false, "collapsed": false,
-                  "children": [
-                    { "text": "Make a new one from the wheel: \"+ New board\".", "color": null, "shiny": false, "collapsed": false,
-                      "children": [
-                        { "text": "Delete one with the ✕ {it asks twice}.", "color": null, "shiny": false, "collapsed": false, "children": [] }
-                      ]}
-                  ]}
-              ]}
-          ]},
-        {
-          "text": "that's it.", "x": 1282, "y": 0, "w": 264, "collapsed": false,
-          "children": [
-            { "text": "For direct Q&A: hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] },
-            { "text": "Say something new or say something else.", "color": "linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)", "shiny": true, "collapsed": false, "children": [] }
-          ]}
-      ]
-    }
-  ]
-};
+
+  /* ══ start here ══ */
+  { "name": "start here", "x": 0, "y": 0, "statements": [
+    { "text": "dab.", "x": 0, "y": 0, "w": 300, "collapsed": false, "children": [
+      { "text": "A board for boards. Post what you mean, reply if you're interested. That's the whole thing.", "color": "linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)", "shiny": true, "collapsed": false, "children": [] },
+      { "text": "No accounts. No algorithm. No app.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Everything lives in your browser. Export a backup if you want to keep it.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] }
+    ] },
+    { "text": "Rules (all of them)", "x": 330, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "1. Be a person.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "2. Post what you mean.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "3. Reply if you're interested.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "4. Don't be a jerk.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "That's the list.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [
+        { "text": "If it feels like more than this, it is.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "The moment it needs a policy, we've already lost.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] }
+    ] },
+    { "text": "How to read this", "x": 700, "y": 0, "w": 320, "collapsed": false, "children": [
+      { "text": "Each board is a place. Cards are posts. Lines are the details.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Left-click to open. Right-click for actions.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Reply to any line by branching underneath it.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Nested replies stay with the line they belong to.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "You can go as deep as you need to.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] }
+    ] },
+    { "text": "What counts as a reply", "x": 1050, "y": 0, "w": 300, "collapsed": false, "children": [
+      { "text": "Anything you'd say in an email, but shorter.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "A price. A question. A yes.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "You don't need to introduce yourself.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] }
+    ] }
+  ] },
+
+  /* ══ for sale ══ */
+  { "name": "for sale", "x": 300, "y": 0, "statements": [
+    { "text": "floor lamp — $40", "x": 0, "y": 0, "w": 300, "collapsed": false, "children": [
+      { "text": "Adjustable arm, brass finish. Real brass, or at least it looks like it.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Missing the top screw on the shade. It holds fine.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Slight dent on the base, hidden by the couch.", "color": null, "shiny": false, "collapsed": true, "children": [] },
+      { "text": "Works. Both bulbs are new.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Pickup in Park Slope. 4th ave, near the R.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [
+        { "text": "No delivery, no holds, no 'is this still available.'", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "If it's up, it's up.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Cash or venmo. hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "synth — $280", "x": 330, "y": 0, "w": 320, "collapsed": false, "children": [
+      { "text": "https://picsum.photos/seed/dabsynth/900/600.jpg", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Korg Minilogue XD. Bought it in 2022, used it for maybe ten hours.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Nothing wrong with it. I just don't play it.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Comes with the power supply and original box.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Price is firm-ish. $280 is what I paid half of.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Williamsburg, pick up at my place. I'll let you play it first.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "bike — $200", "x": 690, "y": 0, "w": 300, "collapsed": false, "children": [
+      { "text": "1988 Trek. Steel frame, 54cm.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "I'm 5'9\" and it fits me well.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "New chain, new brake pads, new tires last spring.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Some rust spots on the top tube. Nothing structural.", "color": null, "shiny": false, "collapsed": true, "children": [] },
+      { "text": "Rides great. I just have two now.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Pickup in Bushwick. Bring a lock or a friend.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "standing desk — $150", "x": 0, "y": 400, "w": 300, "collapsed": false, "children": [
+      { "text": "Fully Jarvis, bamboo top, 60x30.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Motor works. Presets work. Leveling feet work.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "It's heavy. Bring a friend or a dolly.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Moving out, need it gone by Sunday.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Photos on request. Cash preferred.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "records — make an offer", "x": 330, "y": 400, "w": 300, "collapsed": false, "children": [
+      { "text": "~80 records. Jazz, soul, some rock.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Mostly VG+ or better.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Nothing rare. Nothing trashed.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "I'm moving and don't want to box them again.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Take all of them for $200 or come flip through.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Fort Greene.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] }
+  ] },
+
+  /* ══ housing ══ */
+  { "name": "housing", "x": 600, "y": 0, "statements": [
+    { "text": "1BR in Bed-Stuy — $1,850", "x": 0, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "Brownstone, third floor walkup. Available Nov 1.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Heat and hot water included. You pay electric + internet.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Laundry in the basement. Free.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "No broker fee. Direct from the owner.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "About the apartment:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "Windows face the backyard. Quiet.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Galley kitchen, new stove last year.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Living room fits a couch + a desk + a small dining table.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Bedroom fits a queen.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "About the block:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "Two blocks from the C at Kingston-Throop.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "The bodega on the corner is very good.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Street parking is hard. Don't count on it.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "12-month lease. 1 month deposit. Credit check, references.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Cat ok. Dog maybe. No smokers.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "room in a house — Ridgewood, $1,100", "x": 380, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "2-bedroom house, one room open. Available now.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Two of us already live here:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "One works nights, you'll rarely see him.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "One works from home, she's around but quiet.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "The room: fits a full bed, a desk, a dresser. Window faces the yard.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "The house: shared kitchen, shared bath, yard, grill, laundry.", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "We cook. We're not precious about the kitchen but we do clean it.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Sunday dinners happen. You're welcome to join or not.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Looking for: someone calm, employed, cleans up after themselves.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [
+        { "text": "No couples. No pets (allergies).", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Month-to-month is fine. Prefer 6+.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "sublet — 6 months, Dec–May", "x": 760, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "1BR in Bushwick. Furnished.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "$1,600/month, utilities included.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "December 1 through May 31. Dates are firm.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "About the place:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "Jefferson L, two blocks.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Top floor, big windows, very bright.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Furnished: couch, bed, desk, kitchen stuff. All of it works.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "About you:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "You'll be on the sublease as a guest. Standard.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "No parties, no sub-subleasing.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Cat ok, dog no.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Photos on request. Walkthrough by appointment.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "looking for: a room, March 1", "x": 0, "y": 420, "w": 340, "collapsed": false, "children": [
+      { "text": "I'm a 30-something woman, moving back to the city after two years away.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Looking for a room in Brooklyn, $1,200-ish.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "About me:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "I work in publishing. Remote 3 days, in-office 2.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "I have a cat. She's 14, she sleeps, she's fine.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "I cook, I clean, I'm quiet.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Move-in March 1. Month-to-month or 6+.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "References available.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] }
+  ] },
+
+  /* ══ jobs ══ */
+  { "name": "jobs", "x": 900, "y": 0, "statements": [
+    { "text": "line cook — $22/hr + meals", "x": 0, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "Small seasonal restaurant in Williamsburg. About 40 seats.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Full-time. Evenings, Wednesday through Sunday.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Closed Mondays and Tuesdays.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Service 5:30–10:30, plus prep and close.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "What we're looking for:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "2+ years on a line, ideally fine-ish dining.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Knife skills are non-negotiable. We'll test them.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "You read the ticket, you call the ticket, you don't guess.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "What we offer:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "$22/hr, paid weekly.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Family meal every shift. Good food, not scraps.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Two consecutive days off. We mean it.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "To apply:", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [
+        { "text": "Email with a line about your last kitchen.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "No resume required. One line is fine.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "freelance designer — 6-week project", "x": 380, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "Rebrand + website for a small nonprofit in the arts.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "6 weeks. Starts when we find the right person.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Remote, ~15 hrs/week, with 2 in-person kickoff days in Manhattan.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Rate: $65–85/hr depending on experience. Firm budget of $12k.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "What you'll do:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Audit the existing brand (it's 12 years old).", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Propose 2 directions, not 6.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Wireframe 5–6 pages.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Work with our dev to ship it.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "What we're looking for:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "Portfolio, obviously.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "One reference we can actually call.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Someone who has shipped, not just pitched.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "What this is not:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "Not a rebrand-plus-campaign.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Not an ongoing retainer. Six weeks, done.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Reply: hi@dab.cx with 2–3 projects and your rate.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "moving help — Saturday, $25/hr cash", "x": 760, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "4 hours. 9am to 1pm.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Two flights of stairs, no elevator. Both ends.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Everything is boxed and stacked by the door.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Big stuff: a couch, a bed, a dresser, a desk.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Everything else is boxes.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Need 2 people. A truck is a plus, not required.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Lunch is on me. Cash at the end of the shift.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Text a number to set it up. hi@dab.cx", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "dog walker — part-time, $20/walk", "x": 0, "y": 420, "w": 340, "collapsed": false, "children": [
+      { "text": "Two dogs. Ridgewood, near the park.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "One is 7, one is 3. Both are friendly.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "The 3-year-old pulls. Bring a good leash.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Monday, Wednesday, Friday. Midday, 30-minute loop.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Time is flexible. Somewhere between 11 and 2.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "$20/walk, cash or venmo.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Looking for someone consistent, not a service.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "If you're sick, text. Don't send a substitute.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "The dogs get weird around new people.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Bonus if you're around on weekends — occasional longer walks.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "weekend barista — $18/hr + tips", "x": 380, "y": 420, "w": 340, "collapsed": false, "children": [
+      { "text": "Small coffee shop in Greenpoint.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Saturdays and Sundays, 7am–2pm.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "What we're looking for:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "You've pulled shots before. Even at home.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "You're ok on bar alone for an hour if it happens.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "You're nice to people who order 'a coffee'.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "What we offer:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "$18/hr plus pooled tips. Tips average $8–12/hr more.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Free drink and a pastry per shift.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Real training if you want to learn more.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Starts as a weekend thing. Could grow.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "weekend receptionist — yoga studio", "x": 760, "y": 420, "w": 340, "collapsed": false, "children": [
+      { "text": "Studio in Fort Greene. Two teachers, one room, no drama.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Saturdays 8am–1pm. Sundays 9am–2pm.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "$20/hr. Mostly checking people in and answering the phone.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "What we need:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "You're on time. Consistently.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "You can figure out the booking software. It's not hard.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "You're ok with silence. Lots of silence between classes.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Yoga experience not required. Most of us don't do it either.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] }
+  ] },
+
+  /* ══ services ══ */
+  { "name": "services", "x": 0, "y": 300, "statements": [
+    { "text": "sourdough lessons — $60", "x": 0, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "I've been baking weekly for 11 years. I've made every mistake.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Two hours, your kitchen or mine.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "What we'll do:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Feed a starter and talk about why it matters.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Mix, fold, shape, score. You'll do the shaping.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Bake one loaf in my oven, one in yours.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "You leave with a jar of starter and a loaf.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Kitchen in Bushwick, or yours if you have an oven and a counter.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Weekends work best. Weeknights possible with notice.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "$60 for two. $40 if it's just you.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "houseplant rescue — sliding scale", "x": 380, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "I take in sad plants. I bring them back, or I tell you what's wrong.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Two ways to work with me:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "You drop the plant off. I keep it as long as it takes. $40.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "I come to you. I diagnose, repot, teach you. $60.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Sliding scale if money is tight. Ask. I mean it.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "What I'm good at:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "Ficuses, monsteras, pothos, anything variegated.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Overwatering. It's the answer 80% of the time.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Pests. I've seen them all.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "What I'm not:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "Orchids. They win.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Anything that needs a greenhouse.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "I've kept a 40-year-old ficus alive for 6 years. Ask me anything.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "guitar lessons — $40/30min", "x": 760, "y": 0, "w": 340, "collapsed": false, "children": [
+      { "text": "I've played for 20 years. I teach beginners and re-beginners.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Not a shredder. Not a theory guy.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "If you want to play songs, I can get you there.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "If you want to play jazz, find someone else.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "30 minutes is enough for a lesson. 60 if you're serious.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "$40 for 30. $70 for the hour. First lesson is $20, no commitment.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Park Slope. I have two amps and one spare guitar.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "bike repair — I come to you", "x": 0, "y": 460, "w": 340, "collapsed": false, "children": [
+      { "text": "Tune-ups, flat fixes, brake adjustments, chain work.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "I come to you. Bring the bike downstairs.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Flat: $20. Tune-up: $60. Brake work: $40. Chain + cassette: $50.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [
+        { "text": "Parts are extra, at cost. I don't markup.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "I don't do:", "color": null, "shiny": false, "collapsed": true, "children": [
+        { "text": "Full rebuilds. Internal hubs. Anything hydraulic on a Sunday.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Same-week appointments most weeks. Text a photo of the bike.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "resume + portfolio review — pay what you want", "x": 380, "y": 460, "w": 340, "collapsed": false, "children": [
+      { "text": "I hire designers. I've read thousands of resumes.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Two things I can do:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Line-edit your resume for clarity. 30 minutes.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Walk through your portfolio and tell you what's not working.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Pay what you want. $0 is fine. $100 is fine.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Not a recruiter. Not a coach. Just someone who's been on the other side.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] }
+  ] },
+
+  /* ══ wanted ══ */
+  { "name": "wanted", "x": 300, "y": 300, "statements": [
+    { "text": "wanted: a good dentist", "x": 0, "y": 0, "w": 320, "collapsed": false, "children": [
+      { "text": "Mine retired. I need a new one.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Requirements:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Takes insurance (Aetna).", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Isn't a lecture.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Doesn't try to sell me a $4k treatment I don't need.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+        { "text": "Somewhere in Brooklyn. Willing to go to Manhattan for the right person.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] },
+      { "text": "Recommendations welcome. Both directions — good and bad.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "wanted: a used monitor", "x": 350, "y": 0, "w": 300, "collapsed": false, "children": [
+      { "text": "24 or 27 inch. 1080p is fine. 4K is nicer.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Doesn't need to be fancy. Just needs to work.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Budget: $80–120.", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] },
+      { "text": "I'm in Bed-Stuy. I can pick up anywhere on the A/C/G.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+    ] },
+    { "text": "wanted: someone to fix a leak", "x": 700, "y": 0, "w": 300, "collapsed": false, "children": [
+      { "text": "Under the kitchen sink. Slow drip.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Not urgent but getting annoying.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "I've tried to tighten it. It doesn't want to be tightened.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Looking for a handyperson who knows what they're doing.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Cash. Same week preferred.", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] }
+    ] }
+  ] },
+
+  /* ══ dabbling (meta) ══ */
+  { "name": "dabbling", "x": 600, "y": 300, "statements": [
+    { "text": "dab.", "x": 0, "y": 0, "w": 264, "collapsed": false, "children": [
+      { "text": "It's a board. That's the whole pitch.", "color": "linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)", "shiny": true, "collapsed": false, "children": [] }
+    ] },
+    { "text": "how it works", "x": 292, "y": 0, "w": 264, "collapsed": false, "children": [
+      { "text": "Post.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "digress.", "color": null, "shiny": false, "collapsed": false, "children": [
+          { "text": "digress.", "color": null, "shiny": false, "collapsed": false, "children": [
+            { "text": "digress", "color": null, "shiny": false, "collapsed": false, "children": [] }
+          ] }
+        ] },
+        { "text": "rinse & repeat", "color": null, "shiny": false, "collapsed": false, "children": [] }
+      ] }
+    ] },
+    { "text": "the rest of it", "x": 584, "y": 0, "w": 342, "collapsed": false, "children": [
+      { "text": "how to:", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "right click for color options", "color": null, "shiny": false, "collapsed": false, "children": [
+          { "text": "hold shift ⇧ for menu", "color": null, "shiny": false, "collapsed": false, "children": [
+            { "text": "hold alt+scroll to re-order lines", "color": null, "shiny": false, "collapsed": false, "children": [
+              { "text": "cmd / ctrl + z → undo · + shift → redo", "color": null, "shiny": false, "collapsed": false, "children": [
+                { "text": "supports images, mp4s, and urls.", "color": null, "shiny": false, "collapsed": false, "children": [
+                  { "text": "type an email and it becomes mailto:", "color": null, "shiny": false, "collapsed": false, "children": [] }
+                ] }
+              ] }
+            ] }
+          ] }
+        ] }
+      ] }
+    ] },
+    { "text": "on boards", "x": 954, "y": 0, "w": 300, "collapsed": false, "children": [
+      { "text": "Each board is its own space.", "color": null, "shiny": false, "collapsed": false, "children": [
+        { "text": "Rename one by clicking its name at the top.", "color": null, "shiny": false, "collapsed": false, "children": [
+          { "text": "Make a new one from the wheel: \"+ New board\".", "color": null, "shiny": false, "collapsed": false, "children": [
+            { "text": "Delete one with the ✕ {it asks twice}.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+          ] }
+        ] }
+      ] }
+    ] },
+    { "text": "that's it.", "x": 1282, "y": 0, "w": 264, "collapsed": false, "children": [
+      { "text": "For direct Q&A: hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] },
+      { "text": "Say something new or say something else.", "color": "linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)", "shiny": true, "collapsed": false, "children": [] }
+    ] }
+  ] }
+
+] };
 
 function seedFromExport(d){
   const conv = arr => (arr || []).map(x => ({
@@ -2320,7 +2981,7 @@ function ensureSplit(g){
   }
 }
 
-const IMG = /^(?:https?:\/\/\S+\.(?:png|jpe?g|gif|webp|avif|svg|bmp)(?:[?#]\S*)?|https?:\/\/(?:images\.unsplash\.com|i\.imgur\.com|pbs\.twimg\.com|images\.pexels\.com)\/\S+|data:image\/(?:png|jpe?g|gif|webp|avif);base64,[A-Za-z0-9+\/=]+)$/i;
+const IMG = /^(?:https?:\/\/\S+\.(?:png|jpe?g|gif|webp|avif|svg|bmp)(?:[?#]\S*)?|https?:\/\/(?:images\.unsplash\.com|i\.imgur\.com|pbs\.twimg\.com|images\.pexels\.com|picsum\.photos)\/\S+|data:image\/(?:png|jpe?g|gif|webp|avif);base64,[A-Za-z0-9+\/=]+)$/i;
 const VID = /^(?:https?:\/\/\S+\.(?:mp4|webm|mov|m4v|ogv)(?:[?#]\S*)?|data:video\/(?:mp4|webm|ogg);base64,[A-Za-z0-9+\/=]+)$/i;
 const URL_RE = /^https?:\/\/\S+$/i;
 const isImg = t => IMG.test(t.trim());
