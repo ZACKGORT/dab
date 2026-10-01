@@ -152,8 +152,8 @@ li.rv.ef>.row .vw{display:none}
 li.z>.row .badge{display:inline-block}
 #tb{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + var(--kb) + 10px);transform:translateX(-50%);z-index:6;display:none;gap:5px;max-width:calc(100vw - 20px);overflow-x:auto;scrollbar-width:none;align-items:center;padding:5px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 8px 28px rgba(0,0,0,.28)}
 body.ed #tb{display:flex}#tb .b{min-height:36px;padding:0 10px;flex:none}
-#tb .hg{flex:none;width:18px;align-self:stretch;margin-right:2px;cursor:grab;touch-action:none;color:var(--mute);opacity:.6;background-image:radial-gradient(currentColor 1px,transparent 1.3px);background-size:5px 5px;background-position:center;transition:opacity .15s}
-#tb .hg:hover,#tb .hg:active{opacity:1}#tb .hg:active{cursor:grabbing}
+.hudw>.hg{flex:none;width:18px;align-self:stretch;margin-right:2px;cursor:grab;touch-action:none;color:var(--mute);opacity:.6;background-image:radial-gradient(currentColor 1px,transparent 1.3px);background-size:5px 5px;background-position:center;transition:opacity .15s}
+.hudw>.hg:hover,.hudw>.hg:active{opacity:1}.hudw>.hg:active{cursor:grabbing}.hudw>.hg:focus-visible{opacity:1;outline:2px solid var(--ink);outline-offset:1px;border-radius:4px}
 #ov{position:fixed;inset:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .25s;touch-action:none}
 #ov.on{opacity:1;pointer-events:auto}
 #wh{position:absolute;inset:0;overflow:hidden}
@@ -329,6 +329,23 @@ body.sub #sorthud{display:flex}
 @media(pointer:coarse){#sorthud button{min-height:40px}}
 @media(max-width:900px){#sorthud{top:calc(env(safe-area-inset-top,0px) + 108px)}}
 
+/* ══ MOVABLE HUD ══ */
+.hudf:not(#zg):not(#fab){width:max-content}
+.hudd{transition:none!important;cursor:grabbing;box-shadow:0 16px 40px rgba(0,0,0,.32)!important;outline:1px dashed var(--ink);outline-offset:3px;-webkit-user-select:none;user-select:none}
+#fab.hudd{transform:scale(1.1)}
+#fab{touch-action:none;-webkit-touch-callout:none}#zg{-webkit-touch-callout:none}
+@media(pointer:coarse){.hudw>.hg{width:22px}}
+/* mobile defaults: thumb-zone stack on the right (zoom gauge sits right above +), sort bar scrolls, letter nav sits clear of +, hint stays clear of + */
+@media(hover:none),(pointer:coarse),(max-width:768px){
+:root{--fb:calc(env(safe-area-inset-bottom,0px) + 18px)}
+#zg{width:40px;height:116px;right:calc(env(safe-area-inset-right,0px) + 24px);bottom:calc(var(--fb) + 66px)}
+#sorthud{max-width:calc(100vw - 20px);overflow-x:auto;scrollbar-width:none}
+#sorthud::-webkit-scrollbar{display:none}
+#sorthud .lbl{display:none}#sorthud button{padding:0 9px}
+#lh{bottom:calc(env(safe-area-inset-bottom,0px) + 22px)}
+#hint{max-width:calc(100vw - 112px)}
+}
+
 body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0392b}
 @media(max-width:900px){#hd .l{flex:1;min-width:0}#cn{flex:1;width:auto;min-width:40px}#bk{font-size:16px}#sf{top:calc(env(safe-area-inset-top,0px) + 58px)}#lt{padding-top:calc(env(safe-area-inset-top,0px) + 112px)}}
 
@@ -398,6 +415,7 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
   <button data-a="search" role="menuitem"><span>Search &amp; commands</span><span class="k">⌘K</span></button>
   <hr>
   <button data-a="help" role="menuitem"><span>How it works</span><span class="k">?</span></button>
+  <button data-a="hud" role="menuitem"><span>Reset HUD layout</span></button>
 </div>
 <div id="es" role="status" aria-live="polite"></div>
 <div id="eb" role="alert"></div>
@@ -435,6 +453,8 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
           <div><dt>hold space + drag</dt><dd>Pan from anywhere</dd></div>
           <div><dt>hold ⇧</dt><dd>Command wheel</dd></div>
           <div><dt>drag ▦ grip</dt><dd>Reorder a line</dd></div>
+          <div><dt>drag ⠿ grip</dt><dd>Move a HUD widget</dd></div>
+          <div><dt>hold + / zoom</dt><dd>Move that widget</dd></div>
         </dl>
       </section>
     </div>
@@ -1522,7 +1542,7 @@ document.addEventListener('pointerup',()=>sw=null);
 
 /* FAB */
 const fab=$('fab'),fabMenu=$('fab-menu');
-function setFabOpen(on){fabMenu.classList.toggle('on',on);fab.classList.toggle('open',on);fab.setAttribute('aria-expanded',String(on));fabMenu.setAttribute('aria-hidden',String(!on))}
+function setFabOpen(on){fabMenu.classList.toggle('on',on);fab.classList.toggle('open',on);fab.setAttribute('aria-expanded',String(on));fabMenu.setAttribute('aria-hidden',String(!on));if(on)hmenu()}
 fab.onclick=e=>{e.stopPropagation();setFabOpen(!fabMenu.classList.contains('on'))};
 fabMenu.onclick=e=>{const b=e.target.closest('button[data-a]');if(!b)return;e.stopPropagation();setFabOpen(false);
   const a=b.dataset.a;
@@ -1530,6 +1550,7 @@ fabMenu.onclick=e=>{const b=e.target.closest('button[data-a]');if(!b)return;e.st
   else if(a==='folder'){if(!V){toast('Open a board first',{kind:'error'});return}if(inSubsView()){toast('Open a sub-board first',{kind:'error'});return}lvOn()?lvNew():newFolder(wx(innerWidth/2),wy(innerHeight/2));toast('New post created')}
   else if(a==='category'){newCat((C.length%4)*260,Math.floor(C.length/4)*230);toast('New board created')}
   else if(a==='help'){openHelp()}
+  else if(a==='hud'){hudReset()}
   else if(a==='search'){openPal()}
 };
 addEventListener('pointerdown',e=>{if(!fabMenu.classList.contains('on'))return;if(e.target.closest('#fab,#fab-menu'))return;setFabOpen(false)},true);
@@ -1688,12 +1709,12 @@ V?(inSubsView()?null:{l:'new post here',f:()=>newFolder(wx(x),wy(y))}):{l:'new b
 S_?{l:'back to sub-boards',k:'Esc',f:closeSub}:V?{l:'back to boards',k:'Esc',f:closeCat}:null,
 {l:'switch board',k:'hold ⇧',f:()=>ow('tap')},'-',
 {l:'help & shortcuts',k:'?',f:openHelp},'-',
-{l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd},'-',{l:'reset demo',f:()=>{if(confirm('Reset demo? This replaces everything on the canvas.')){const b=document.querySelector('#acts [data-a=reset]');rs=1;b&&b.click()}}}].filter(Boolean);
+{l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd},{l:'reset HUD layout',f:hudReset},'-',{l:'reset demo',f:()=>{if(confirm('Reset demo? This replaces everything on the canvas.')){const b=document.querySelector('#acts [data-a=reset]');rs=1;b&&b.click()}}}].filter(Boolean);
 
 function showCtx(x,y,t){const li=t.closest('li[data-id]'),fe=t.closest('.fold'),ce=t.closest('.cat'),o=fe||ce;if(o)setCur(o.dataset.id);
 openMenu(li?lineMenu(li.dataset.id):fe?foldMenu(fobj(fe.dataset.id)):ce?catMenu(fobj(ce.dataset.id)):canvasMenu(x,y),x,y)}
 addEventListener('contextmenu',e=>{const t=e.target;if(!t.closest)return;if(t.closest('#cm'))return e.preventDefault();
-if(W||t.closest('#hd,#tb,#ov,#file,#zg,#fab,#fab-menu,#help,#tour,#sorthud')||t.tagName==='INPUT')return;
+if(W||t.closest('#hd,#tb,#ov,#file,#zg,#fab,#fab-menu,#help,#tour,#sorthud,#sf,#lh')||t.tagName==='INPUT')return;
 e.preventDefault();if(G&&G.t!=='pinch')G.t='none';showCtx(e.clientX,e.clientY,t)});
 
 let lp=0;
@@ -1720,7 +1741,8 @@ if(Z.held)return;const L=s2v(cam.s);if(Math.abs(L-Z.L)>.01){Z.L=L;zwake()}}
 const zoomTo=s=>{s=clamp(s,ZMIN,ZMAX);const k=s/cam.s,cx=innerWidth/2,cy=innerHeight/2;fly({x:cx-(cx-cam.x)*k,y:cy-(cy-cam.y)*k,s},260)};
 function zmove(e){const v=clamp((Z.r.bottom-e.clientY)/Z.r.height*100,0,100);let s=v2s(v);if(Math.abs(s-1)<.05)s=1;Z.L=s2v(s);cancelAnimationFrame(fl);zoomAt(innerWidth/2,innerHeight/2,s);zwake()}
 const zup=()=>{if(!Z.held)return;Z.held=false;zg.dataset.held=0;zwake()};
-zg.onpointerdown=e=>{if(e.button)return;Z.held=true;Z.r=zg.getBoundingClientRect();zg.dataset.held=1;try{zg.setPointerCapture(e.pointerId)}catch(_){}zmove(e)};
+const zbegin=e=>{Z.held=true;Z.r=zg.getBoundingClientRect();zg.dataset.held=1;try{zg.setPointerCapture(e.pointerId)}catch(_){}zmove(e)};
+zg.onpointerdown=e=>{if(e.button)return;hhold('zg',e,(ev,tap)=>{zbegin(e);if(tap)zup();else zmove(ev)})};
 zg.onpointermove=e=>{if(Z.held)zmove(e)};zg.onpointerup=zg.onpointercancel=zg.onlostpointercapture=zup;zg.ondblclick=()=>zoomTo(1);
 zg.onkeydown=e=>{const d=e.shiftKey?10:2,v=s2v(cam.s),m={ArrowUp:v+d,ArrowRight:v+d,ArrowDown:v-d,ArrowLeft:v-d,PageUp:v+10,PageDown:v-10,Home:0,End:100}[e.key];
 if(e.key==='0'){zoomTo(1);return}if(m==null)return;e.preventDefault();zoomAt(innerWidth/2,innerHeight/2,v2s(m))};
@@ -1728,20 +1750,60 @@ addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey||W||e.target.ma
 if(e.key==='='||e.key==='+')zoomTo(cam.s*1.15);else if(e.key==='-')zoomTo(cam.s/1.15);else if(e.key==='0')zoomTo(1)});
 zsync();zpaint();
 
-/* movable HUD */
-const tb=$('tb'),hg=h('span','hg');hg.title='drag to move · double-click to re-dock';tb.prepend(hg);
-let tp=null;try{tp=JSON.parse(localStorage.getItem('dab:hud'))}catch(_){}
-function tbPlace(){if(!tp||!isFinite(tp.x)||!isFinite(tp.y)){tb.style.left=tb.style.top=tb.style.bottom=tb.style.transform='';return}
-const r=tb.getBoundingClientRect(),w=r.width||320,hh=r.height||48,vh=vv?vv.height+vv.offsetTop:innerHeight;
-Object.assign(tb.style,{left:clamp(tp.x,4,Math.max(4,innerWidth-w-4))+'px',top:clamp(tp.y,4,Math.max(4,vh-hh-4))+'px',bottom:'auto',transform:'none'})}
-const hsave=()=>{try{tp?localStorage.setItem('dab:hud',JSON.stringify(tp)):localStorage.removeItem('dab:hud')}catch(_){}};
-hg.onmousedown=e=>e.preventDefault();
-hg.onpointerdown=e=>{e.preventDefault();e.stopPropagation();const r=tb.getBoundingClientRect(),ox=e.clientX-r.left,oy=e.clientY-r.top,id=e.pointerId;
-try{hg.setPointerCapture(id)}catch(_){}
-const mv=ev=>{tp={x:ev.clientX-ox,y:ev.clientY-oy};tbPlace()},up=()=>{hg.removeEventListener('pointermove',mv);hg.removeEventListener('pointerup',up);hg.removeEventListener('pointercancel',up);hsave()};
-hg.addEventListener('pointermove',mv);hg.addEventListener('pointerup',up);hg.addEventListener('pointercancel',up)};
-hg.ondblclick=()=>{tp=null;hsave();tbPlace()};
-addEventListener('focusin',()=>setTimeout(tbPlace,0));addEventListener('resize',tbPlace);if(vv)vv.addEventListener('resize',tbPlace);
+/* movable HUD widgets — grip on the pills, press-and-hold on + and the zoom gauge.
+   Positions are stored as viewport fractions per profile (desktop / mobile), so they survive resize, rotation and the keyboard. */
+const tb=$('tb'),HK='dab:hud:v2',HID=['sf','sorthud','zg','fab','tb','lh'],HGRIP=['sf','sorthud','tb','lh'],HCEN=new Set(HGRIP),HHOLD=340,HM=6,
+HNAME={sf:'surface switcher',sorthud:'sort bar',zg:'zoom gauge',fab:'create button',tb:'editing toolbar',lh:'letter navigation'};
+let HS={d:{},m:{}};try{const x=JSON.parse(localStorage.getItem(HK));if(x&&x.d&&x.m)HS=x}catch(_){}
+try{const o=JSON.parse(localStorage.getItem('dab:hud'));if(o&&isFinite(o.x)&&isFinite(o.y)&&!HS.d.tb&&!HS.m.tb){HS[coarse.matches?'m':'d'].tb={px:o.x,py:o.y};localStorage.setItem(HK,JSON.stringify(HS))}localStorage.removeItem('dab:hud')}catch(_){}
+const hprof=()=>coarse.matches?'m':'d',hsave=()=>{try{localStorage.setItem(HK,JSON.stringify(HS))}catch(_){}},hvis=()=>vv?vv.height+vv.offsetTop:innerHeight,
+hsafe=(()=>{const p=document.createElement('div');p.style.cssText='position:fixed;left:0;top:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)';document.body.append(p);
+return()=>{const c=getComputedStyle(p);return{t:parseFloat(c.paddingTop)||0,r:parseFloat(c.paddingRight)||0,b:parseFloat(c.paddingBottom)||0,l:parseFloat(c.paddingLeft)||0}}})();
+function hbox(el){const s=hsafe(),w=el.offsetWidth,hh=el.offsetHeight,x0=s.l+HM,y0=s.t+HM;return{w,h:hh,x0,y0,x1:Math.max(x0,innerWidth-s.r-w-HM),y1:Math.max(y0,hvis()-s.b-hh-HM)}}
+const hrec=(b,x,y)=>({fx:+((x+b.w/2)/innerWidth).toFixed(4),fy:+((y+b.h/2)/innerHeight).toFixed(4)});
+function hplace(id){const el=$(id);if(!el)return;const rec=HS[hprof()][id];
+if(!rec){if(el.classList.contains('hudf')){el.classList.remove('hudf');['left','top','right','bottom'].forEach(k=>el.style[k]='');if(HCEN.has(id))el.style.transform=''}if(id==='fab')hmenu();return}
+el.classList.add('hudf');if(!el.offsetWidth)return;const b=hbox(el);
+if(rec.px!=null){rec.fx=(rec.px+b.w/2)/innerWidth;rec.fy=(rec.py+b.h/2)/innerHeight;delete rec.px;delete rec.py;hsave()}
+el.style.left=clamp(rec.fx*innerWidth-b.w/2,b.x0,b.x1)+'px';el.style.top=clamp(rec.fy*innerHeight-b.h/2,b.y0,b.y1)+'px';el.style.right=el.style.bottom='auto';
+if(HCEN.has(id))el.style.transform='none';if(id==='fab')hmenu()}
+function hmenu(){const st=fabMenu.style;if(!fab.classList.contains('hudf')){st.left=st.top=st.right=st.bottom=st.transformOrigin='';return}
+if(!fabMenu.classList.contains('on'))return;const r=fab.getBoundingClientRect(),mw=fabMenu.offsetWidth,mh=fabMenu.offsetHeight,s=hsafe(),vh=hvis(),
+left=r.left+r.width/2<innerWidth/2,up=r.top+r.height/2>vh/2;
+const x=clamp(left?r.left:r.right-mw,s.l+8,Math.max(s.l+8,innerWidth-s.r-mw-8)),y=clamp(up?r.top-mh-10:r.bottom+10,s.t+8,Math.max(s.t+8,vh-s.b-mh-8));
+st.left=x+'px';st.top=y+'px';st.right=st.bottom='auto';st.transformOrigin=(up?'bottom':'top')+' '+(left?'left':'right')}
+function hdrag(id,e,src,held){const el=$(id),p=hprof(),r=el.getBoundingClientRect(),ox=e.clientX-r.left,oy=e.clientY-r.top;
+setFabOpen(false);el.classList.add('hudd');try{src.setPointerCapture(e.pointerId)}catch(_){}
+const mv=ev=>{const b=hbox(el);let x=clamp(ev.clientX-ox,b.x0,b.x1),y=clamp(ev.clientY-oy,b.y0,b.y1);
+if(Math.abs(x+b.w/2-innerWidth/2)<10)x=innerWidth/2-b.w/2;
+if(Math.abs(x-b.x0)<10)x=b.x0;else if(Math.abs(x-b.x1)<10)x=b.x1;if(Math.abs(y-b.y0)<10)y=b.y0;else if(Math.abs(y-b.y1)<10)y=b.y1;
+HS[p][id]=hrec(b,x,y);hplace(id)};
+const up=()=>{['pointermove','pointerup','pointercancel','lostpointercapture'].forEach(t=>src.removeEventListener(t,t==='pointermove'?mv:up));el.classList.remove('hudd');hsave();try{snd('set')}catch(_){}
+if(held){const kill=ev=>{ev.stopPropagation();ev.preventDefault()};addEventListener('click',kill,true);setTimeout(()=>removeEventListener('click',kill,true),80)}};
+['pointermove','pointerup','pointercancel','lostpointercapture'].forEach(t=>src.addEventListener(t,t==='pointermove'?mv:up))}
+function hhold(id,e,pass){if(e.pointerType==='mouse'&&e.button)return;const el=$(id);let ls={x:e.clientX,y:e.clientY},done=0,t=0;
+try{el.setPointerCapture(e.pointerId)}catch(_){}
+const fin=()=>{done=1;clearTimeout(t);el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.removeEventListener('pointercancel',up)},
+mv=ev=>{ls={x:ev.clientX,y:ev.clientY};if(Math.hypot(ls.x-e.clientX,ls.y-e.clientY)>6){fin();pass&&pass(ev,0)}},
+up=ev=>{if(done)return;fin();pass&&pass(ev,1)};
+t=setTimeout(()=>{if(done)return;fin();try{navigator.vibrate&&navigator.vibrate(10)}catch(_){}try{snd('lift')}catch(_){}hdrag(id,{clientX:ls.x,clientY:ls.y,pointerId:e.pointerId},el,true)},HHOLD);
+el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up)}
+function hgrip(id){const el=$(id),g=h('span','hg');g.tabIndex=0;g.setAttribute('role','button');g.setAttribute('aria-label','Move '+HNAME[id]+' (arrow keys, Delete to reset)');g.title='drag to move · double-click to reset';el.prepend(g);
+const reset=()=>{delete HS[hprof()][id];hsave();hplace(id)};
+g.onmousedown=e=>e.preventDefault();
+g.onpointerdown=e=>{if(e.button)return;e.preventDefault();e.stopPropagation();hdrag(id,e,g,false)};
+g.ondblclick=reset;
+g.onkeydown=e=>{if(e.key==='Delete'||e.key==='Home'){e.preventDefault();reset();return}
+const d={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];if(!d)return;e.preventDefault();
+const k=e.shiftKey?40:10,r=el.getBoundingClientRect(),b=hbox(el);HS[hprof()][id]=hrec(b,clamp(r.left+d[0]*k,b.x0,b.x1),clamp(r.top+d[1]*k,b.y0,b.y1));hplace(id);hsave()}}
+function hudReset(){HS[hprof()]={};hsave();hall();toast('HUD layout reset')}
+const hall=()=>HID.forEach(hplace);
+HID.forEach(id=>{const el=$(id);if(el)el.classList.add('hudw')});HGRIP.forEach(hgrip);
+fab.addEventListener('pointerdown',e=>hhold('fab',e));fab.addEventListener('contextmenu',e=>e.preventDefault());
+fab.title='hold & drag to move';zg.title='drag to zoom · double-click for 100% · hold to move';
+if(window.ResizeObserver){const ro=new ResizeObserver(es=>es.forEach(en=>hplace(en.target.id)));HID.forEach(id=>{const el=$(id);el&&ro.observe(el)})}
+addEventListener('focusin',()=>setTimeout(hall,0));addEventListener('resize',hall);if(vv){vv.addEventListener('resize',hall);vv.addEventListener('scroll',hall)}
+coarse.addEventListener&&coarse.addEventListener('change',hall);hall();
 
 /* boot */
 paintTheme();chrome();renderAll();apply();
