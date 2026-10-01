@@ -4,11 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>dab</title>
-<meta name="description" content="A simple place to put things into the world. Boards, posts, nested lines. No ceremony.">
+<meta name="description" content="A board for posting and browsing. Categories are places. Cards are posts. Lines are the content.">
 <meta property="og:title" content="dab">
-<meta property="og:description" content="A simple place to put things into the world. Dabble publicly.">
+<meta property="og:description" content="A board for posting and browsing. Low ceremony. Nested thinking.">
+<meta property="og:type" content="website">
 <meta property="og:url" content="https://dab.cx">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23000%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-family=%27monospace%27 font-size=%2717%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27%23fff%27%3Edab%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -361,7 +363,7 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
   <div class="l">
     <button id="bk">dab</button>
     <span class="sl ci">/</span>
-    <input id="cn" class="ci" placeholder="untitled" spellcheck="false" aria-label="Category name">
+    <input id="cn" class="ci" placeholder="untitled" spellcheck="false" aria-label="Board name">
     <span id="bc" class="ci" aria-live="polite"></span>
   </div>
   <div class="r">
@@ -373,7 +375,7 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
 <div id="zg" role="slider" tabindex="0" aria-label="Zoom" aria-orientation="vertical" aria-valuemin="12" aria-valuemax="250" title="drag to zoom · double-click for 100%"></div>
 <div id="tb"></div>
 <div id="ov" aria-hidden="true"><div id="wh"></div><button class="b" id="cx">close</button>
-<div id="acts"><button class="b" data-a="fit">fit all</button><button class="b" data-a="import">import</button><button class="b" data-a="export">export</button><button class="b" data-a="theme">theme</button><button class="b" data-a="search">search</button><button class="b" data-a="help">help</button><button class="b" data-a="reset">reset demo</button><button class="b" data-a="delcat">delete category</button></div></div>
+<div id="acts"><button class="b" data-a="fit">fit all</button><button class="b" data-a="import">import</button><button class="b" data-a="export">export</button><button class="b" data-a="theme">theme</button><button class="b" data-a="search">search</button><button class="b" data-a="help">help</button><button class="b" data-a="reset">reset demo</button><button class="b" data-a="delcat">delete board</button></div></div>
 <input type="file" id="file" accept="application/json,.json" hidden>
 <div id="cm" hidden></div>
 <div id="toasts" aria-live="polite" aria-atomic="false"></div>
@@ -382,8 +384,8 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
 </button>
 <div id="fab-menu" role="menu" aria-hidden="true">
   <button data-a="line" role="menuitem"><span>New line</span><span class="k">↵</span></button>
-  <button data-a="folder" role="menuitem"><span>New folder here</span></button>
-  <button data-a="category" role="menuitem"><span>New category</span></button>
+  <button data-a="folder" role="menuitem"><span>New post here</span></button>
+  <button data-a="category" role="menuitem"><span>New board</span></button>
   <button data-a="search" role="menuitem"><span>Search &amp; commands</span><span class="k">⌘K</span></button>
   <hr>
   <button data-a="help" role="menuitem"><span>How it works</span><span class="k">?</span></button>
@@ -391,7 +393,7 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
 <div id="es" role="status" aria-live="polite"></div>
 <div id="eb" role="alert"></div>
 <div id="modal-root"></div>
-<div id="pal" role="dialog" aria-modal="true" aria-label="Search and commands" aria-hidden="true"><div class="pal-bg" id="palbg"></div><div class="pal-box"><input id="pali" type="text" role="combobox" aria-expanded="true" aria-controls="pall" aria-autocomplete="list" aria-label="Search letters, lines and actions" placeholder="Jump to a letter, line or action…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"><div id="pall" role="listbox" aria-label="Results"></div></div></div>
+<div id="pal" role="dialog" aria-modal="true" aria-label="Search and commands" aria-hidden="true"><div class="pal-bg" id="palbg"></div><div class="pal-box"><input id="pali" type="text" role="combobox" aria-expanded="true" aria-controls="pall" aria-autocomplete="list" aria-label="Search posts, lines and actions" placeholder="Jump to a post, line or action…" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go"><div id="pall" role="listbox" aria-label="Results"></div></div></div>
 <div id="help" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="helptitle">
   <div class="help-bg" data-close></div>
   <div class="help-body">
@@ -401,10 +403,10 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
     </header>
     <div class="grid">
       <section>
-        <h3>Write</h3>
+        <h3>Post</h3>
         <dl>
           <div><dt>↵</dt><dd>New line below</dd></div>
-          <div><dt>⇧ ↵</dt><dd>New branch (child)</dd></div>
+          <div><dt>⇧ ↵</dt><dd>Nested reply</dd></div>
           <div><dt>⇥</dt><dd>Indent</dd></div>
           <div><dt>⇧ ⇥</dt><dd>Outdent</dd></div>
           <div><dt>⌥ ↑ ↓</dt><dd>Move line up / down</dd></div>
@@ -415,7 +417,7 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
       <section>
         <h3>Canvas</h3>
         <dl>
-          <div><dt>click</dt><dd>Open a card</dd></div>
+          <div><dt>click</dt><dd>Open a post</dd></div>
           <div><dt>dbl-click</dt><dd>Create new (empty space)</dd></div>
           <div><dt>drag</dt><dd>Pan · move a card</dd></div>
           <div><dt>⌘ + scroll</dt><dd>Zoom</dd></div>
@@ -434,7 +436,7 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
   <div class="tour-card">
     <div class="step" id="tourstep">Step 1 of 5</div>
     <h2 id="tourtitle">Welcome to dab</h2>
-    <p id="tourbody">A canvas of documents. Each card is a folder of lines. Everything here is real — click, type, drag, break it.</p>
+    <p id="tourbody">A board of boards. Every card is a post. Everything here is real — click, type, drag, break it.</p>
     <footer>
       <button class="tour-skip" id="tourskip">skip tour</button>
       <div class="dots" id="tourdots"></div>
@@ -443,7 +445,7 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
   </div>
 </div>
 
-<div id="sf" role="group" aria-label="Surface"><button data-m="folders">folders</button><button data-m="canvas">canvas</button><button data-m="letters">letters</button></div>
+<div id="sf" role="group" aria-label="Surface"><button data-m="folders">boards</button><button data-m="canvas">canvas</button><button data-m="letters">letters</button></div>
 <div id="lt" role="region" aria-label="Letters"><div id="ltk"></div><div class="lz l" id="lzl" aria-hidden="true"></div><div class="lz r" id="lzr" aria-hidden="true"></div></div>
 <div id="lh" role="group" aria-label="Letter navigation"><button class="b icon" id="lprev" aria-label="Previous letter">‹</button><span class="n" id="ln" role="status" aria-live="polite"></span><button class="b icon" id="lnext" aria-label="Next letter">›</button></div>
 <div id="fx" aria-hidden="true"><div class="fxh l" id="fxl" aria-hidden="true"></div><div class="fxh r" id="fxr" aria-hidden="true"></div><button id="fxb" type="button">back to canvas</button></div>
@@ -463,11 +465,11 @@ const T=(name,x,y,...tree)=>({id:nid(),name,x,y,tree});
 const CT=(name,x,y,...trees)=>({id:nid(),name,x,y,trees});
 const nd=(text,o,...k)=>({...(o&&o.w?{w:o.w}:{}),text,color:(o&&o.c)||null,shiny:!!(o&&o.s),collapsed:!!(o&&o.z),children:k.map(x=>typeof x==='string'?nd(x):x)});
 const sc=(name,url)=>nd(name,0,url);
-const SEED_DATA = {"app": "dab", "version": 2, "theme": "light", "currentCategory": "start here", "categories": [{"name": "start here", "x": 0, "y": 0, "statements": [{"text": "This is a board.", "collapsed": false, "children": [{"text": "Open a card. Write.", "collapsed": false, "children": []}, {"text": "Digress if you need to.", "collapsed": false, "children": [{"text": "Like this.", "collapsed": false, "children": [{"text": "Branches are where details, questions and replies live.", "collapsed": false, "children": []}]}]}, {"text": "That's the whole thing.", "collapsed": false, "children": [], "color": "#e93d82"}], "x": 0, "y": 0, "w": 320}, {"text": "How to post", "collapsed": false, "children": [{"text": "Double-click empty space to start a card.", "collapsed": false, "children": []}, {"text": "First line is the headline. Everything under it is the post.", "collapsed": false, "children": []}, {"text": "Paste an image link or a URL and it just shows up.", "collapsed": false, "children": []}, {"text": "Reply by adding a line under someone's post.", "collapsed": false, "children": []}], "x": 360, "y": 0, "w": 320}, {"text": "Rules (all of them)", "collapsed": false, "children": [{"text": "Be a person.", "collapsed": false, "children": []}, {"text": "Say what it is, what it costs, where it is.", "collapsed": false, "children": []}, {"text": "Take it down when it's gone.", "collapsed": false, "children": []}, {"text": "Don't be weird about it.", "collapsed": false, "children": []}], "x": 720, "y": 0, "w": 320}]}, {"name": "for sale", "x": 260, "y": 0, "statements": [{"text": "Brass desk lamp — $25", "collapsed": false, "children": [{"text": "Works. Small chip on the shade.", "collapsed": false, "children": []}, {"text": "data:image/webp;base64,UklGRvwDAABXRUJQVlA4IPADAACwMgCdASqQAQQBPpVKoEwlpCMiJNVYKLASiWdu4Wlwi2atz1TLzuPhtUfmf9b62NuldztPiBdYaOpOQV1YaOpOQWJv7s5Ng6QyIT3GtxrcagpsKek+2lKvQNhpSr0pV6Uq9J361V5t8jNPiFHuWS1m43bWdk2DytVKa134XhqwKIjZt15pk4gDG/UoN2TReIMlSN6ryF/biwrkuvKYKuxDCI76G6LAmh0NPwkhnCuaDzjWlzCHOmrrb8dEc7q3PSygLKrjawmLHCNSpgewC3dEcFo3iYt52WIBaytYWDHwuFKhH5ACkHlktZuNJpDRBCuHZXsHQrTqTD09CIhQkMNbjAD9QkVyT0tOmrrzbXdbWbGVSnZH/8JlKb3EbG3RpTedmREDPLJDRNmkxXW1AOwB/Qhia0xEN09qWEyFa42tt8Br+ha3AzyyWs7lGPZb/WfF/qxtIm7Cx6lo3H7ba8Ct4f2fPbUP/////r/Tqw0dSc9lad9YaOpOQV1YaOpOQV1YaOpOQV1YaOpOQV1YaOmn6p2P+dAQ9DE2neA8wAAA/vpn64iRt8irnYYJQMp61m5rk8NulOaK8UQxU7iAMdbxG/1hnOK/En/Es0XVPaA76YNyjfxFuITpgKMPGUqC1E5TGd4oH0LzDlKmwRuzzJ3s7V85ppG4WORyeFmFRRu6WrtXaA0aGK9sEoePdieLedvBcnNKL3Dn9q4DTXoQ7EjBFcYT9V1G0aAzJ6QAP27uCFC3t7x5dO4xVy9xCdyF6RIcpkeTvMmcftygUoY1aguTphVI5fPH8fOP5gRN3VS+fqgtU43I9CB82N1xkDhmgmBraB/be0n61+Fkl34x9lrL9zjAyQdK+laxxP4t2wSMwoARFxEBQtB1PAOZqa+sSt9uUXRQPMULjPEVReIzvO6SNkcpd2NgkAz+vY6Lee5bddgousQ60KBPSQtVLF/hcSE1IzElHU8KAq17YuRCqnOjisZ5LbmErdBWpJ0dFMC7gUL4mnC+2QUOWE4jrgIQjM5lsqaMwSncCQARaYvGAf0oKZcnloISkXxP4/9Ibyo0s7YuCSHo3z+jzNUAS+pcyvab/CZCL044B+lWIP+6CIiHN2ncO/v8g8h/ZFL9aNQuV6TrxOdD8p/towTn4b60U17hT+DRE7vGEsIhDJ9yesomD78Jqj6+2ze5bOe31wbsYwq5GJebLWTUuk8Jvea5kL273+cTh2ShZA8n2dIhgZ9nnaCr0sof3+DrlFO45/5XGkS0Sh1U1o7J5c0bkg5+DygFNVytsPjvPoeQ51ZVDKGeRJQGvtA3c3KMg/nJ67bx5RGAAAAAAAAAAAAAAAAAAAA=", "collapsed": false, "children": []}, {"text": "Pickup only, evenings.", "collapsed": false, "children": []}, {"text": "Q&A", "collapsed": false, "children": [{"text": "Does it come with a bulb?", "collapsed": false, "children": [{"text": "Yes, warm 40w.", "collapsed": false, "children": []}]}, {"text": "Would you take $20?", "collapsed": false, "children": [{"text": "Come see it first.", "collapsed": false, "children": []}]}]}], "x": 0, "y": 0, "w": 320}, {"text": "Mono synth, needs one knob — $150", "collapsed": false, "children": [{"text": "1980s-ish. Sounds enormous.", "collapsed": false, "children": []}, {"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "Missing the cutoff knob; the pot is fine.", "collapsed": false, "children": []}, {"text": "Trade?", "collapsed": false, "children": [{"text": "for a decent mic stand", "collapsed": false, "children": []}, {"text": "or a turntable", "collapsed": false, "children": []}]}], "x": 360, "y": 0, "w": 320}, {"text": "Commuter bike, 54cm — $180", "collapsed": false, "children": [{"text": "New chain, new tires. Rides smooth.", "collapsed": false, "children": []}, {"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "Lock not included. Sorry.", "collapsed": false, "children": []}, {"text": "Includes rear rack", "collapsed": false, "children": []}], "x": 720, "y": 0, "w": 320}]}, {"name": "housing", "x": 520, "y": 0, "statements": [{"text": "Sunny 1BR, 2nd floor — $1,450/mo", "collapsed": false, "children": [{"text": "data:image/webp;base64,UklGRhIEAABXRUJQVlA4IAYEAAAQMgCdASqQAQQBPpVKo0urv6ehpTc42/ASiWdu4WwwcvnvdmbKMmsP43yPznmH00CMhH7OKUEWuY6t6e69TIdDQ8Mis5X7x7mxXqBJOOsOXTDGLtfGQblmY+i8Sxs/zNiCgAvwa37FQcdRi6nE80tHteDfe00roeKzifI6kj1VuU9sm6HSBX3m0XVDj+sv6nJJBVLsqkwGnA+yGZevvTEgLrIHjGR0+ldBGJx0YuKOWCP5IZfRr9zRitYtUOWyHhtJ8U56ar7UMs1eywZEZ9zxmW/+KEFTXgC00d8AUP9YEfuXaV880nDEtqT4EKg77PEsD0gZZgSAYQnMn5BvXke70DRwZ1uz/zvXkv9R/FCiPfuVb37JnW4IDRfAvGzdxheRMAfxcNn94IPpSLqa0zJVA9ywzH9hfvkLA3KjMzV6ivsVuTiQXeAehVRbQfDfjnxgPCwchI9n3a5J9ftMvArwDjzI/vc5zOWLh1ax3nyL5B6PNkJBFi4dWsI/ZxSgiyIYuHVrCP2cUoIsXDp8f2cUoIsXDq1hH4gAAP77zH/1VT1+N3tlAnpWvdpfyRw0h3b5ELL4juiwEZ8EuamoseL3KD2MrIOqDme+I6KylvNboVD/bzMECdDQauDah1UaMpiyCMabJ+yngiIjpDaNChDOIoyqYPwTM6YA837BJUKnJm9yFvCM/UfYrLFP5YCfvaXUo9Xkf1hSPqZeQfSuA1hVqWXq/SvKSu6R+0c4Vgbrgw3jLXdtAT1QjHbVBVelfw2/AtvgZiuOPvObe/8x9k3BE/Y8pvSR2pcIkUHabilB19OndDR9xJF0V5KTYz6FsHAWz23b8jgA1EtftA0BGVSjDz2k07pdv+zd5uZWaOBys07eaH+t8e+7osEbr5pmzZOLP7QuS0+girb0rbzyriCDqkrHuh7G4ipHI18Zmz3aame4S0xNOLnxa+GxnY42+EBRkRfKn3tP9qrcFBTc/o+kiLX3WNjoAmUOGPkBGgB2SSFkkO2KFbPaD5Kv3PXFVtEFG29ISwN/+Np1zYZX5L/mqgWmqlL93NKh/EFoqGRvTHqC73ZgLQvHj+fAJyzS/KpGn3bzDLAJp5XLIndcC31k/gVKKJlqa0LEHjyp+GFAk1mM4sirgI3AMnjjgJAfrWLQmlmSP31AhKLzfaXMkXqPPILiiaIbAUjDA0NPYBYk0phZhGIX7jBoX+u2j3Dpw+D1AANWzHrg9rxyaP2Ff/jABpfU23ihAD7e+cSD3sB1o0TRNuEX7X9kQ/CzHbjTaB4zHMc7mz/xOX6CXe/dy/1iqKlKI9voTf9Av9973Pd/2+8uGB8QmcwjsyDNO4sjAAAAADAnrIz0JAAAm7wAAB/AkAAAAAAA", "collapsed": false, "children": []}, {"text": "Dogs ok, small deposit.", "collapsed": false, "children": []}, {"text": "Laundry in the basement.", "collapsed": false, "children": []}, {"text": "Available the 1st.", "collapsed": false, "children": []}, {"text": "Viewing", "collapsed": false, "children": [{"text": "Saturday 11–1", "collapsed": false, "children": []}, {"text": "or message a time", "collapsed": false, "children": []}]}], "x": 0, "y": 0, "w": 320}, {"text": "Room in a quiet house — $700", "collapsed": false, "children": [{"text": "Shared bath, shared garden, no smokers.", "collapsed": false, "children": []}, {"text": "Looking for someone tidy and friendly.", "collapsed": false, "children": []}, {"text": "Utilities split, about $60.", "collapsed": false, "children": []}, {"text": "Reply below with two lines about you.", "collapsed": false, "children": []}], "x": 360, "y": 0, "w": 320}]}, {"name": "jobs", "x": 780, "y": 0, "statements": [{"text": "Line cook, part-time — $22/hr", "collapsed": false, "children": [{"text": "data:image/webp;base64,UklGRkwFAABXRUJQVlA4IEAFAADQOgCdASqQAQQBPpVKnUslq6Khp9WIwXASiWdu4XCr75YGhpM71D8INMP5gP1J9W30O7zzT5Pm+Y8uIADVAIH/+7zmgAL3e0jwiDVYiDkjqulOUYa8t6nGZnP1oM8mGvLLa9Y8x7EnH/2sVm9iB//qszmXLvuUDjIIlOurI6bkRZoGv165uzWLrZTytst3f7m+/Mhz90UIhYBIxIS5bFOyozoLGuJvpDEkmW5bSrZycgC6zf2Zr0NOpDF8eGxmzL1WB6+ZCX4XQg4awiVZQYbNN7cGzuLn4OHlnropH0wUygiUvXKnkTivV9Pg8xP3cxGw4P89uDWkrDUQ41ODwfViyT9izK6SlY+l2cIFuIHC0EmMbqsJ+tc3l6+PBirA6LGRTW8WUxHf+jOovQXlSSvJoY7QaDjSBcQFTgdJPJ4WmLFt1NhcyfIU86CEfRTQpgaWIrmGhOU9CvCy1l9jU00j1i9cGajikhEIXNi+J2bifkje49M+GjbpVeSj3scVepSmLFvJ2eq50BAK67lBFgTsJynNBes3K962fW9LKVPU/A6cNj3CZpCZHslzFeo3GjEjLCuNmeivN1YthBaIntK+EjBlG67Vi9mTaazMnCBrkXA1NnA0dNHgNkDMNpWEcAD+/aTf6S6XNc2yd5gKwQ7WHarNrb75MwXDSBSHPsjFUMXfFmAAAAAATlG11Syz6IOQn6MBVLfG3BqOA8v7wcP/dJ3/mbq+SHjHhm/tB0NaT/4DkP4nmhc7z34voTikDQ9wfzq7v58o1nZHQ2WNGpiqqS+mP5u5JJjPxKmkE5lLfh8NCSKtnY0m+tt/5NvvtEPPF2crFbpoUX/IrchVwB3NLN38GD/s6uV+lJl++EoDQK/bKS3QZb/PMAhPceaPBlR6nswdwPCxRhYL8dhX7cBDMsJGqrSjpVkoCgHgG0+FdaqjN5yTccMlAj/4qwPVB8q7LCpjWyj/b4y1ZDma+G7RsqtpBvWqAqceS8GpUEo+/ItKHjXz+ilcTvuS+mZ1LoRj+uuXrMARu7oMsdKO0RnUvKHyrcU29zOrxtK8jIWzyw60GUwQC12tN5sPeHFtJ+KZAS6cI30z63m/LNM2z5ol9NNx00NOsGODj8gbKL1ESjq66GjZQCroYc+JR4Voo7PTAoNdY5Ol70SfvHTF9JViz4zWWHyFtaBGhNRQjfb5ba1lVD3rucTc6v5ixKmq8KE6qi2gS7Apgay+3KpT8cOJXlmEsysD0197h2/M7pISZNAA9QFYyI8MXW3IH+/ZdUir/YY2UpoZTIx+6af5RJjH/k9Zodw0LvWI30baAo6uz109aCWnUCvqgdDCNFtt6rKn6PqbYHpItO6AGSASk9+5o2z2PuISwo9FQ7tXnt7eBKaxZA6XO2Q8K6WhN00QffQRgVt/ajJrXbjS0lwNZZbTJs9lsi9GslbGaakAKTR8N1j5aUO6NMlYzgK/AZv3w2epsuNVxC121knyGjLFLclAezLzPC9ukRVNZVj6A3RyfNj1ORx63E2otGe4W2Id6882wnkkP4dEbTNBLsP9dZdmyHK/1HlSLktqchhoq768nwDttDEPLJuYxDc3ZqTXwwFPGKRp7LdjE/QEPrTty6q5ZlMHfQfbAwO15aQFsywviIGRZDMBznJKwmYAPpy8Nq56TuYnFAny7HDfOnt/DSZt6YGfyk3W6s31SyfGErtcfVDBKWaQuh3JkJa/mb5HNBLb9kNgOmtn2mhLbpwFgYKxoH/vqvXC0IuT1uw+gAAAAAEqWysAAAAAM2gAAAAAAAA=", "collapsed": false, "children": []}, {"text": "Small corner café, weekend brunch + 2 weekdays.", "collapsed": false, "children": []}, {"text": "Experience helps; attitude helps more.", "collapsed": false, "children": []}, {"text": "To apply", "collapsed": false, "children": [{"text": "Stop in after 2pm and ask for Dee.", "collapsed": false, "children": []}, {"text": "Or reply here with your last kitchen.", "collapsed": false, "children": []}]}, {"text": "Hiring now", "collapsed": false, "children": [], "color": "#e93d82"}], "x": 0, "y": 0, "w": 320}, {"text": "Freelance designer, small agentic-builds studio", "collapsed": false, "children": [{"text": "data:image/webp;base64,UklGRqQEAABXRUJQVlA4IJgEAAAQOACdASqQAQQBPpVKoEulpSMhplYYmLASiWdu8p8dSPrtZSt/01w7Z4Rfy8t/u/H0/R7lPqR23f8N6IZ9N/T6JJQTTsiNtdls4eF/eB/TLc1foj2apOTUkfqnbOHhf3gftapyuUbq+GM3COxBQRCs+IVVLWIrEViASKxAJFYgEisRWH29P3ZIWtAtXOg0SqbcCnVevKp3HI+2zCBCj26Q/7wOIRgZwaeU+chp13HuBTR8ZYRaPo0TmUhmJ1fCf5WahgK7iZ9d/FmBbCH0N1XWmuKfx4oPIZy3NRaF2z+wp3ChvrBnBSRcf1+xA2P38FnapCOt726nC3oK7OlV6ATzmhURmS+yvmJRycWyYibpjk5abgXu1Kqex2ILr8T9APZafMRPwdV+qu3ryrve44AR9gb88HbV/vGjDqGIfmjI16zVi4vp1GqnmRl97TWiao7eNmhBxAB/5FewihIkk8j5Kxr0QrAb+4/JNe45oWpbAtZZr6wrHsr4y+yQCQwIddmjk4w4a0cp0Jci+RfIvkXyL5F8hHEM+n/P9HmFRfjQqL8aFRfjQqL8aFRfjQqL8aFRfjQqL8aFRfjQqL8aFRfjQqL6N7xfoiJwAP79XlpY78Iw9dNi8U9AB0kQpQypeMnEtwpobipdkWgAAAA+hTglm/PLgHollbv1btgsp+s2+mk5M7Vx7VwatTY3aKLyIOaZPLEcBPg/GC7d1CAjf9W4VZswf68OfLn5Wwt4++DHNf60/luVmM41AHPmy3msdfbGn60ku7U9wAVpjkP/ri40r+r926RLboBI9NBL1mDXaXF3jUqirSB8tqriCBo3dlcy+Tn+1D9vMWkwgLD9Bu9Y/TB1P5reRUOsGCc1C2HD3oI39LAcIzMJaCZiIgKR8so92f4a0hbgbiwlS8UwyHzOrb6cmmlTaRoHR3vnFEmZ7KfNZZfTfSNVWm/mJ3nLLN0AteTyHcYxri56RtHVgo43ggQNNMyN1fIsyXLct91AC0LFGCn5GSb1BIZJcbL+xZW2TSIx94GZcLdFl+l5lhRhLibIMjIyk8vvZgpuz3kuQ9N58xF6qK/uGYPffb7ncfEB3V4Y1YYgEubsflHWTM8ULdNvhjy91Lcp05PdUlzwjfLZC/Sx9QcK+F9Z+EtEESzrsO+0APpO23ZYBBD6MGcflNM74LJQSNLRwm+chDAgYKq/nibbZX5CTGxuRn43IgkzTwasF8mEDeUTpHFocIF27fjvbAEYR4oZTnt04F8lK5IP+TR22oEXlwYax9MKZjkqaT20CHDnGlbjMmNj+f5lRPV5+lIrM+9okAWNXAO/g3Who9frgNZlsvtBinluRVYNtxrpiiFYCHvQ8p14b4gZjA26cOe4nOCBnTADGkojT1fFgkPR/f9OD4+P/uDNpzYR0rkbwmF1I6x6GA5rh8Iu4NA7O+wqtSvplhZ6JDEkWopWMCnGxEnPQhbIqUj5JQRR+SPkj5BQwZ/Y5rfhRnh9IWS2yzke09o9QSHb3Po0wqMYbeUq0pXjW4IE8ktq5VJtraCyAAAAAAGzQgAAAAAAAAAAAAAAAAA=", "collapsed": false, "children": []}, {"text": "Short projects, remote, $45–70/hr.", "collapsed": false, "children": []}, {"text": "You make interfaces that AI agents and people can both use.", "collapsed": false, "children": []}, {"text": "Bring one thing you made.", "collapsed": false, "children": [{"text": "Links beat résumés.", "collapsed": false, "children": []}]}, {"text": "Questions", "collapsed": false, "children": [{"text": "Is it full-time?", "collapsed": false, "children": [{"text": "No. Dabble-time. Ten to twenty hours.", "collapsed": false, "children": []}]}]}], "x": 360, "y": 0, "w": 320}, {"text": "Weekend moving help — $25/hr cash", "collapsed": false, "children": [{"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "Two people, one van, two Saturdays.", "collapsed": false, "children": []}, {"text": "Lift with your legs. Be on time.", "collapsed": false, "children": []}, {"text": "Reply with your name and a phone number.", "collapsed": false, "children": []}], "x": 720, "y": 0, "w": 320}, {"text": "Dog walker wanted — $18/walk", "collapsed": false, "children": [{"text": "data:image/webp;base64,UklGRsoFAABXRUJQVlA4IL4FAAAQPQCdASqQAQQBPpVKoUylpL+ioXNpG/ASiWdu4MbTWf9Suf91/ezi/I56z/6Tzg32n8yxJ7t/mTno+YB+qvTd8wHnUelzeRPQA8tv2ivuAzFEP76DHqYh7tBEUOaRbf27f5vtWAL3tAs3ysvgj0uAM3yrLBZrb+7QR+lyNdwgOXfqmbLCrT785eCcvBOBiPZiItxc6pVcgr7nS9SBAnFYOfnLwTl2wt8E5CMcuVgVvau/mzXpd61q7kacCDeeZFYceH/7+tyVXfRv3TG3lA8TiTjeNq59m562JzjyusSTMqFXdCvyU71vF8INrkmeRWyX6yDQK24gTT1ePwDcm3y9ovLXgfrqwKxRe9GRfUDMVWO2O3yKPCNR0p/2vNhRBuaL8/OXgnHuVmLJB/Ak/p2i+aw/WwVy03O82jz+CPi86Uc8L9whEqzjb3Dd1sMnEXvjEk6rry1LIp1iiowK5k/417Qw4DubMpbOlKYrfQKW2fEiObbjyTD+pBLSro5UkudqjH146EIOEHuu+AlkFARplGo1Go1Go1GnPJO8GVtvL/K6gJxCmzqA1CYxXkEeopKfZ47HY7HY7Hb7zNot4b18+ij6L+5ahu0fI2KpJTSqyXzPl96Ez4iSmlViHTBHkSU0qsQ6YI8iSmlViHS9ND3NAAD++lK7f1B00Gx/nriVefAPoTFYT7kvxZf8HUAG58dmznihrcf+D2s6L/vUUAAA0PcoCyuDsLjMAAK+MEENwTVEpuKWnfmgYYq5/gfon8sdwYiCjBQSIk+NP2i5UN/jBolxHJoFzX16DKQv1/d5xUBOKyELpgLDYqJ9jeBfDfU9BR97sKgTtRFzKjs5VaGUBd0nQo1eRTY8V+LFpkacR5MhzCTVcW1g9AaazLSQYWN4y44Eay7L5uZIw2niw7L5GVBKDc1r/fS/ErAtLt1VpOHHyGYBMwuWmT9qNSi+iLzO02m3Zn8MkRfj9lJ03GQ1wQL2Gpq/OdVTj70+vHSDIlfcYFKtDtmYG3xbLJBQcgmUiyki59PqlzXeQcmot+qJ6kQlLhgDUsa3B3Bzb02g2xkACevm14aW7uEZeCDfyx5iVbRMgwuv30oF3hh4geWvSfp35sQDXynTV0bFbvMvFrSUpmuTA3B85YSqHy1r+1ghQHGmpxMN3mLpyQW6qMZSDEesIuGFfOaqX0gLZXFkwvbqMcgPpkiouyllJbD2xB4POpi5W3a5//BZsTp50kWvD7eo+0+KQUx5+qG5iJfF+QNeDx6/Iuo69AGEiMI1UW2O8OEmHkITYIA19kJbJvDlvEV/HfbW7HKVLjhRQVcUxAhYRIbXbctuf/7NGCql16n9lpC2RplSfBlibRtG2X2z5vTXYmo3l6jkF0U8+Pe3KegJkTdQ8KNBUA6tgnrA+iXvsuZJkM3Gy08BpQlNk7TF3zdrm+V/7YqXEp0GagcNtxhtBfsre+FpWi/txoteIe9nDAn2rIm+eU5DRQtC+x0K64AswJMyZOKYrwOD5wIwEakTLeH8Kagdh+uqaS9uvOTCZW4fQ6HrhEv2srQyLnuESplrTuii3bQC891A3YMrGPZD/vfCFObw178YOdKE8FsNWaLtjANxei+fPa9cfiyoP7bk/h/fOI1cVDoLCvHmwzmIa099f1mDnfVaZhSCNAjJ1ZNPP4UrIEnnXG6CvBoN0tdRknLOqeSTU4KBum5BPkDZEhX6Gm0nOp7OOQxDZFzBA8iH6Wa45HeYI3Ry3n1DfrkcswX5XJv/cu5B6I0/99dEJUDhsMr+X5afQbpVZJvcQA9ZoX+c6WK+ydbCEwZbR6JJw4ZzxymczGUzHiBrnl2QHecmEInQ4XPrP3sykPn0D3NBVO0MVN4CKhs0FECXJg5W2FP2A5wESogBrMVuULnIma0qS/asd9KGpcX6JapCYGPEhfeXgXQR9urfwAAAAAAAAAAAAAAAAAAAAAA=", "collapsed": false, "children": []}, {"text": "Mon–Fri, around noon. Two friendly dogs.", "collapsed": false, "children": []}, {"text": "Must be reliable and love dogs.", "collapsed": false, "children": []}, {"text": "References appreciated, not required.", "collapsed": false, "children": []}], "x": 1080, "y": 0, "w": 320}]}, {"name": "services", "x": 0, "y": 260, "statements": [{"text": "Sourdough lessons, one afternoon — $40", "collapsed": false, "children": [{"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "You leave with a starter and a loaf.", "collapsed": false, "children": []}, {"text": "Small groups, flour provided.", "collapsed": false, "children": []}, {"text": "Next dates", "collapsed": false, "children": [{"text": "Sun 2pm", "collapsed": false, "children": []}, {"text": "Sat 10am", "collapsed": false, "children": []}]}], "x": 0, "y": 0, "w": 320}, {"text": "Houseplant rescue", "collapsed": false, "children": [{"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "Sad plant? I'll nurse it back or tell you honestly.", "collapsed": false, "children": []}, {"text": "$15 consult, repotting extra.", "collapsed": false, "children": []}, {"text": "Before/after photos on request.", "collapsed": false, "children": []}], "x": 360, "y": 0, "w": 320}]}, {"name": "wanted", "x": 260, "y": 260, "statements": [{"text": "Looking for: a ride to the airport, Fri 6am", "collapsed": false, "children": [{"text": "Splitting gas, happy to buy coffee.", "collapsed": false, "children": []}, {"text": "Flexible on terminal.", "collapsed": false, "children": []}, {"text": "Reply below", "collapsed": false, "children": [{"text": "Can do 6:15 — Sam", "collapsed": false, "children": []}]}], "x": 0, "y": 0, "w": 320}, {"text": "Wanted: a used electric guitar amp", "collapsed": false, "children": [{"text": "Anything small, tube or solid-state.", "collapsed": false, "children": []}, {"text": "Under $200.", "collapsed": false, "children": []}, {"text": "I'll pick up.", "collapsed": false, "children": []}], "x": 360, "y": 0, "w": 320}, {"text": "Wanted: someone to teach me sourdough", "collapsed": false, "children": [{"text": "One afternoon. I'll bring flour.", "collapsed": false, "children": []}, {"text": "Trade: I can fix your slow laptop or your slower website.", "collapsed": false, "children": []}], "x": 720, "y": 0, "w": 320}]}, {"name": "dabbling", "x": 520, "y": 260, "statements": [{"text": "Day 3 of a tiny weather app", "collapsed": false, "children": [{"text": "It only says 'jacket' or 'no jacket'.", "collapsed": false, "children": []}, {"text": "Next", "collapsed": false, "children": [{"text": "maybe 'umbrella'", "collapsed": false, "children": []}, {"text": "maybe stop", "collapsed": false, "children": []}]}, {"text": "Link: https://example.com", "collapsed": false, "children": []}], "x": 0, "y": 0, "w": 320}, {"text": "Things I'm bad at, on purpose", "collapsed": false, "children": [{"text": "Drawing hands", "collapsed": false, "children": []}, {"text": "Chess", "collapsed": false, "children": []}, {"text": "Small talk", "collapsed": false, "children": [{"text": "trying anyway", "collapsed": false, "children": []}]}], "x": 360, "y": 0, "w": 320}]}]};
+const SEED_DATA = {"app":"dab","version":2,"theme":"light","categories":[{"name":"nearby","x":0,"y":0,"statements":[{"text":"free: moving boxes","x":0,"y":0,"w":300,"collapsed":false,"children":[{"text":"~20 boxes, most of them still taped.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"flattened and stacked in the hallway. dry, no water damage.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"gone by sunday or they go to recycling.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"pickup in Ridgewood, anytime after 6.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[{"text":"buzzer's broken — text when you're outside.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"looking for: an 18v drill","x":330,"y":0,"w":300,"collapsed":false,"children":[{"text":"mine died halfway through a shelf.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"need it for an afternoon. will return it cleaner than I got it.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"will trade: coffee, or a spare battery that may or may not hold a charge.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"offering: ride to philly, friday","x":660,"y":0,"w":300,"collapsed":false,"children":[{"text":"leaving around 4. one seat open. splitting gas.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"back sunday night if that helps.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"no smoking, one small bag please.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"found: one very confident cat","x":0,"y":330,"w":300,"collapsed":false,"children":[{"text":"https://picsum.photos/seed/dabcat/900/600.jpg","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"no collar, no chip, no fear.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"hanging around the back of the laundromat on 5th.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"she'll come to you if you have food. she'll come to you if you don't.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"holding her until someone claims her. reply: hi@dab.cx","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}]},{"text":"free: a couch, honestly","x":330,"y":330,"w":300,"collapsed":false,"children":[{"text":"it's fine. it's just not mine anymore.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"third floor walkup. bring two people and a van.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"you take it, you take the cushions.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]}]},{"name":"making","x":300,"y":0,"statements":[{"text":"what are you dabbling on?","x":0,"y":0,"w":300,"collapsed":false,"children":[{"text":"post it here. no pitch required.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"a half-finished thing counts.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"so does an idea you haven't started.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"feedback: a very small synth patch","x":330,"y":0,"w":300,"collapsed":false,"children":[{"text":"https://picsum.photos/seed/dabsynth/900/600.jpg","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"one oscillator, one filter, one long tail.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"sounds like a door closing in a large room.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"sounds better than that sentence makes it sound.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"patch notes here (https://example.com/patch)","color":"#0091ff","shiny":false,"collapsed":false,"children":[]}]},{"text":"looking for: someone who actually knows postgres","x":660,"y":0,"w":300,"collapsed":false,"children":[{"text":"not a consultant. a person.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"one evening of \"why is this query like this\"","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"trade: dinner, or a website, or both.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"tools I keep coming back to","x":0,"y":330,"w":300,"collapsed":true,"children":[{"text":"a text editor and a folder","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"a notebook that fits in a pocket","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"walking","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"name":"wtf is dab","x":600,"y":0,"statements":[{"text":"dab.","x":0,"y":0,"w":264,"collapsed":false,"children":[{"text":"It's a board. That's the whole pitch.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]}]},{"text":"how it works","x":292,"y":0,"w":264,"collapsed":false,"children":[{"text":"Post.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"digress.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"digress.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"digress","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"rinse & repeat","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"the rest of it","x":584,"y":0,"w":342,"collapsed":false,"children":[{"text":"how to:","color":null,"shiny":false,"collapsed":false,"children":[{"text":"right click for color options","color":null,"shiny":false,"collapsed":false,"children":[{"text":"hold shift ⇧ for menu","color":null,"shiny":false,"collapsed":false,"children":[{"text":"hold alt+scroll to re-order lines","color":null,"shiny":false,"collapsed":false,"children":[{"text":"cmd / ctrl + z → undo · + shift → redo","color":null,"shiny":false,"collapsed":false,"children":[{"text":"supports images, mp4s, and urls.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"type an email and it becomes mailto:","color":null,"shiny":false,"collapsed":false,"children":[]}]}]}]}]}]}]}]},{"text":"on boards","x":954,"y":0,"w":300,"collapsed":false,"children":[{"text":"Each board is its own space.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Rename one by clicking its name at the top.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Make a new one from the wheel: \"+ New board\".","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Delete one with the ✕ {it asks twice}.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]}]}]},{"text":"that's it.","x":1282,"y":0,"w":264,"collapsed":false,"children":[{"text":"For direct Q&A: hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Say something new or say something else.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]}]}]}],"currentCategory":"wtf is dab"};
 const seedDemo=()=>[
-CT('reading list',0,0,T('essays',0,0,S('on being wrong'),S('the map is not the territory')),T('books',300,40,S('to read',S('invisible cities'),S('the dispossessed')),S('to reread')),T('papers',600,0,S('attention',S('is all you need')),S('scaling laws'))),
-CT('lisbon',260,30,T('days',0,0,S('alfama'),S('belem',S('pasteis'),S('the tower'))),T('book',300,30,S('flights'),S('hostel')),T('pack',600,0,S('layers'),S('adapter'))),
-CT('non sequitur',520,-10,T('embeds',300,0,S('https://example.com'),S('https://example.com')),T('dabble',0,0,S('or dabble elsewhere',S('a branch',S('a leaf'))),S('a link (https://example.com) and hi@example.com')))];
+CT('nearby',0,0,T('free: boxes',0,0,S('~20, still taped'),S('gone by sunday')),T('looking for: a drill',300,0,S('one afternoon'),S('will trade coffee'))),
+CT('making',300,0,T('what are you dabbling on?',0,0,S('no pitch required'),S('half-finished counts'))),
+CT('wtf is dab',600,0,T('dab.',0,0,S("It's a board.",S("That's the whole pitch."))))];
 function seedFromExport(d){
   const L=d&&(d.categories||d.folders);
   if(!L||!L.length)return seedDemo();
@@ -678,10 +680,10 @@ function rFold(f){
 const el=h('div','fold'+(f.id===cur?' cur':'')+(hm(f.tree)?' wide':''));el.dataset.id=f.id;el.style.left=f.x+'px';el.style.top=f.y+'px';
 if(f.w)el.style.width=f.w+'px';
 const hd=h('div','fh'),grip=h('span','grip'),nm=h('input','fn'),del=h('button','fd','delete');
-nm.value=f.name;nm.readOnly=true;nm.placeholder='untitled';nm.spellcheck=false;nm.setAttribute('aria-label','Folder name');
+nm.value=f.name;nm.readOnly=true;nm.placeholder='untitled';nm.spellcheck=false;nm.setAttribute('aria-label','Post name');
 nm.onkeydown=e=>{if(e.key==='Enter'||e.key==='Escape')nm.blur()};
 nm.onblur=()=>{nm.readOnly=true;f.name=nm.value.trim();save();updateBC()};
-del.onclick=async()=>{const ok=await confirmModal('Delete this folder and everything in it?',{title:'Delete folder?',ok:'Delete',danger:1});if(!ok)return;V.trees=F=F.filter(x=>x!==f);el.remove();save();lvOn()&&lvRender();toast('Folder deleted')};
+del.onclick=async()=>{const ok=await confirmModal('Delete this post and everything in it?',{title:'Delete post?',ok:'Delete',danger:1});if(!ok)return;V.trees=F=F.filter(x=>x!==f);el.remove();save();lvOn()&&lvRender();toast('Post deleted')};
 const fx=h('button','fd','focus');fx.title='focus mode';fx.onclick=e=>{e.stopPropagation();openFocus(f)};hd.append(grip,nm,fx,del);
 const body=h('div','fbody');body.append(rList(f.tree));
 const rz=h('div','rz');
@@ -811,7 +813,7 @@ function startLineDrag(e,li){
 /* wheel */
 let W=null,sT=0;
 function ow(m){if(W||document.activeElement.tagName==='INPUT')return;G=null;P.clear();document.activeElement.blur?.();
-const names=[...C.map(c=>c.name||'untitled'),'+ new folder'],idx=Math.max(0,C.findIndex(c=>c.id===(V?V.id:lastCat))),fs=clamp(innerWidth*.075,26,46);
+const names=[...C.map(c=>c.name||'untitled'),'+ new board'],idx=Math.max(0,C.findIndex(c=>c.id===(V?V.id:lastCat))),fs=clamp(innerWidth*.075,26,46);
 wh.innerHTML='';wh.style.setProperty('--fs',fs+'px');ov.style.setProperty('--in',(coarse.matches?26:80)+'px');
 W={m,tg:idx,pos:idx,i:idx,rh:fs*1.35,moved:false,el:names.map((t,i)=>{const d=h('div','wi',t);d.onclick=()=>{if(W.moved)return;W.tg=i;cw(true)};wh.append(d);return d})};
 ov.classList.add('on');ov.setAttribute('aria-hidden','false');wl()}
@@ -828,7 +830,7 @@ const wend=()=>{if(wd&&W&&W.moved){W.tg=Math.round(W.tg);setTimeout(()=>{if(W)W.
 wh.addEventListener('pointerup',wend);wh.addEventListener('pointercancel',wend);
 $('cx').onclick=()=>cw(false);$('bk').onclick=closeCat;
 const cn=$('cn');cn.oninput=()=>{if(V){V.name=cn.value;save()}};cn.onkeydown=e=>{if(e.key==='Enter'||e.key==='Escape')cn.blur()};
-const delCat=async()=>{if(!V)return;const ok=await confirmModal('Delete "'+(V.name||'untitled')+'" and all its folders?',{title:'Delete category?',ok:'Delete',danger:1});if(!ok)return;C=C.filter(c=>c!==V);closeCat();save();toast('Category deleted')};
+const delCat=async()=>{if(!V)return;const ok=await confirmModal('Delete "'+(V.name||'untitled')+'" and all its posts?',{title:'Delete board?',ok:'Delete',danger:1});if(!ok)return;C=C.filter(c=>c!==V);closeCat();save();toast('Board deleted')};
 $('mb').onclick=()=>ow('tap');
 addEventListener('keydown',e=>{
 if(W){if(e.key==='Escape'){e.preventDefault();cw(false)}else if(e.key==='Enter'){e.preventDefault();cw(true)}else if(e.key==='ArrowUp'||e.key==='ArrowDown'){e.preventDefault();W.tg=clamp(Math.round(W.tg)+(e.key==='ArrowUp'?-1:1),0,C.length)}return}
@@ -847,9 +849,9 @@ function setFabOpen(on){fabMenu.classList.toggle('on',on);fab.classList.toggle('
 fab.onclick=e=>{e.stopPropagation();setFabOpen(!fabMenu.classList.contains('on'))};
 fabMenu.onclick=e=>{const b=e.target.closest('button[data-a]');if(!b)return;e.stopPropagation();setFabOpen(false);
   const a=b.dataset.a;
-  if(a==='line'){if(!V){toast('Open a category first',{kind:'error'});return}const f=F.find(x=>x.id===cur)||F[0];if(!f)return;const m=mk();f.tree.push(m);rr(f,m.id,0);toast('New line added')}
-  else if(a==='folder'){if(!V){toast('Open a category first',{kind:'error'});return}lvOn()?lvNew():newFolder(wx(innerWidth/2),wy(innerHeight/2));toast('New folder created')}
-  else if(a==='category'){newCat((C.length%4)*260,Math.floor(C.length/4)*230);toast('New category created')}
+  if(a==='line'){if(!V){toast('Open a board first',{kind:'error'});return}const f=F.find(x=>x.id===cur)||F[0];if(!f)return;const m=mk();f.tree.push(m);rr(f,m.id,0);toast('New line added')}
+  else if(a==='folder'){if(!V){toast('Open a board first',{kind:'error'});return}lvOn()?lvNew():newFolder(wx(innerWidth/2),wy(innerHeight/2));toast('New post created')}
+  else if(a==='category'){newCat((C.length%4)*260,Math.floor(C.length/4)*230);toast('New board created')}
   else if(a==='help'){openHelp()}
   else if(a==='search'){openPal()}
 };
@@ -870,18 +872,18 @@ addEventListener('keydown',e=>{
 /* tour */
 const tourEl=$('tour');
 const TOUR=[
-  {t:'Welcome to dab',b:'A simple place to put things up and dabble. Boards hold posts. Posts are cards. Everything here works — click, type, drag.'},
-  {t:'Open a card',b:'Click or tap any card and the camera flies in. Click \"dab\" or press <kbd>Esc</kbd> to fly back out to the board.'},
-  {t:'Write. Digress.',b:'<kbd>↵</kbd> for a new line. <kbd>⇧ ↵</kbd> for a detail or reply under it. <kbd>⇥</kbd> to indent. Paste an image link and it shows up.'},
-  {t:'Start your own',b:'Double-click empty space for a new post, or use the <kbd>+</kbd> button. Press <kbd>?</kbd> any time for every shortcut.'},
-  {t:'No accounts. Yet.',b:'Like the early days of classifieds: post, browse, reply, no sign-up. Accounts are coming. For now your posts live in this browser — hit <kbd>export</kbd> to keep a copy.'}
+  {t:'Welcome to dab',b:'A board of boards. Every card is a post — nested lines you can reorder, reply to, and link together. Nothing here is a mock.'},
+  {t:'Open a board',b:'Click any card and the camera flies in. Click <b>dab</b> or press <kbd>Esc</kbd> to fly back out.'},
+  {t:'Post something',b:'<kbd>↵</kbd> for a new line. <kbd>⇧ ↵</kbd> for a nested reply. <kbd>⇥</kbd> to indent. <kbd>⇧ ⇥</kbd> to outdent. Drag the ▦ grip to reorder.'},
+  {t:'Everything is discoverable',b:'Hold <kbd>⇧</kbd> for the wheel. Right-click for actions. <kbd>+</kbd> posts from anywhere. <kbd>?</kbd> lists every shortcut.'},
+  {t:'That\'s the whole thing',b:'No accounts, no servers. Your posts live in this browser. Hit <kbd>export</kbd> from the menu to keep a copy.'}
 ];
 let tourStep=0,tourSeen=false;
 function buildTourDots(){const d=$('tourdots');d.innerHTML='';TOUR.forEach((_,i)=>{const e=h('span','dot'+(i===tourStep?' on':''));d.append(e)})}
 function showTour(step){tourStep=clamp(step,0,TOUR.length-1);const s=TOUR[tourStep];
   $('tourstep').textContent='Step '+(tourStep+1)+' of '+TOUR.length;
   $('tourtitle').textContent=s.t;$('tourbody').innerHTML=s.b;
-  $('tournext').textContent=tourStep===TOUR.length-1?'Start writing':'next';
+  $('tournext').textContent=tourStep===TOUR.length-1?'Start posting':'next';
   buildTourDots()}
 function openTour(){tourEl.classList.add('on');tourEl.setAttribute('aria-hidden','false');showTour(0)}
 function closeTour(){tourEl.classList.remove('on');tourEl.setAttribute('aria-hidden','true');try{localStorage.setItem(TOUR_K,'1')}catch(_){}}
@@ -897,13 +899,13 @@ let rs=0;
 document.querySelectorAll('#acts [data-a]').forEach(b=>b.onclick=async()=>{const a=b.dataset.a;
 if(a==='fit'){cw(false);fit(true)}
 else if(a==='import')$('file').click();
-else if(a==='export'){const d={app:'dab',version:2,exportedAt:new Date().toISOString(),theme:dark()?'dark':'light',categories:C.map(c=>({name:c.name,x:Math.round(c.x),y:Math.round(c.y),statements:c.trees.map(t=>({text:t.name,x:Math.round(t.x),y:Math.round(t.y),...(t.w?{w:Math.round(t.w)}:{}),collapsed:false,children:un(t.tree)}))}))},l=h('a');l.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));l.download='dab-canvas.json';l.click();setTimeout(()=>URL.revokeObjectURL(l.href),1000);toast('Exported dab-canvas.json')}
+else if(a==='export'){const d={app:'dab',version:2,exportedAt:new Date().toISOString(),theme:dark()?'dark':'light',categories:C.map(c=>({name:c.name,x:Math.round(c.x),y:Math.round(c.y),statements:c.trees.map(t=>({text:t.name,x:Math.round(t.x),y:Math.round(t.y),...(t.w?{w:Math.round(t.w)}:{}),collapsed:false,children:un(t.tree)}))}))},l=h('a');l.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));l.download='dab.json';l.click();setTimeout(()=>URL.revokeObjectURL(l.href),1000);toast('Exported dab.json')}
 else if(a==='theme'){theme=dark()?'light':'dark';paintTheme();save()}
 else if(a==='search'){cw(false);openPal()}
 else if(a==='help'){cw(false);openHelp()}
 else if(a==='delcat'){cw(false);delCat()}
 else if(a==='reset'){if(rs){rs=0;b.textContent='reset demo';cw(false);C=seed();V=null;F=[];lastCat=null;rc={x:0,y:0,s:1};cams={};H=[];hi=0;Object.assign(cam,{x:0,y:0,s:1});chrome();renderAll();fit();save();toast('Demo reset')}else{rs=1;b.textContent='tap again to reset';setTimeout(()=>{rs=0;b.textContent='reset demo'},2500)}}});
-$('file').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(s=>{try{const d=JSON.parse(s),L=d.categories||d.folders;if(!L||!L.length)throw 0;C=L.map((c,i)=>{const tr=[],loose=[];(c.statements||[]).forEach(s=>(s.children&&s.children.length?tr:loose).push(s));const ts=tr.map((s,j)=>({id:nid(),name:String(s.text||''),x:isFinite(s.x)?+s.x:j*300,y:isFinite(s.y)?+s.y:0,...(isFinite(s.w)&&s.w?{w:+s.w}:{}),tree:conv(s.children)}));if(loose.length)ts.unshift({id:nid(),name:'notes',x:-300,y:0,tree:conv(loose)});if(!ts.length)ts.push({id:nid(),name:'',x:0,y:0,tree:[mk()]});return{id:nid(),name:String(c.name||''),x:isFinite(c.x)?+c.x:(i%4)*260,y:isFinite(c.y)?+c.y:Math.floor(i/4)*230,trees:ts}});V=null;F=[];cams={};cw(false);chrome();renderAll();fit();save();toast('Imported '+C.length+' folders',{kind:'ok'})}catch(_){toast('Could not read that file',{kind:'error'})}}).catch(()=>toast('Could not read that file',{kind:'error'}))};
+$('file').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(s=>{try{const d=JSON.parse(s),L=d.categories||d.folders;if(!L||!L.length)throw 0;C=L.map((c,i)=>{const tr=[],loose=[];(c.statements||[]).forEach(s=>(s.children&&s.children.length?tr:loose).push(s));const ts=tr.map((s,j)=>({id:nid(),name:String(s.text||''),x:isFinite(s.x)?+s.x:j*300,y:isFinite(s.y)?+s.y:0,...(isFinite(s.w)&&s.w?{w:+s.w}:{}),tree:conv(s.children)}));if(loose.length)ts.unshift({id:nid(),name:'notes',x:-300,y:0,tree:conv(loose)});if(!ts.length)ts.push({id:nid(),name:'',x:0,y:0,tree:[mk()]});return{id:nid(),name:String(c.name||''),x:isFinite(c.x)?+c.x:(i%4)*260,y:isFinite(c.y)?+c.y:Math.floor(i/4)*230,trees:ts}});V=null;F=[];cams={};cw(false);chrome();renderAll();fit();save();toast('Imported '+C.length+' boards',{kind:'ok'})}catch(_){toast('Could not read that file',{kind:'error'})}}).catch(()=>toast('Could not read that file',{kind:'error'}))};
 
 /* context menu */
 const cm=$('cm'),mod=/Mac|iP(hone|ad)/.test(navigator.platform||'')?'⌘':'Ctrl+';let mb=[],mh=-1;
@@ -953,25 +955,25 @@ n.k.length?{l:n.z?'expand branch':'collapse branch',f:()=>{n.z=!n.z;const li=QR(
 const foldMenu=f=>[
 {l:'rename',f:()=>rename(f)},
 {l:'new line',f:()=>{const m=mk();f.tree.push(m);rr(f,m.id,0)}},
-{l:'focus mode',k:mod==='⌘'?'⌘⇧F':'Ctrl+Shift+F',f:()=>openFocus(f)},lvOn()?null:{l:'zoom to folder',f:()=>fly(view(f))},'-',
+{l:'focus mode',k:mod==='⌘'?'⌘⇧F':'Ctrl+Shift+F',f:()=>openFocus(f)},lvOn()?null:{l:'zoom to post',f:()=>fly(view(f))},'-',
 {l:'collapse all lines',f:()=>{setZ(f.tree,true);rr(f)}},
 {l:'expand all lines',f:()=>{setZ(f.tree,false);rr(f)}},
-{l:'duplicate folder',f:()=>{const d={id:nid(),name:(f.name||'untitled')+' copy',x:f.x+28,y:f.y+28,tree:f.tree.map(cl),...(f.w?{w:f.w}:{})};F.push(d);world.append(rFold(d));setCur(d.id);save()}},
+{l:'duplicate post',f:()=>{const d={id:nid(),name:(f.name||'untitled')+' copy',x:f.x+28,y:f.y+28,tree:f.tree.map(cl),...(f.w?{w:f.w}:{})};F.push(d);world.append(rFold(d));setCur(d.id);save()}},
 f.w?{l:'reset width',f:()=>{delete f.w;const e=fel(f.id);if(e)e.style.width='';save()}}:null,'-',
-{l:'delete folder',danger:true,f:async()=>{const ok=await confirmModal('Delete "'+(f.name||'untitled')+'"?',{title:'Delete folder?',ok:'Delete',danger:1});if(!ok)return;const el=fel(f.id);V.trees=F=F.filter(x=>x!==f);if(el)el.remove();save();lvOn()&&lvRender();toast('Folder deleted')}}];
+{l:'delete post',danger:true,f:async()=>{const ok=await confirmModal('Delete "'+(f.name||'untitled')+'"?',{title:'Delete post?',ok:'Delete',danger:1});if(!ok)return;const el=fel(f.id);V.trees=F=F.filter(x=>x!==f);if(el)el.remove();save();lvOn()&&lvRender();toast('Post deleted')}}];
 
 const catMenu=c=>[
 {l:'open',f:()=>openCat(c)},
 {l:'rename',f:()=>{openCat(c);setTimeout(()=>{$('cn').focus();$('cn').select()},0)}},'-',
-{l:'delete category',danger:true,f:async()=>{const ok=await confirmModal('Delete "'+(c.name||'untitled')+'"?',{title:'Delete category?',ok:'Delete',danger:1});if(!ok)return;C=C.filter(x=>x!==c);if(lastCat===c.id)lastCat=null;cur=null;renderAll();save();toast('Category deleted')}}];
+{l:'delete board',danger:true,f:async()=>{const ok=await confirmModal('Delete "'+(c.name||'untitled')+'" and all its posts?',{title:'Delete board?',ok:'Delete',danger:1});if(!ok)return;C=C.filter(x=>x!==c);if(lastCat===c.id)lastCat=null;cur=null;renderAll();save();toast('Board deleted')}}];
 
 const canvasMenu=(x,y)=>lvOn()?lvMenu():[
 {l:'search & commands',k:mod+'K',f:openPal},'-',
-V?{l:'new folder here',f:()=>newFolder(wx(x),wy(y))}:{l:'new category here',f:()=>newCat(wx(x)-100,wy(y)-60)},'-',
+V?{l:'new post here',f:()=>newFolder(wx(x),wy(y))}:{l:'new board here',f:()=>newCat(wx(x)-100,wy(y)-60)},'-',
 {l:'fit all',f:()=>fit(true)},{l:'zoom 100%',k:'0',f:()=>zoomTo(1)},{l:'go to zero',f:home},'-',
 {l:'undo',k:mod+'Z',f:undo},{l:'redo',k:mod+'⇧Z',f:redo},'-',
-V?{l:'back to categories',k:'Esc',f:closeCat}:null,
-{l:'switch category',k:'hold ⇧',f:()=>ow('tap')},'-',
+V?{l:'back to boards',k:'Esc',f:closeCat}:null,
+{l:'switch board',k:'hold ⇧',f:()=>ow('tap')},'-',
 {l:'help & shortcuts',k:'?',f:openHelp},'-',
 {l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd},'-',{l:'reset demo',f:()=>{if(confirm('Reset demo? This replaces everything on the canvas.')){const b=document.querySelector('#acts [data-a=reset]');rs=1;b&&b.click()}}}];
 
@@ -1031,12 +1033,12 @@ addEventListener('focusin',()=>setTimeout(tbPlace,0));addEventListener('resize',
 /* boot */
 paintTheme();chrome();renderAll();apply();
 if(needFit){fit();document.fonts&&document.fonts.ready.then(()=>fit())}
-if(!coarse.matches)say('click a card to open · double-click empty space to add · hold ⇧ for the wheel · right-click for actions · ? for help');
-else say('tap a card to open · long-press for actions · ? for help');
+if(!coarse.matches)say('click a board to open · double-click empty space to post · hold ⇧ for the wheel · right-click for actions · ? for help');
+else say('tap a board to open · long-press for actions · ? for help');
 if(!tourSeen)setTimeout(()=>openTour(),700);
 document.addEventListener('pointerdown',()=>{hint.style.opacity=0},{once:true});
 
-/* focus mode: the full dab editor (colors, shiny, pressure) on one folder's tree */
+/* focus mode: the full dab editor (colors, shiny, pressure) on one post's tree */
 const fxEl=$('fx');let FX=null;
 const adopt=a=>(Array.isArray(a)?a:[]).map(x=>({id:x.id||nid(),t:String(x.t||''),c:typeof x.c==='string'?x.c:null,s:!!x.s,z:!!x.z,k:adopt(x.k)}));
 const nsSrc=()=>document.getElementById('ns-src').textContent.replace(/<\\\/script/g,'<\/script');
@@ -1164,10 +1166,10 @@ const fname=f=>(f.name&&f.name.trim())||tx(f.tree)||'untitled';
 const fabDo=a=>{const b=fabMenu.querySelector(`[data-a="${a}"]`);if(b)b.click()};
 const psc=(text,toks)=>{const L=text.toLowerCase();let s=0;for(const t of toks){const i=L.indexOf(t);if(i<0)return -1;s+=100-Math.min(i,50)+(i===0||L[i-1]===' '?25:0)}return s};
 function palActs(){const v=!!V,a=[];
-  if(v){a.push(['New line',()=>fabDo('line'),'↵'],[lvOn()?'New letter':'New folder',()=>fabDo('folder')])}
-  a.push(['New category',()=>fabDo('category')]);
+  if(v){a.push(['New line',()=>fabDo('line'),'↵'],[lvOn()?'New letter':'New post',()=>fabDo('folder')])}
+  a.push(['New board',()=>fabDo('category')]);
   if(v&&fobj(cur))a.push(['Focus mode',()=>openFocus(fobj(cur)),mod==='⌘'?'⌘⇧F':'Ctrl+Shift+F']);
-  if(v)a.push(['All categories',()=>sfSet('folders'),'Esc']);
+  if(v)a.push(['All boards',()=>sfSet('folders'),'Esc']);
   if(!v||LV)a.push(['Canvas view',()=>sfSet('canvas')]);if(!v||!LV)a.push(['Letters view',()=>sfSet('letters')]);
   a.push(['Undo',undo,mod+'Z'],['Redo',redo,mod+'⇧Z'],[dark()?'Switch to light theme':'Switch to dark theme',()=>act('theme')],['Export backup',()=>act('export')],['Import…',()=>act('import')],['Help & shortcuts',openHelp,'?'],['Take the tour',openTour]);
   return a}
@@ -1183,11 +1185,11 @@ function palBuild(q){const toks=q.trim().toLowerCase().split(/\s+/).filter(Boole
   const Ls=[];C.forEach(c=>{if(!any&&c!==V)return;c.trees.forEach(f=>{const t=fname(f);Ls.push({t,sub:c.name||'untitled',f:()=>goFolder(c,f),s:(x=>x<0?x:x+(c===V?5:0))(psc(t+' '+(c.name||''),toks))})})});
   const Ln=[];if(any&&toks.join('').length>1)for(const c of C)for(const f of c.trees)(function w(a){for(const n of a){if(Ln.length>=40)return;const s=n.t?psc(n.t,toks):-1;if(s>=0)Ln.push({t:n.t.trim().slice(0,110),sub:(c.name||'untitled')+' › '+fname(f),f:()=>goLine(c,f,n),s:s-30+(c===V?5:0)});w(n.k)}})(f.tree);
   const add=(name,items)=>{if(items.length)G.push({name,items,b:items[0].s})};
-  add('Actions',A);add('Categories',Cs);add(any?'Letters':'Letters here',top(Ls,any?6:12));add('Lines',top(Ln,8));
+  add('Actions',A);add('Boards',Cs);add(any?'Letters':'Posts here',top(Ls,any?6:12));add('Lines',top(Ln,8));
   return{G:any?G.sort((a,b)=>b.b-a.b):G,toks}}
 function palHL(el,text,toks){const L=text.toLowerCase(),r=[];toks.forEach(t=>{const i=L.indexOf(t);if(i>=0)r.push([i,i+t.length])});r.sort((a,b)=>a[0]-b[0]);let p=0;r.forEach(([a,b])=>{if(a<p)return;if(a>p)el.append(text.slice(p,a));el.append(h('mark','',text.slice(a,b)));p=b});if(p<text.length)el.append(text.slice(p))}
 function palRender(){const q=palI.value,{G,toks}=palBuild(q);palR=[];palL.replaceChildren();
-  if(!G.length){palL.append(h('div','pe',q.trim()?'Nothing matches “'+q.trim()+'”. Try a word from a line, a letter or category name, or an action like “export”.':'Nothing here yet.'));palI.removeAttribute('aria-activedescendant');return}
+  if(!G.length){palL.append(h('div','pe',q.trim()?'Nothing matches “'+q.trim()+'”. Try a word from a line, a post or board name, or an action like “export”.':'Nothing here yet.'));palI.removeAttribute('aria-activedescendant');return}
   G.forEach(g=>{const box=h('div');box.setAttribute('role','group');box.setAttribute('aria-label',g.name);box.append(h('div','pg',g.name));
     g.items.forEach(it=>{const i=palR.length,o=h('div','po'),t=h('span','t');o.id='po'+i;o.setAttribute('role','option');o.setAttribute('aria-selected','false');palHL(t,it.t,toks);o.append(t);
       if(it.sub)o.append(h('span','s',it.sub));if(it.k)o.append(h('span','k',it.k));
@@ -1259,14 +1261,14 @@ lvSet=function(want){if(!V||LV===want)return;if(!document.startViewTransition||R
 
 /* ══ letter view: actions menu, press-and-hold, first-run hint ══ */
 function lvMenu(){const ord=lvOrder(),f=ord[lvI];return[{l:'new letter',f:lvNew},{l:'focus mode',k:mod==='⌘'?'⌘⇧F':'Ctrl+Shift+F',f:()=>f&&openFocus(f)},'-',
-{l:'previous letter',k:'←',f:()=>lvGo(lvI-1)},{l:'next letter',k:'→',f:()=>lvGo(lvI+1)},'-',{l:'search & commands',k:mod+'K',f:openPal},{l:'canvas view',f:()=>sfSet('canvas')},{l:'back to categories',k:'Esc',f:closeCat},'-',
+{l:'previous letter',k:'←',f:()=>lvGo(lvI-1)},{l:'next letter',k:'→',f:()=>lvGo(lvI+1)},'-',{l:'search & commands',k:mod+'K',f:openPal},{l:'canvas view',f:()=>sfSet('canvas')},{l:'back to boards',k:'Esc',f:closeCat},'-',
 {l:'undo',k:mod+'Z',f:undo},{l:'redo',k:mod+'⇧Z',f:redo},'-',{l:'help & shortcuts',k:'?',f:openHelp},'-',{l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd}]}
 {const lt=$('lt');let t0=0,px=0,py=0;
 lt.addEventListener('pointerdown',e=>{clearTimeout(t0);t0=0;if(e.pointerType!=='touch'||e.target.closest('textarea,input,button,a,.lg'))return;px=e.clientX;py=e.clientY;const tg=e.target;t0=setTimeout(()=>{t0=0;showCtx(px,py,tg)},550)});
 lt.addEventListener('pointermove',e=>{if(t0&&Math.hypot(e.clientX-px,e.clientY-py)>10){clearTimeout(t0);t0=0}});
 ['pointerup','pointercancel'].forEach(n=>lt.addEventListener(n,()=>{clearTimeout(t0);t0=0}));ltk.addEventListener('scroll',()=>{clearTimeout(t0);t0=0},{passive:true})}
 const TOUCH=matchMedia('(hover:none) and (pointer:coarse)'),LPK='dab:lphint';let lpOn=false;try{lpOn=!!localStorage.getItem(LPK)}catch(_){}
-function lpHint(){if(lpOn||!TOUCH.matches||!V||tourEl.classList.contains('on'))return;lpOn=true;try{localStorage.setItem(LPK,'1')}catch(_){}setTimeout(()=>toast('Tip: press and hold a line, card or empty space for more actions',{duration:6500}),900)}
+function lpHint(){if(lpOn||!TOUCH.matches||!V||tourEl.classList.contains('on'))return;lpOn=true;try{localStorage.setItem(LPK,'1')}catch(_){}setTimeout(()=>toast('Tip: press and hold a line, post or empty space for more actions',{duration:6500}),900)}
 {const oc=openCat;openCat=function(c){const r=oc.apply(this,arguments);lpHint();return r}}
 
 /* ══ letter view: drag a letter's label to reorder ══ */
@@ -1290,8 +1292,8 @@ addEventListener('keydown',e=>{if(LG&&e.key==='Escape'){e.preventDefault();e.sto
 /* ══ empty + error states ══ */
 const esEl=$('es'),ebEl=$('eb');let ebDis=false;
 function paintEmpty(){const n=(V?F:C).length,on=!lvOn()&&n===0&&!FX;esEl.classList.toggle('on',on);if(!on)return;const k=V?'f':'c';if(esEl.dataset.k===k&&esEl.firstChild)return;esEl.dataset.k=k;
-  const b=h('button','b',V?'New folder':'New category');b.onclick=()=>V?newFolder(wx(innerWidth/2),wy(innerHeight/2)):newCat(0,0);
-  esEl.replaceChildren(h('h3','',V?'This category is empty':'No categories yet'),h('p','',V?'Folders hold your lines. Make one here, or double-click anywhere on the canvas.':'A category is a space for related folders. Create your first one to start writing.'),b)}
+  const b=h('button','b',V?'New post':'New board');b.onclick=()=>V?newFolder(wx(innerWidth/2),wy(innerHeight/2)):newCat(0,0);
+  esEl.replaceChildren(h('h3','',V?'Nothing posted here yet':'No boards yet'),h('p','',V?'A board holds posts. Make one here, or double-click anywhere on the canvas.':'A board is a place for posts. Start one and put something into the world.'),b)}
 {const ra=renderAll;renderAll=function(){const r=ra.apply(this,arguments);paintEmpty();return r}}
 new MutationObserver(paintEmpty).observe(world,{childList:true});paintEmpty();
 function storeFail(err){if(ebDis)return;const q=err&&(err.name==='QuotaExceededError'||err.code===22);
@@ -1307,7 +1309,6 @@ addEventListener('error',e=>{if(e&&/ResizeObserver|Script error/i.test(e.message
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%23000%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-family=%27monospace%27 font-size=%2717%27 font-weight=%27700%27 text-anchor=%27middle%27 fill=%27%23fff%27%3Edab%3C/text%3E%3C/svg%3E">
 <title>dab</title>
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@1,2,3,4,5,6,7,8,9&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -1790,7 +1791,7 @@ body.custom-cursor-active.write-native-cursor,body.custom-cursor-active.write-na
     <span class="cat-name" id="catName" contenteditable="true" spellcheck="false"></span>
     <span class="cat-hint">
       <span class="ch-text">hold <kbd>⇧</kbd> to switch</span>
-      <button class="cat-del" id="btnDeleteCat" type="button" aria-label="Delete category" title="Delete category (Del)">
+      <button class="cat-del" id="btnDeleteCat" type="button" aria-label="Delete board" title="Delete board (Del)">
         <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
           <path d="M3 3l6 6M9 3l-6 6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         </svg>
@@ -1841,7 +1842,7 @@ body.custom-cursor-active.write-native-cursor,body.custom-cursor-active.write-na
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="hint"><span id="ht"></span></div>
 <div id="menu"></div>
-<div id="ghost" aria-hidden="true">dabble, or dabble something else</div>
+<div id="ghost" aria-hidden="true">dabble</div>
 <div id="treeToggle" aria-hidden="true">
   <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
     <path d="M3 8 L6 4 L9 8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1882,10 +1883,201 @@ const nid = () => 'n' + (++uid).toString(36) + '-' + Math.random().toString(36).
 const mk  = (t = '') => ({ id: nid(), t, c: null, s: false, z: false, k: [] });
 
 /* ══════════════════════════════════════════════════════
-   SEED — canonical demo. non sequitur leads.
-   text → t,  color → c,  shiny → s,  collapsed → z,  children → k
+   SEED — dabble demo.
 ══════════════════════════════════════════════════════ */
-const SEED_DATA = {"app": "dab", "version": 2, "theme": "light", "currentCategory": "start here", "categories": [{"name": "start here", "x": 0, "y": 0, "statements": [{"text": "This is a board.", "collapsed": false, "children": [{"text": "Open a card. Write.", "collapsed": false, "children": []}, {"text": "Digress if you need to.", "collapsed": false, "children": [{"text": "Like this.", "collapsed": false, "children": [{"text": "Branches are where details, questions and replies live.", "collapsed": false, "children": []}]}]}, {"text": "That's the whole thing.", "collapsed": false, "children": [], "color": "#e93d82"}], "x": 0, "y": 0, "w": 320}, {"text": "How to post", "collapsed": false, "children": [{"text": "Double-click empty space to start a card.", "collapsed": false, "children": []}, {"text": "First line is the headline. Everything under it is the post.", "collapsed": false, "children": []}, {"text": "Paste an image link or a URL and it just shows up.", "collapsed": false, "children": []}, {"text": "Reply by adding a line under someone's post.", "collapsed": false, "children": []}], "x": 360, "y": 0, "w": 320}, {"text": "Rules (all of them)", "collapsed": false, "children": [{"text": "Be a person.", "collapsed": false, "children": []}, {"text": "Say what it is, what it costs, where it is.", "collapsed": false, "children": []}, {"text": "Take it down when it's gone.", "collapsed": false, "children": []}, {"text": "Don't be weird about it.", "collapsed": false, "children": []}], "x": 720, "y": 0, "w": 320}]}, {"name": "for sale", "x": 260, "y": 0, "statements": [{"text": "Brass desk lamp — $25", "collapsed": false, "children": [{"text": "Works. Small chip on the shade.", "collapsed": false, "children": []}, {"text": "data:image/webp;base64,UklGRvwDAABXRUJQVlA4IPADAACwMgCdASqQAQQBPpVKoEwlpCMiJNVYKLASiWdu4Wlwi2atz1TLzuPhtUfmf9b62NuldztPiBdYaOpOQV1YaOpOQWJv7s5Ng6QyIT3GtxrcagpsKek+2lKvQNhpSr0pV6Uq9J361V5t8jNPiFHuWS1m43bWdk2DytVKa134XhqwKIjZt15pk4gDG/UoN2TReIMlSN6ryF/biwrkuvKYKuxDCI76G6LAmh0NPwkhnCuaDzjWlzCHOmrrb8dEc7q3PSygLKrjawmLHCNSpgewC3dEcFo3iYt52WIBaytYWDHwuFKhH5ACkHlktZuNJpDRBCuHZXsHQrTqTD09CIhQkMNbjAD9QkVyT0tOmrrzbXdbWbGVSnZH/8JlKb3EbG3RpTedmREDPLJDRNmkxXW1AOwB/Qhia0xEN09qWEyFa42tt8Br+ha3AzyyWs7lGPZb/WfF/qxtIm7Cx6lo3H7ba8Ct4f2fPbUP/////r/Tqw0dSc9lad9YaOpOQV1YaOpOQV1YaOpOQV1YaOpOQV1YaOmn6p2P+dAQ9DE2neA8wAAA/vpn64iRt8irnYYJQMp61m5rk8NulOaK8UQxU7iAMdbxG/1hnOK/En/Es0XVPaA76YNyjfxFuITpgKMPGUqC1E5TGd4oH0LzDlKmwRuzzJ3s7V85ppG4WORyeFmFRRu6WrtXaA0aGK9sEoePdieLedvBcnNKL3Dn9q4DTXoQ7EjBFcYT9V1G0aAzJ6QAP27uCFC3t7x5dO4xVy9xCdyF6RIcpkeTvMmcftygUoY1aguTphVI5fPH8fOP5gRN3VS+fqgtU43I9CB82N1xkDhmgmBraB/be0n61+Fkl34x9lrL9zjAyQdK+laxxP4t2wSMwoARFxEBQtB1PAOZqa+sSt9uUXRQPMULjPEVReIzvO6SNkcpd2NgkAz+vY6Lee5bddgousQ60KBPSQtVLF/hcSE1IzElHU8KAq17YuRCqnOjisZ5LbmErdBWpJ0dFMC7gUL4mnC+2QUOWE4jrgIQjM5lsqaMwSncCQARaYvGAf0oKZcnloISkXxP4/9Ibyo0s7YuCSHo3z+jzNUAS+pcyvab/CZCL044B+lWIP+6CIiHN2ncO/v8g8h/ZFL9aNQuV6TrxOdD8p/towTn4b60U17hT+DRE7vGEsIhDJ9yesomD78Jqj6+2ze5bOe31wbsYwq5GJebLWTUuk8Jvea5kL273+cTh2ShZA8n2dIhgZ9nnaCr0sof3+DrlFO45/5XGkS0Sh1U1o7J5c0bkg5+DygFNVytsPjvPoeQ51ZVDKGeRJQGvtA3c3KMg/nJ67bx5RGAAAAAAAAAAAAAAAAAAAA=", "collapsed": false, "children": []}, {"text": "Pickup only, evenings.", "collapsed": false, "children": []}, {"text": "Q&A", "collapsed": false, "children": [{"text": "Does it come with a bulb?", "collapsed": false, "children": [{"text": "Yes, warm 40w.", "collapsed": false, "children": []}]}, {"text": "Would you take $20?", "collapsed": false, "children": [{"text": "Come see it first.", "collapsed": false, "children": []}]}]}], "x": 0, "y": 0, "w": 320}, {"text": "Mono synth, needs one knob — $150", "collapsed": false, "children": [{"text": "1980s-ish. Sounds enormous.", "collapsed": false, "children": []}, {"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "Missing the cutoff knob; the pot is fine.", "collapsed": false, "children": []}, {"text": "Trade?", "collapsed": false, "children": [{"text": "for a decent mic stand", "collapsed": false, "children": []}, {"text": "or a turntable", "collapsed": false, "children": []}]}], "x": 360, "y": 0, "w": 320}, {"text": "Commuter bike, 54cm — $180", "collapsed": false, "children": [{"text": "New chain, new tires. Rides smooth.", "collapsed": false, "children": []}, {"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "Lock not included. Sorry.", "collapsed": false, "children": []}, {"text": "Includes rear rack", "collapsed": false, "children": []}], "x": 720, "y": 0, "w": 320}]}, {"name": "housing", "x": 520, "y": 0, "statements": [{"text": "Sunny 1BR, 2nd floor — $1,450/mo", "collapsed": false, "children": [{"text": "data:image/webp;base64,UklGRhIEAABXRUJQVlA4IAYEAAAQMgCdASqQAQQBPpVKo0urv6ehpTc42/ASiWdu4WwwcvnvdmbKMmsP43yPznmH00CMhH7OKUEWuY6t6e69TIdDQ8Mis5X7x7mxXqBJOOsOXTDGLtfGQblmY+i8Sxs/zNiCgAvwa37FQcdRi6nE80tHteDfe00roeKzifI6kj1VuU9sm6HSBX3m0XVDj+sv6nJJBVLsqkwGnA+yGZevvTEgLrIHjGR0+ldBGJx0YuKOWCP5IZfRr9zRitYtUOWyHhtJ8U56ar7UMs1eywZEZ9zxmW/+KEFTXgC00d8AUP9YEfuXaV880nDEtqT4EKg77PEsD0gZZgSAYQnMn5BvXke70DRwZ1uz/zvXkv9R/FCiPfuVb37JnW4IDRfAvGzdxheRMAfxcNn94IPpSLqa0zJVA9ywzH9hfvkLA3KjMzV6ivsVuTiQXeAehVRbQfDfjnxgPCwchI9n3a5J9ftMvArwDjzI/vc5zOWLh1ax3nyL5B6PNkJBFi4dWsI/ZxSgiyIYuHVrCP2cUoIsXDp8f2cUoIsXDq1hH4gAAP77zH/1VT1+N3tlAnpWvdpfyRw0h3b5ELL4juiwEZ8EuamoseL3KD2MrIOqDme+I6KylvNboVD/bzMECdDQauDah1UaMpiyCMabJ+yngiIjpDaNChDOIoyqYPwTM6YA837BJUKnJm9yFvCM/UfYrLFP5YCfvaXUo9Xkf1hSPqZeQfSuA1hVqWXq/SvKSu6R+0c4Vgbrgw3jLXdtAT1QjHbVBVelfw2/AtvgZiuOPvObe/8x9k3BE/Y8pvSR2pcIkUHabilB19OndDR9xJF0V5KTYz6FsHAWz23b8jgA1EtftA0BGVSjDz2k07pdv+zd5uZWaOBys07eaH+t8e+7osEbr5pmzZOLP7QuS0+girb0rbzyriCDqkrHuh7G4ipHI18Zmz3aame4S0xNOLnxa+GxnY42+EBRkRfKn3tP9qrcFBTc/o+kiLX3WNjoAmUOGPkBGgB2SSFkkO2KFbPaD5Kv3PXFVtEFG29ISwN/+Np1zYZX5L/mqgWmqlL93NKh/EFoqGRvTHqC73ZgLQvHj+fAJyzS/KpGn3bzDLAJp5XLIndcC31k/gVKKJlqa0LEHjyp+GFAk1mM4sirgI3AMnjjgJAfrWLQmlmSP31AhKLzfaXMkXqPPILiiaIbAUjDA0NPYBYk0phZhGIX7jBoX+u2j3Dpw+D1AANWzHrg9rxyaP2Ff/jABpfU23ihAD7e+cSD3sB1o0TRNuEX7X9kQ/CzHbjTaB4zHMc7mz/xOX6CXe/dy/1iqKlKI9voTf9Av9973Pd/2+8uGB8QmcwjsyDNO4sjAAAAADAnrIz0JAAAm7wAAB/AkAAAAAAA", "collapsed": false, "children": []}, {"text": "Dogs ok, small deposit.", "collapsed": false, "children": []}, {"text": "Laundry in the basement.", "collapsed": false, "children": []}, {"text": "Available the 1st.", "collapsed": false, "children": []}, {"text": "Viewing", "collapsed": false, "children": [{"text": "Saturday 11–1", "collapsed": false, "children": []}, {"text": "or message a time", "collapsed": false, "children": []}]}], "x": 0, "y": 0, "w": 320}, {"text": "Room in a quiet house — $700", "collapsed": false, "children": [{"text": "Shared bath, shared garden, no smokers.", "collapsed": false, "children": []}, {"text": "Looking for someone tidy and friendly.", "collapsed": false, "children": []}, {"text": "Utilities split, about $60.", "collapsed": false, "children": []}, {"text": "Reply below with two lines about you.", "collapsed": false, "children": []}], "x": 360, "y": 0, "w": 320}]}, {"name": "jobs", "x": 780, "y": 0, "statements": [{"text": "Line cook, part-time — $22/hr", "collapsed": false, "children": [{"text": "data:image/webp;base64,UklGRkwFAABXRUJQVlA4IEAFAADQOgCdASqQAQQBPpVKnUslq6Khp9WIwXASiWdu4XCr75YGhpM71D8INMP5gP1J9W30O7zzT5Pm+Y8uIADVAIH/+7zmgAL3e0jwiDVYiDkjqulOUYa8t6nGZnP1oM8mGvLLa9Y8x7EnH/2sVm9iB//qszmXLvuUDjIIlOurI6bkRZoGv165uzWLrZTytst3f7m+/Mhz90UIhYBIxIS5bFOyozoLGuJvpDEkmW5bSrZycgC6zf2Zr0NOpDF8eGxmzL1WB6+ZCX4XQg4awiVZQYbNN7cGzuLn4OHlnropH0wUygiUvXKnkTivV9Pg8xP3cxGw4P89uDWkrDUQ41ODwfViyT9izK6SlY+l2cIFuIHC0EmMbqsJ+tc3l6+PBirA6LGRTW8WUxHf+jOovQXlSSvJoY7QaDjSBcQFTgdJPJ4WmLFt1NhcyfIU86CEfRTQpgaWIrmGhOU9CvCy1l9jU00j1i9cGajikhEIXNi+J2bifkje49M+GjbpVeSj3scVepSmLFvJ2eq50BAK67lBFgTsJynNBes3K962fW9LKVPU/A6cNj3CZpCZHslzFeo3GjEjLCuNmeivN1YthBaIntK+EjBlG67Vi9mTaazMnCBrkXA1NnA0dNHgNkDMNpWEcAD+/aTf6S6XNc2yd5gKwQ7WHarNrb75MwXDSBSHPsjFUMXfFmAAAAAATlG11Syz6IOQn6MBVLfG3BqOA8v7wcP/dJ3/mbq+SHjHhm/tB0NaT/4DkP4nmhc7z34voTikDQ9wfzq7v58o1nZHQ2WNGpiqqS+mP5u5JJjPxKmkE5lLfh8NCSKtnY0m+tt/5NvvtEPPF2crFbpoUX/IrchVwB3NLN38GD/s6uV+lJl++EoDQK/bKS3QZb/PMAhPceaPBlR6nswdwPCxRhYL8dhX7cBDMsJGqrSjpVkoCgHgG0+FdaqjN5yTccMlAj/4qwPVB8q7LCpjWyj/b4y1ZDma+G7RsqtpBvWqAqceS8GpUEo+/ItKHjXz+ilcTvuS+mZ1LoRj+uuXrMARu7oMsdKO0RnUvKHyrcU29zOrxtK8jIWzyw60GUwQC12tN5sPeHFtJ+KZAS6cI30z63m/LNM2z5ol9NNx00NOsGODj8gbKL1ESjq66GjZQCroYc+JR4Voo7PTAoNdY5Ol70SfvHTF9JViz4zWWHyFtaBGhNRQjfb5ba1lVD3rucTc6v5ixKmq8KE6qi2gS7Apgay+3KpT8cOJXlmEsysD0197h2/M7pISZNAA9QFYyI8MXW3IH+/ZdUir/YY2UpoZTIx+6af5RJjH/k9Zodw0LvWI30baAo6uz109aCWnUCvqgdDCNFtt6rKn6PqbYHpItO6AGSASk9+5o2z2PuISwo9FQ7tXnt7eBKaxZA6XO2Q8K6WhN00QffQRgVt/ajJrXbjS0lwNZZbTJs9lsi9GslbGaakAKTR8N1j5aUO6NMlYzgK/AZv3w2epsuNVxC121knyGjLFLclAezLzPC9ukRVNZVj6A3RyfNj1ORx63E2otGe4W2Id6882wnkkP4dEbTNBLsP9dZdmyHK/1HlSLktqchhoq768nwDttDEPLJuYxDc3ZqTXwwFPGKRp7LdjE/QEPrTty6q5ZlMHfQfbAwO15aQFsywviIGRZDMBznJKwmYAPpy8Nq56TuYnFAny7HDfOnt/DSZt6YGfyk3W6s31SyfGErtcfVDBKWaQuh3JkJa/mb5HNBLb9kNgOmtn2mhLbpwFgYKxoH/vqvXC0IuT1uw+gAAAAAEqWysAAAAAM2gAAAAAAAA=", "collapsed": false, "children": []}, {"text": "Small corner café, weekend brunch + 2 weekdays.", "collapsed": false, "children": []}, {"text": "Experience helps; attitude helps more.", "collapsed": false, "children": []}, {"text": "To apply", "collapsed": false, "children": [{"text": "Stop in after 2pm and ask for Dee.", "collapsed": false, "children": []}, {"text": "Or reply here with your last kitchen.", "collapsed": false, "children": []}]}, {"text": "Hiring now", "collapsed": false, "children": [], "color": "#e93d82"}], "x": 0, "y": 0, "w": 320}, {"text": "Freelance designer, small agentic-builds studio", "collapsed": false, "children": [{"text": "data:image/webp;base64,UklGRqQEAABXRUJQVlA4IJgEAAAQOACdASqQAQQBPpVKoEulpSMhplYYmLASiWdu8p8dSPrtZSt/01w7Z4Rfy8t/u/H0/R7lPqR23f8N6IZ9N/T6JJQTTsiNtdls4eF/eB/TLc1foj2apOTUkfqnbOHhf3gftapyuUbq+GM3COxBQRCs+IVVLWIrEViASKxAJFYgEisRWH29P3ZIWtAtXOg0SqbcCnVevKp3HI+2zCBCj26Q/7wOIRgZwaeU+chp13HuBTR8ZYRaPo0TmUhmJ1fCf5WahgK7iZ9d/FmBbCH0N1XWmuKfx4oPIZy3NRaF2z+wp3ChvrBnBSRcf1+xA2P38FnapCOt726nC3oK7OlV6ATzmhURmS+yvmJRycWyYibpjk5abgXu1Kqex2ILr8T9APZafMRPwdV+qu3ryrve44AR9gb88HbV/vGjDqGIfmjI16zVi4vp1GqnmRl97TWiao7eNmhBxAB/5FewihIkk8j5Kxr0QrAb+4/JNe45oWpbAtZZr6wrHsr4y+yQCQwIddmjk4w4a0cp0Jci+RfIvkXyL5F8hHEM+n/P9HmFRfjQqL8aFRfjQqL8aFRfjQqL8aFRfjQqL8aFRfjQqL8aFRfjQqL6N7xfoiJwAP79XlpY78Iw9dNi8U9AB0kQpQypeMnEtwpobipdkWgAAAA+hTglm/PLgHollbv1btgsp+s2+mk5M7Vx7VwatTY3aKLyIOaZPLEcBPg/GC7d1CAjf9W4VZswf68OfLn5Wwt4++DHNf60/luVmM41AHPmy3msdfbGn60ku7U9wAVpjkP/ri40r+r926RLboBI9NBL1mDXaXF3jUqirSB8tqriCBo3dlcy+Tn+1D9vMWkwgLD9Bu9Y/TB1P5reRUOsGCc1C2HD3oI39LAcIzMJaCZiIgKR8so92f4a0hbgbiwlS8UwyHzOrb6cmmlTaRoHR3vnFEmZ7KfNZZfTfSNVWm/mJ3nLLN0AteTyHcYxri56RtHVgo43ggQNNMyN1fIsyXLct91AC0LFGCn5GSb1BIZJcbL+xZW2TSIx94GZcLdFl+l5lhRhLibIMjIyk8vvZgpuz3kuQ9N58xF6qK/uGYPffb7ncfEB3V4Y1YYgEubsflHWTM8ULdNvhjy91Lcp05PdUlzwjfLZC/Sx9QcK+F9Z+EtEESzrsO+0APpO23ZYBBD6MGcflNM74LJQSNLRwm+chDAgYKq/nibbZX5CTGxuRn43IgkzTwasF8mEDeUTpHFocIF27fjvbAEYR4oZTnt04F8lK5IP+TR22oEXlwYax9MKZjkqaT20CHDnGlbjMmNj+f5lRPV5+lIrM+9okAWNXAO/g3Who9frgNZlsvtBinluRVYNtxrpiiFYCHvQ8p14b4gZjA26cOe4nOCBnTADGkojT1fFgkPR/f9OD4+P/uDNpzYR0rkbwmF1I6x6GA5rh8Iu4NA7O+wqtSvplhZ6JDEkWopWMCnGxEnPQhbIqUj5JQRR+SPkj5BQwZ/Y5rfhRnh9IWS2yzke09o9QSHb3Po0wqMYbeUq0pXjW4IE8ktq5VJtraCyAAAAAAGzQgAAAAAAAAAAAAAAAAA=", "collapsed": false, "children": []}, {"text": "Short projects, remote, $45–70/hr.", "collapsed": false, "children": []}, {"text": "You make interfaces that AI agents and people can both use.", "collapsed": false, "children": []}, {"text": "Bring one thing you made.", "collapsed": false, "children": [{"text": "Links beat résumés.", "collapsed": false, "children": []}]}, {"text": "Questions", "collapsed": false, "children": [{"text": "Is it full-time?", "collapsed": false, "children": [{"text": "No. Dabble-time. Ten to twenty hours.", "collapsed": false, "children": []}]}]}], "x": 360, "y": 0, "w": 320}, {"text": "Weekend moving help — $25/hr cash", "collapsed": false, "children": [{"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "Two people, one van, two Saturdays.", "collapsed": false, "children": []}, {"text": "Lift with your legs. Be on time.", "collapsed": false, "children": []}, {"text": "Reply with your name and a phone number.", "collapsed": false, "children": []}], "x": 720, "y": 0, "w": 320}, {"text": "Dog walker wanted — $18/walk", "collapsed": false, "children": [{"text": "data:image/webp;base64,UklGRsoFAABXRUJQVlA4IL4FAAAQPQCdASqQAQQBPpVKoUylpL+ioXNpG/ASiWdu4MbTWf9Suf91/ezi/I56z/6Tzg32n8yxJ7t/mTno+YB+qvTd8wHnUelzeRPQA8tv2ivuAzFEP76DHqYh7tBEUOaRbf27f5vtWAL3tAs3ysvgj0uAM3yrLBZrb+7QR+lyNdwgOXfqmbLCrT785eCcvBOBiPZiItxc6pVcgr7nS9SBAnFYOfnLwTl2wt8E5CMcuVgVvau/mzXpd61q7kacCDeeZFYceH/7+tyVXfRv3TG3lA8TiTjeNq59m562JzjyusSTMqFXdCvyU71vF8INrkmeRWyX6yDQK24gTT1ePwDcm3y9ovLXgfrqwKxRe9GRfUDMVWO2O3yKPCNR0p/2vNhRBuaL8/OXgnHuVmLJB/Ak/p2i+aw/WwVy03O82jz+CPi86Uc8L9whEqzjb3Dd1sMnEXvjEk6rry1LIp1iiowK5k/417Qw4DubMpbOlKYrfQKW2fEiObbjyTD+pBLSro5UkudqjH146EIOEHuu+AlkFARplGo1Go1Go1GnPJO8GVtvL/K6gJxCmzqA1CYxXkEeopKfZ47HY7HY7Hb7zNot4b18+ij6L+5ahu0fI2KpJTSqyXzPl96Ez4iSmlViHTBHkSU0qsQ6YI8iSmlViHS9ND3NAAD++lK7f1B00Gx/nriVefAPoTFYT7kvxZf8HUAG58dmznihrcf+D2s6L/vUUAAA0PcoCyuDsLjMAAK+MEENwTVEpuKWnfmgYYq5/gfon8sdwYiCjBQSIk+NP2i5UN/jBolxHJoFzX16DKQv1/d5xUBOKyELpgLDYqJ9jeBfDfU9BR97sKgTtRFzKjs5VaGUBd0nQo1eRTY8V+LFpkacR5MhzCTVcW1g9AaazLSQYWN4y44Eay7L5uZIw2niw7L5GVBKDc1r/fS/ErAtLt1VpOHHyGYBMwuWmT9qNSi+iLzO02m3Zn8MkRfj9lJ03GQ1wQL2Gpq/OdVTj70+vHSDIlfcYFKtDtmYG3xbLJBQcgmUiyki59PqlzXeQcmot+qJ6kQlLhgDUsa3B3Bzb02g2xkACevm14aW7uEZeCDfyx5iVbRMgwuv30oF3hh4geWvSfp35sQDXynTV0bFbvMvFrSUpmuTA3B85YSqHy1r+1ghQHGmpxMN3mLpyQW6qMZSDEesIuGFfOaqX0gLZXFkwvbqMcgPpkiouyllJbD2xB4POpi5W3a5//BZsTp50kWvD7eo+0+KQUx5+qG5iJfF+QNeDx6/Iuo69AGEiMI1UW2O8OEmHkITYIA19kJbJvDlvEV/HfbW7HKVLjhRQVcUxAhYRIbXbctuf/7NGCql16n9lpC2RplSfBlibRtG2X2z5vTXYmo3l6jkF0U8+Pe3KegJkTdQ8KNBUA6tgnrA+iXvsuZJkM3Gy08BpQlNk7TF3zdrm+V/7YqXEp0GagcNtxhtBfsre+FpWi/txoteIe9nDAn2rIm+eU5DRQtC+x0K64AswJMyZOKYrwOD5wIwEakTLeH8Kagdh+uqaS9uvOTCZW4fQ6HrhEv2srQyLnuESplrTuii3bQC891A3YMrGPZD/vfCFObw178YOdKE8FsNWaLtjANxei+fPa9cfiyoP7bk/h/fOI1cVDoLCvHmwzmIa099f1mDnfVaZhSCNAjJ1ZNPP4UrIEnnXG6CvBoN0tdRknLOqeSTU4KBum5BPkDZEhX6Gm0nOp7OOQxDZFzBA8iH6Wa45HeYI3Ry3n1DfrkcswX5XJv/cu5B6I0/99dEJUDhsMr+X5afQbpVZJvcQA9ZoX+c6WK+ydbCEwZbR6JJw4ZzxymczGUzHiBrnl2QHecmEInQ4XPrP3sykPn0D3NBVO0MVN4CKhs0FECXJg5W2FP2A5wESogBrMVuULnIma0qS/asd9KGpcX6JapCYGPEhfeXgXQR9urfwAAAAAAAAAAAAAAAAAAAAAA=", "collapsed": false, "children": []}, {"text": "Mon–Fri, around noon. Two friendly dogs.", "collapsed": false, "children": []}, {"text": "Must be reliable and love dogs.", "collapsed": false, "children": []}, {"text": "References appreciated, not required.", "collapsed": false, "children": []}], "x": 1080, "y": 0, "w": 320}]}, {"name": "services", "x": 0, "y": 260, "statements": [{"text": "Sourdough lessons, one afternoon — $40", "collapsed": false, "children": [{"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "You leave with a starter and a loaf.", "collapsed": false, "children": []}, {"text": "Small groups, flour provided.", "collapsed": false, "children": []}, {"text": "Next dates", "collapsed": false, "children": [{"text": "Sun 2pm", "collapsed": false, "children": []}, {"text": "Sat 10am", "collapsed": false, "children": []}]}], "x": 0, "y": 0, "w": 320}, {"text": "Houseplant rescue", "collapsed": false, "children": [{"text": "data:image/webp;base64,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", "collapsed": false, "children": []}, {"text": "Sad plant? I'll nurse it back or tell you honestly.", "collapsed": false, "children": []}, {"text": "$15 consult, repotting extra.", "collapsed": false, "children": []}, {"text": "Before/after photos on request.", "collapsed": false, "children": []}], "x": 360, "y": 0, "w": 320}]}, {"name": "wanted", "x": 260, "y": 260, "statements": [{"text": "Looking for: a ride to the airport, Fri 6am", "collapsed": false, "children": [{"text": "Splitting gas, happy to buy coffee.", "collapsed": false, "children": []}, {"text": "Flexible on terminal.", "collapsed": false, "children": []}, {"text": "Reply below", "collapsed": false, "children": [{"text": "Can do 6:15 — Sam", "collapsed": false, "children": []}]}], "x": 0, "y": 0, "w": 320}, {"text": "Wanted: a used electric guitar amp", "collapsed": false, "children": [{"text": "Anything small, tube or solid-state.", "collapsed": false, "children": []}, {"text": "Under $200.", "collapsed": false, "children": []}, {"text": "I'll pick up.", "collapsed": false, "children": []}], "x": 360, "y": 0, "w": 320}, {"text": "Wanted: someone to teach me sourdough", "collapsed": false, "children": [{"text": "One afternoon. I'll bring flour.", "collapsed": false, "children": []}, {"text": "Trade: I can fix your slow laptop or your slower website.", "collapsed": false, "children": []}], "x": 720, "y": 0, "w": 320}]}, {"name": "dabbling", "x": 520, "y": 260, "statements": [{"text": "Day 3 of a tiny weather app", "collapsed": false, "children": [{"text": "It only says 'jacket' or 'no jacket'.", "collapsed": false, "children": []}, {"text": "Next", "collapsed": false, "children": [{"text": "maybe 'umbrella'", "collapsed": false, "children": []}, {"text": "maybe stop", "collapsed": false, "children": []}]}, {"text": "Link: https://example.com", "collapsed": false, "children": []}], "x": 0, "y": 0, "w": 320}, {"text": "Things I'm bad at, on purpose", "collapsed": false, "children": [{"text": "Drawing hands", "collapsed": false, "children": []}, {"text": "Chess", "collapsed": false, "children": []}, {"text": "Small talk", "collapsed": false, "children": [{"text": "trying anyway", "collapsed": false, "children": []}]}], "x": 360, "y": 0, "w": 320}]}]};
+const SEED_DATA = {
+  "app": "dab",
+  "version": 2,
+  "theme": "light",
+  "currentCategory": "wtf is dab",
+  "categories": [
+    {
+      "name": "nearby",
+      "x": 0, "y": 0,
+      "statements": [
+        {
+          "text": "free: moving boxes", "x": 0, "y": 0, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "~20 boxes, most of them still taped.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "flattened and stacked in the hallway. dry, no water damage.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+                { "text": "gone by sunday or they go to recycling.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]},
+            { "text": "pickup in Ridgewood, anytime after 6.", "color": "#8e8e93", "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "buzzer's broken — text when you're outside.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]}
+          ]},
+        {
+          "text": "looking for: an 18v drill", "x": 330, "y": 0, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "mine died halfway through a shelf.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "need it for an afternoon. will return it cleaner than I got it.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]},
+            { "text": "will trade: coffee, or a spare battery that may or may not hold a charge.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+            { "text": "hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] }
+          ]},
+        {
+          "text": "offering: ride to philly, friday", "x": 660, "y": 0, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "leaving around 4. one seat open. splitting gas.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "back sunday night if that helps.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+                { "text": "no smoking, one small bag please.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]}
+          ]},
+        {
+          "text": "found: one very confident cat", "x": 0, "y": 330, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "https://picsum.photos/seed/dabcat/900/600.jpg", "color": null, "shiny": false, "collapsed": false, "children": [] },
+            { "text": "no collar, no chip, no fear.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "hanging around the back of the laundromat on 5th.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+                { "text": "she'll come to you if you have food. she'll come to you if you don't.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]},
+            { "text": "holding her until someone claims her. reply: hi@dab.cx", "color": "#8e8e93", "shiny": false, "collapsed": false, "children": [] }
+          ]},
+        {
+          "text": "free: a couch, honestly", "x": 330, "y": 330, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "it's fine. it's just not mine anymore.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "third floor walkup. bring two people and a van.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+                { "text": "you take it, you take the cushions.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]}
+          ]}
+      ]
+    },
+    {
+      "name": "making",
+      "x": 300, "y": 0,
+      "statements": [
+        {
+          "text": "what are you dabbling on?", "x": 0, "y": 0, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "post it here. no pitch required.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "a half-finished thing counts.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+                { "text": "so does an idea you haven't started.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]}
+          ]},
+        {
+          "text": "feedback: a very small synth patch", "x": 330, "y": 0, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "https://picsum.photos/seed/dabsynth/900/600.jpg", "color": null, "shiny": false, "collapsed": false, "children": [] },
+            { "text": "one oscillator, one filter, one long tail.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "sounds like a door closing in a large room.", "color": null, "shiny": false, "collapsed": false, "children": [] },
+                { "text": "sounds better than that sentence makes it sound.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]},
+            { "text": "patch notes here (https://example.com/patch)", "color": "#0091ff", "shiny": false, "collapsed": false, "children": [] }
+          ]},
+        {
+          "text": "looking for: someone who actually knows postgres", "x": 660, "y": 0, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "not a consultant. a person.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "one evening of \"why is this query like this\"", "color": null, "shiny": false, "collapsed": false, "children": [] },
+                { "text": "trade: dinner, or a website, or both.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]}
+          ]},
+        {
+          "text": "tools I keep coming back to", "x": 0, "y": 330, "w": 300, "collapsed": true,
+          "children": [
+            { "text": "a text editor and a folder", "color": null, "shiny": false, "collapsed": false, "children": [] },
+            { "text": "a notebook that fits in a pocket", "color": null, "shiny": false, "collapsed": false, "children": [] },
+            { "text": "walking", "color": null, "shiny": false, "collapsed": false, "children": [] }
+          ]}
+      ]
+    },
+    {
+      "name": "wtf is dab",
+      "x": 600, "y": 0,
+      "statements": [
+        {
+          "text": "dab.", "x": 0, "y": 0, "w": 264, "collapsed": false,
+          "children": [
+            { "text": "It's a board. That's the whole pitch.", "color": "linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)", "shiny": true, "collapsed": false, "children": [] }
+          ]},
+        {
+          "text": "how it works", "x": 292, "y": 0, "w": 264, "collapsed": false,
+          "children": [
+            { "text": "Post.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "digress.", "color": null, "shiny": false, "collapsed": false,
+                  "children": [
+                    { "text": "digress.", "color": null, "shiny": false, "collapsed": false,
+                      "children": [
+                        { "text": "digress", "color": null, "shiny": false, "collapsed": false, "children": [] }
+                      ]}
+                  ]},
+                { "text": "rinse & repeat", "color": null, "shiny": false, "collapsed": false, "children": [] }
+              ]}
+          ]},
+        {
+          "text": "the rest of it", "x": 584, "y": 0, "w": 342, "collapsed": false,
+          "children": [
+            { "text": "how to:", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "right click for color options", "color": null, "shiny": false, "collapsed": false,
+                  "children": [
+                    { "text": "hold shift ⇧ for menu", "color": null, "shiny": false, "collapsed": false,
+                      "children": [
+                        { "text": "hold alt+scroll to re-order lines", "color": null, "shiny": false, "collapsed": false,
+                          "children": [
+                            { "text": "cmd / ctrl + z → undo · + shift → redo", "color": null, "shiny": false, "collapsed": false,
+                              "children": [
+                                { "text": "supports images, mp4s, and urls.", "color": null, "shiny": false, "collapsed": false,
+                                  "children": [
+                                    { "text": "type an email and it becomes mailto:", "color": null, "shiny": false, "collapsed": false, "children": [] }
+                                  ]}
+                              ]}
+                          ]}
+                      ]}
+                  ]}
+              ]}
+          ]},
+        {
+          "text": "on boards", "x": 954, "y": 0, "w": 300, "collapsed": false,
+          "children": [
+            { "text": "Each board is its own space.", "color": null, "shiny": false, "collapsed": false,
+              "children": [
+                { "text": "Rename one by clicking its name at the top.", "color": null, "shiny": false, "collapsed": false,
+                  "children": [
+                    { "text": "Make a new one from the wheel: \"+ New board\".", "color": null, "shiny": false, "collapsed": false,
+                      "children": [
+                        { "text": "Delete one with the ✕ {it asks twice}.", "color": null, "shiny": false, "collapsed": false, "children": [] }
+                      ]}
+                  ]}
+              ]}
+          ]},
+        {
+          "text": "that's it.", "x": 1282, "y": 0, "w": 264, "collapsed": false,
+          "children": [
+            { "text": "For direct Q&A: hi@dab.cx", "color": null, "shiny": false, "collapsed": false, "children": [] },
+            { "text": "Say something new or say something else.", "color": "linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)", "shiny": true, "collapsed": false, "children": [] }
+          ]}
+      ]
+    }
+  ]
+};
+
+function seedFromExport(d){
+  const conv = arr => (arr || []).map(x => ({
+    id: nid(),
+    t: typeof x.text === 'string' ? x.text : '',
+    c: typeof x.color === 'string' ? x.color : null,
+    s: x.shiny === true,
+    z: x.collapsed === true,
+    k: conv(x.children)
+  }));
+  return (d.categories || []).map(c => ({
+    id: nid(),
+    name: typeof c.name === 'string' ? c.name : 'Untitled',
+    tree: conv(c.statements)
+  }));
+}
 
 const seed = () => seedFromExport(SEED_DATA);
 
@@ -2149,19 +2341,13 @@ const frameRO = new ResizeObserver(es => es.forEach(e => {
 document.addEventListener('pointerdown', e => document.querySelectorAll('.fbox.live').forEach(b => { if(!b.contains(e.target)) b.classList.remove('live'); }), true);
 
 
-/* ── RICH TEXT ──
-   Splits a plain text string into text nodes + <a> elements for emails
-   and (parenthesized) URLs. Parenthesized image URLs are extracted and
-   returned separately so callers can render them below the text. Bare
-   URLs in text are left alone — use parens to make them clickable, or
-   paste a bare URL alone to embed. */
+/* ── RICH TEXT ── */
 const EMAIL_RE = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
 const RICH_RE  = /(\(https?:\/\/[^\s)]+\)|[\w.+-]+@[\w-]+(?:\.[\w-]+)+)/g;
 const PAREN_URL_RE = /^\((https?:\/\/[^\s)]+)\)$/;
 const PAREN_IMG_RE = /\s*\((https?:\/\/\S+\.(?:png|jpe?g|gif|webp|avif|svg|bmp)(?:[?#]\S*)?)\)\s*/gi;
 
 function renderRich(st, text){
-  // Pull out parenthesized image URLs first — they become inline images.
   const inlineImgs = [];
   const cleaned = String(text).replace(PAREN_IMG_RE, (m, url) => {
     inlineImgs.push(url);
@@ -3182,8 +3368,6 @@ menu.addEventListener('click', e => {
    REORDER GESTURES — Alt+Arrow fallback & Alt+Wheel
 ═══════════════════════════════════════════════════════ */
 
-/* ── Alt+Arrow fallback (document level) ──
-   Runs only if nothing upstream handled it. */
 document.addEventListener('keydown', e => {
   if(e.defaultPrevented) return;
   if(!e.altKey) return;
@@ -3193,7 +3377,7 @@ document.addEventListener('keydown', e => {
 
   const ae = document.activeElement;
   if(!ae || ae === document.body) return;
-  if(ae.tagName === 'TEXTAREA') return;   // textarea handles its own
+  if(ae.tagName === 'TEXTAREA') return;
   const li = ae.closest && ae.closest('li[role="treeitem"]');
   if(!li) return;
   const r = find(li.dataset.id);
@@ -3208,13 +3392,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ── Alt + Scroll Wheel: free reorder ──
-   • Targets the focused row (nav or edit) if there is one.
-   • Otherwise targets the row under the cursor.
-   • Locks the target for 400 ms so the row can move out from under
-     the cursor without losing continuity mid-scroll.
-   • Emits a short toast on each successful move with direction and
-     position (e.g. "↑ · 3 / 7"). */
 let altWheelTarget = null;
 let altWheelTimer  = null;
 let altWheelLast   = 0;
@@ -3247,7 +3424,7 @@ document.addEventListener('wheel', e => {
   e.stopPropagation();
 
   const now = performance.now();
-  if(now - altWheelLast < 25) return;   // throttle trackpad spam
+  if(now - altWheelLast < 25) return;
   altWheelLast = now;
 
   const dir = e.deltaY > 0 ? 1 : -1;
@@ -3284,8 +3461,8 @@ function disarmDelete(){
   if(!deleteArmed) return;
   deleteArmed = false;
   btnDeleteCat.classList.remove('armed');
-  btnDeleteCat.title = 'Delete category (Del)';
-  btnDeleteCat.setAttribute('aria-label', 'Delete category');
+  btnDeleteCat.title = 'Delete board (Del)';
+  btnDeleteCat.setAttribute('aria-label', 'Delete board');
 }
 
 function performDeleteCategory(){
@@ -3303,14 +3480,14 @@ function performDeleteCategory(){
 
 function triggerDeleteCategory(){
   if(categories.length <= 1){
-    toast('at least one category is required');
+    toast('at least one board is required');
     return;
   }
   if(!deleteArmed){
     deleteArmed = true;
     btnDeleteCat.classList.add('armed');
     btnDeleteCat.title = 'Press again to confirm';
-    btnDeleteCat.setAttribute('aria-label', 'Confirm delete category');
+    btnDeleteCat.setAttribute('aria-label', 'Confirm delete board');
     clearTimeout(deleteArmTimer);
     deleteArmTimer = setTimeout(() => { deleteArmTimer = null; disarmDelete(); }, 2600);
     return;
@@ -3415,7 +3592,7 @@ $('file').onchange = async e => {
       ensureCategoryShapes(categories);
       editing = null; pendingCaret = null;
       render(); save();
-      toast('imported ' + list.length + ' categories — cmd+z to undo');
+      toast('imported ' + list.length + ' boards — cmd+z to undo');
       return;
     }
 
@@ -3724,7 +3901,7 @@ addEventListener('touchmove', e => {
 }, { passive: true });
 
 const GHOST_GUTTER = 'hold shift for menu';
-const GHOST_WHITE  = 'dabble, or dabble something else';
+const GHOST_WHITE  = 'dabble';
 const GUTTER_PAD   = 6;
 const EDGE_MARGIN  = 24;
 
@@ -4127,7 +4304,7 @@ function createOptionWheel(root, options){
   if (o.side === 'right') root.classList.add('option-wheel--right');
   if (o.className) o.className.split(/\s+/).filter(Boolean).forEach(c => root.classList.add(c));
   root.setAttribute('role', 'listbox');
-  root.setAttribute('aria-label', 'Category wheel');
+  root.setAttribute('aria-label', 'Board wheel');
   root.tabIndex = 0;
 
   root.style.setProperty('--ow-text-color', o.textColor);
@@ -4366,7 +4543,7 @@ function createOptionWheel(root, options){
     originalIdx = currentIndex;
 
     const names = categories.map(c => c.name || 'Untitled');
-    names.push('+ New category');
+    names.push('+ New board');
 
     overlay.classList.add('on');
     overlay.setAttribute('aria-hidden', 'false');
@@ -4441,7 +4618,7 @@ function createOptionWheel(root, options){
         sel.addRange(rng);
       } catch(_){}
     });
-    toast('new category — name it, then write');
+    toast('new board — name it, then post');
   }
 
   addEventListener('keydown', function(e){
@@ -4571,12 +4748,12 @@ function createOptionWheel(root, options){
         sel.addRange(rng);
       } catch(_){}
     });
-    toast('new category — name it, then write');
+    toast('new board — name it, then post');
   }
 
   function buildWheel(){
     const names = categories.map(c => c.name || 'Untitled');
-    names.push('+ New category');
+    names.push('+ New board');
     host.innerHTML = '';
     return createOptionWheel(host, {
       items: names,
