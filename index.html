@@ -1606,6 +1606,16 @@ function packTree(t){
     collapsed:false, children:un(t.tree)
   };
 }
+/* reset demo - shared by the button, context menu and Cmd/Ctrl+R */
+function resetDemo(){
+  rs=0;const rb=document.querySelector('#acts [data-a=reset]');if(rb)rb.textContent='reset demo';
+  /* drop focus mode without flushing, so the iframe can't write old content back */
+  if(typeof FX!=='undefined'&&FX){document.body.classList.remove('fxo');fxEl.classList.remove('on');fxEl.setAttribute('aria-hidden','true');fxEl.style.opacity='';fxEl.style.transform='';try{FX.ifr.remove()}catch(_){}FX=null}
+  cw(false);closeMenu();closeHelp();try{closePal()}catch(_){}
+  C=seed();V=null;S_=null;F=[];lastCat=null;rc={x:0,y:0,s:1};cams={};H=[];hi=0;
+  Object.assign(cam,{x:0,y:0,s:1});
+  chrome();renderAll();fit();save();toast('Demo reset');
+}
 let rs=0;
 document.querySelectorAll('#acts [data-a]').forEach(b=>b.onclick=async()=>{const a=b.dataset.a;
 if(a==='fit'){cw(false);fit(true)}
@@ -1623,7 +1633,7 @@ else if(a==='theme'){theme=dark()?'light':'dark';paintTheme();save()}
 else if(a==='search'){cw(false);openPal()}
 else if(a==='help'){cw(false);openHelp()}
 else if(a==='delcat'){cw(false);delCat()}
-else if(a==='reset'){if(rs){rs=0;b.textContent='reset demo';cw(false);C=seed();V=null;S_=null;F=[];lastCat=null;rc={x:0,y:0,s:1};cams={};H=[];hi=0;Object.assign(cam,{x:0,y:0,s:1});chrome();renderAll();fit();save();toast('Demo reset')}else{rs=1;b.textContent='tap again to reset';setTimeout(()=>{rs=0;b.textContent='reset demo'},2500)}}});
+else if(a==='reset'){if(rs){resetDemo()}else{rs=1;b.textContent='tap again to reset';setTimeout(()=>{rs=0;b.textContent='reset demo'},2500)}}});
 $('file').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(s=>{try{const d=JSON.parse(s),L=d.categories||d.folders;if(!L||!L.length)throw 0;C=seedFromExport({categories:L});V=null;S_=null;F=[];cams={};cw(false);chrome();renderAll();fit();save();toast('Imported '+C.length+' boards',{kind:'ok'})}catch(_){toast('Could not read that file',{kind:'error'})}}).catch(()=>toast('Could not read that file',{kind:'error'}))};
 
 /* context menu */
@@ -1829,6 +1839,7 @@ const shim='<script>(function(){var B='+boot+',K="dab:categories:v1",KT="dab:the
 +'var S={getItem:function(k){return k in m?m[k]:null},setItem:function(k,v){m[k]=String(v);if(k===K)parent.postMessage({fx:"save",v:v},"*");else if(k===KT)parent.postMessage({fx:"theme",v:v},"*")},removeItem:function(k){delete m[k]},clear:function(){m={}},key:function(i){return Object.keys(m)[i]||null},get length(){return Object.keys(m).length}};'
 +'try{Object.defineProperty(window,"localStorage",{get:function(){return S},configurable:true})}catch(e){}'
 +'addEventListener("message",function(e){if(e.data&&e.data.fx==="flush")dispatchEvent(new Event("pagehide"))});'
++'addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&!e.altKey&&(e.key==="r"||e.key==="R")){e.preventDefault();e.stopPropagation();if(!e.repeat)parent.postMessage({fx:"reset"},"*")}},true);'
 +'addEventListener("keydown",function(e){var a=document.activeElement,t=a&&a.tagName,d=document.getElementById("menu"),w=document.getElementById("wheelOverlay");if((e.metaKey||e.ctrlKey)&&e.shiftKey&&(e.key==="F"||e.key==="f")||(e.key==="Escape"&&!(t==="INPUT"||t==="TEXTAREA"||(a&&a.isContentEditable)||(d&&d.style.display==="flex")||(document.getElementById("pm")&&!document.getElementById("pm").hidden)||(w&&w.classList.contains("on"))))){e.preventDefault();parent.postMessage({fx:"close"},"*")}},true);document.addEventListener("pointerdown",function(){parent.postMessage({fx:"snd",k:"tap"},"*")},true);addEventListener("keydown",function(e){var k=e.key==="Enter"?"flick":e.key==="Tab"?"slide":0;if(k)parent.postMessage({fx:"snd",k:k},"*")},true)})()<\/script>';
 const doc=nsSrc().replace(/<head>/i,m=>m+shim);
 const ifr=document.createElement('iframe');ifr.title='focus mode';ifr.srcdoc=doc;
@@ -1890,6 +1901,9 @@ try{const o=undo;undo=function(){snd('slide');return o.apply(this,arguments)}}ca
 try{const o=redo;redo=function(){snd('slide');return o.apply(this,arguments)}}catch(_){}
 
 addEventListener('keydown',e=>{if(FX&&e.key==='Escape'){e.preventDefault();e.stopPropagation();closeFocus()}},true);
+/* Cmd/Ctrl+R resets the demo (Cmd+Shift+R still does a normal hard reload) */
+addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&!e.altKey&&e.key.toLowerCase()==='r'){e.preventDefault();e.stopPropagation();if(e.repeat)return;const a=document.activeElement;if(a&&a!==document.body&&a.blur)a.blur();resetDemo()}},true);
+addEventListener('message',e=>{if(FX&&e.source===FX.ifr.contentWindow&&e.data&&e.data.fx==='reset')resetDemo()});
 addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.shiftKey&&e.key.toLowerCase()==='f'){e.preventDefault();if(FX)closeFocus();else{const f=fobj(cur);if(V&&f)openFocus(f)}}});
 
 /* letter view */
