@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<title>dab</title>
+<title>dab.cx</title>
 <meta name="description" content="A board for posting and browsing. Categories are places. Cards are posts. Lines are the content.">
 <meta property="og:title" content="dab">
 <meta property="og:description" content="A board for posting and browsing. Low ceremony. Nested thinking.">
@@ -414,7 +414,7 @@ body.lst #cv,body.lst #zg,body.lst #zero,body.lst #edge,body.lst #ring,body.lst 
 <svg id="ring" aria-hidden="true"><path id="rb"/><path id="rs"/></svg>
 <div id="hd">
   <div class="l">
-    <button id="bk">dab</button>
+    <button id="bk">dab.cx</button>
     <span class="sl pc">/</span><button id="pl" aria-label="Back to places"></button>
     <span class="sl ci">/</span>
     <input id="cn" class="ci" placeholder="untitled" spellcheck="false" aria-label="Board name">
@@ -525,462 +525,796 @@ const S=(t,...k)=>({id:nid(),t,z:false,k});
 const T=(name,x,y,...tree)=>({id:nid(),name,x,y,tree});
 const CT=(name,x,y,...trees)=>({id:nid(),name,x,y,trees});
 
+const SEEDGEN=(()=>{
 /* ══════════════════════════════════════════════════════════════
-   SEED — dab classifieds demo.
-   Seven boards: start here / for sale / housing / jobs / services / wanted / dabbling.
-   jobs uses a sub-board layer (subs) — click jobs → pick a sub-board → see the job posts.
-   Sub-boards support sorting via #sorthud, driven by each tree's postedAt.
+   SEED — a live-feeling board, generated deterministically.
+   Same content every load. No network, no accounts, no servers.
+   Output folds into the standard dab.json export shape, so
+   import / export / focus mode all keep working unchanged.
 ══════════════════════════════════════════════════════════════ */
 const _HOUR=3600*1000,_DAY=24*_HOUR,_NOW0=Date.now();
-const posted=(hoursAgo)=>({postedAt:_NOW0-hoursAgo*_HOUR});
+const posted=h=>({postedAt:_NOW0-h*_HOUR});
+function _rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 
-const SEED_DATA={"app":"dab","version":2,"theme":"light","currentCategory":"start here","categories":[
+/* ── places ─────────────────────────────────────────────────── */
+const PLACE_TABLE=[
+  ['*','everywhere','all'],
+  ['nyc','New York City','city'],
+  ['bk','Brooklyn','borough','nyc'],
+  ['mn','Manhattan','borough','nyc'],
+  ['qn','Queens','borough','nyc'],
+  ['bx','Bronx','borough','nyc'],
+  ['phl','Philadelphia','city'],
+  ['bos','Boston','city'],
+  ['pvd','Providence','city'],
+  ['bal','Baltimore','city'],
+  ['was','Washington','city'],
+  ['pit','Pittsburgh','city'],
+  ['chi','Chicago','city'],
+  ['min','Minneapolis','city'],
+  ['det','Detroit','city'],
+  ['aus','Austin','city'],
+  ['nsh','Nashville','city'],
+  ['atl','Atlanta','city'],
+  ['nola','New Orleans','city'],
+  ['den','Denver','city'],
+  ['pdx','Portland','city'],
+  ['sea','Seattle','city'],
+  ['sf','San Francisco','city'],
+  ['oak','Oakland','city'],
+  ['la','Los Angeles','city'],
+  ['sd','San Diego','city'],
+  ['tor','Toronto','city'],
+  ['mtl','Montreal','city'],
+  ['van','Vancouver','city'],
+  ['dyl','Doylestown','borough'],
+  ['wdk','Woodstock','town'],
+  ['slh','Sleepy Hollow','village'],
+  ['ith','Ithaca','town'],
+  ['ash','Asheville','town'],
+  ['bld','Boulder','town']
+];
+const PLACE_W={bk:11,mn:9,qn:5,bx:3,phl:8,bos:6,pvd:2,bal:3,was:5,pit:4,chi:9,min:4,det:3,aus:7,nsh:4,atl:4,nola:4,den:6,pdx:6,sea:6,sf:8,oak:3,la:8,sd:4,tor:7,mtl:5,van:5,dyl:1,wdk:1,slh:1,ith:2,ash:2,bld:2};
 
-/* ══ start here ══ */
-{"name":"start here","x":0,"y":0,"statements":[
-  {"text":"dab.","x":0,"y":0,"w":300,"collapsed":false,"children":[
-    {"text":"A board for boards. Post what you mean, reply if you're interested. That's the whole thing.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]},
-    {"text":"No accounts. No algorithm. No app.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Everything lives in your browser. Export a backup if you want to keep it.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]}
-  ]},
-  {"text":"Rules (all of them)","x":330,"y":0,"w":340,"collapsed":false,"children":[
-    {"text":"1. Be a person.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"2. Post what you mean.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"3. Reply if you're interested.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"4. Don't be a jerk.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"That's the list.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[
-      {"text":"If it feels like more than this, it is.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"The moment it needs a policy, we've already lost.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]}
-  ]},
-  {"text":"How to read this","x":700,"y":0,"w":320,"collapsed":false,"children":[
-    {"text":"Each board is a place. Cards are posts. Lines are the details.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Left-click to open. Right-click for actions.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Reply to any line by branching underneath it.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Nested replies stay with the line they belong to.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"You can go as deep as you need to.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]}
-  ]},
-  {"text":"What counts as a reply","x":1050,"y":0,"w":300,"collapsed":false,"children":[
-    {"text":"Anything you'd say in an email, but shorter.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"A price. A question. A yes.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"You don't need to introduce yourself.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
-  ]}
-]},
+const HOOD={
+ bk:['Park Slope','Bushwick','Bed-Stuy','Williamsburg','Greenpoint','Fort Greene','Crown Heights','Sunset Park','Red Hook','Prospect Heights','Clinton Hill','Gowanus','Windsor Terrace','Kensington'],
+ mn:['the East Village','the Lower East Side',"Hell's Kitchen",'Washington Heights','Inwood','Harlem','Chelsea','SoHo','the Upper West Side','Tribeca','Murray Hill','the Financial District','Morningside Heights','the West Village'],
+ qn:['Astoria','Long Island City','Jackson Heights','Forest Hills','Ridgewood','Sunnyside','Flushing','Woodside','Corona','Maspeth'],
+ bx:['Riverdale','Fordham','Mott Haven','Parkchester','Kingsbridge','Concourse','Belmont','Norwood'],
+ phl:['Fishtown','Northern Liberties','South Philly','Queen Village','Fairmount','Kensington','University City','Passyunk','Bella Vista','Mt. Airy','Graduate Hospital','Port Richmond','Rittenhouse'],
+ bos:['Somerville','Jamaica Plain','Allston','Brighton','the South End','Dorchester','Cambridge','Roslindale','East Boston','Mission Hill'],
+ pvd:['Fox Point','Federal Hill','College Hill','the West End','Olneyville','Mount Hope','Smith Hill'],
+ bal:['Hampden','Federal Hill','Fells Point','Canton','Charles Village','Remington','Mt. Vernon','Station North'],
+ was:['Adams Morgan','Petworth','Columbia Heights','Shaw','Bloomingdale','Takoma','Capitol Hill','Brightwood'],
+ pit:['Lawrenceville','East Liberty','Shadyside','Squirrel Hill','Bloomfield','Garfield','the South Side','Polish Hill'],
+ chi:['Logan Square','Wicker Park','Pilsen','Uptown','Andersonville','Hyde Park','Bridgeport','Lakeview','Rogers Park','Avondale','Humboldt Park','Edgewater'],
+ min:['Northeast','Uptown','Powderhorn','Longfellow','Whittier','Marcy-Holmes','Seward','Phillips'],
+ det:['Corktown','Midtown','Hamtramck','West Village','Indian Village','Ferndale','Woodbridge'],
+ aus:['East Austin','South Congress','Hyde Park','Mueller','Bouldin Creek','Cherrywood','Rosedale','North Loop','Windsor Park'],
+ nsh:['East Nashville','12South','Germantown','The Nations','Sylvan Park','Berry Hill','Inglewood','Donelson'],
+ atl:['Kirkwood','Decatur','Old Fourth Ward','Cabbagetown','Grant Park','East Atlanta','West Midtown','Summerhill','Inman Park'],
+ nola:['Bywater','Marigny','Mid-City','Uptown','Treme','the Lower Garden District','Bayou St. John','the Irish Channel'],
+ den:['Cap Hill','Baker','Washington Park','Highland','RiNo',"Sloan's Lake",'Berkeley','Congress Park','Five Points'],
+ pdx:['Alberta','Hawthorne','Division','Mississippi','Sellwood','St. Johns','Montavilla','Kerns','Buckman'],
+ sea:['Capitol Hill','Ballard','Fremont','Wallingford','Georgetown','Columbia City','Beacon Hill','Rainier Valley','Greenwood'],
+ sf:['the Mission','Bernal Heights','the Richmond','the Sunset','Potrero Hill','Nob Hill','the Inner Sunset','Noe Valley','Dogpatch','the Haight'],
+ oak:['Temescal','Rockridge','Lake Merritt','Fruitvale','West Oakland','Adams Point','Dimond','Grand Lake'],
+ la:['Silver Lake','Los Feliz','Echo Park','Highland Park','Koreatown','Culver City','Venice','Atwater Village','Cypress Park','Eagle Rock'],
+ sd:['North Park','South Park','Normal Heights','Hillcrest','Ocean Beach','Golden Hill','Barrio Logan','University Heights'],
+ tor:['Parkdale','Kensington Market','Leslieville','the Junction','Roncesvalles','Little Portugal','Riverdale','Trinity Bellwoods'],
+ mtl:['Le Plateau','Mile End','Villeray','Rosemont','Griffintown','St-Henri','Outremont','Le Sud-Ouest'],
+ van:['Commercial Drive','Mount Pleasant','Kitsilano','East Van','Strathcona','Main St','Hastings-Sunrise','Fairview'],
+ dyl:['downtown','the borough'],
+ wdk:['downtown','the village'],
+ slh:['the village','the hollow'],
+ ith:['Fall Creek','Collegetown','the Commons','South Hill','Northside'],
+ ash:['West Asheville','the River Arts District','Montford','Kenilworth','North Asheville','Haw Creek'],
+ bld:['the Hill','North Boulder','Mapleton','Gunbarrel','Table Mesa']
+};
+const TRANSIT={
+ bk:['the L at Bedford','the G at Fulton','the A/C at Hoyt-Schermerhorn','the 2/3 at Bergen','the R at Union','the F at York','the J/M at Myrtle','the Q at 7th Ave'],
+ mn:['the 6 at Astor Pl','the L at 1st Ave','the A/C/E at 14th','the 1 at Christopher','the N/Q/R at Union Sq','the 2/3 at 72nd','the B/D at Rockefeller Center'],
+ qn:['the 7 at Court Sq','the M/R at Steinway','the E/F at Roosevelt','the 7 at Junction','the N/W at Astoria Blvd'],
+ bx:['the 4 at Fordham Rd','the D at 161st','the 6 at Pelham Bay','the 1 at 231st'],
+ phl:['the Market-Frankford at Girard','the Broad St Line at Tasker-Morris','the 47 bus','the 21 bus','the 5 bus'],
+ bos:['the Red Line at Central','the Orange Line at Stony Brook','the 39 bus','the Green Line at Kenmore','the 66 bus'],
+ pvd:['the 1 bus','the 99 bus','the R Line'],
+ bal:['the Light Rail at North Ave','the 22 bus','the Circulator'],
+ was:['the Red Line at Columbia Heights','the Green Line at U St','the H2 bus','the 42 bus'],
+ pit:['the 54 bus','the 75 bus','the East Busway'],
+ chi:['the Blue Line at Damen','the Brown Line at Western','the 22 bus','the Red Line at Belmont','the 49 bus'],
+ min:['the Blue Line at Franklin','the Green Line at West Bank','the 6 bus'],
+ det:['the QLine at Grand Blvd','the 4 bus','the 16 bus'],
+ aus:['the 10 bus','the 20 bus','the 7 bus'],
+ nsh:['the 20 bus','the 4 bus','the Music City Star'],
+ atl:['the Blue Line at Inman Park','the 2 bus','the 36 bus'],
+ nola:['the 91 bus','the 39 bus','the St. Charles streetcar'],
+ den:['the 15 bus','the 0 bus','the A Line at 38th'],
+ pdx:['the 20 bus','the 75 bus','the Orange Line at Clinton'],
+ sea:['the 44 bus','the Link at Capitol Hill','the 10 bus'],
+ sf:['the 14 bus','the 49 bus','BART at 24th St','the J at Church'],
+ oak:['the 51 bus','the 1 bus','BART at MacArthur'],
+ la:['the 4 bus','the 704 Rapid','the Red Line at Vermont'],
+ sd:['the 7 bus','the 2 bus','the 30 bus'],
+ tor:['the 504 streetcar','the 506 streetcar','the Line 2 at Dufferin'],
+ mtl:['the Orange Line at Laurier','the 51 bus','the 80 bus'],
+ van:['the 20 bus','the 9 bus','the Expo Line at Commercial'],
+ dyl:['the SEPTA R5','the 55 bus'],
+ wdk:['the Trailways'],
+ slh:['the Metro-North at Philipse Manor'],
+ ith:['the 10 bus','the 30 bus'],
+ ash:['the 1 bus','the 9 bus'],
+ bld:['the HOP','the 205 bus']
+};
+const MAIL=['hi@dab.cx','hi@dab.cx','hi@dab.cx','hi@dab.cx','reply@dab.cx','post@dab.cx'];
+const GRAY='#8e8e93', BLUE='#0091ff', GRAD='linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)';
 
-/* ══ for sale ══ */
-{"name":"for sale","x":300,"y":0,"statements":[
-  {"text":"floor lamp — $40","x":0,"y":0,"w":300,"collapsed":false,"children":[
-    {"text":"Adjustable arm, brass finish. Real brass, or at least it looks like it.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Missing the top screw on the shade. It holds fine.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Slight dent on the base, hidden by the couch.","color":null,"shiny":false,"collapsed":true,"children":[]},
-    {"text":"Works. Both bulbs are new.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Pickup in Park Slope. 4th ave, near the R.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[
-      {"text":"No delivery, no holds, no 'is this still available.'","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"If it's up, it's up.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Cash or venmo. hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"synth — $280","x":330,"y":0,"w":320,"collapsed":false,"children":[
-    {"text":"https://picsum.photos/seed/dabsynth/900/600.jpg","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Korg Minilogue XD. Bought it in 2022, used it for maybe ten hours.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Nothing wrong with it. I just don't play it.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Comes with the power supply and original box.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Price is firm-ish. $280 is what I paid half of.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Williamsburg, pick up at my place. I'll let you play it first.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"bike — $200","x":690,"y":0,"w":300,"collapsed":false,"children":[
-    {"text":"1988 Trek. Steel frame, 54cm.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"I'm 5'9\" and it fits me well.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"New chain, new brake pads, new tires last spring.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Some rust spots on the top tube. Nothing structural.","color":null,"shiny":false,"collapsed":true,"children":[]},
-    {"text":"Rides great. I just have two now.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Pickup in Bushwick. Bring a lock or a friend.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"standing desk — $150","x":0,"y":400,"w":300,"collapsed":false,"children":[
-    {"text":"Fully Jarvis, bamboo top, 60x30.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Motor works. Presets work. Leveling feet work.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"It's heavy. Bring a friend or a dolly.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Moving out, need it gone by Sunday.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Photos on request. Cash preferred.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"records — make an offer","x":330,"y":400,"w":300,"collapsed":false,"children":[
-    {"text":"~80 records. Jazz, soul, some rock.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Mostly VG+ or better.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Nothing rare. Nothing trashed.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"I'm moving and don't want to box them again.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Take all of them for $200 or come flip through.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
-    {"text":"Fort Greene.","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]}
-]},
+/* ── shared helpers ─────────────────────────────────────────── */
+function _pick(R,a){return a[(R()*a.length)|0]}
+function _shuf(R,a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=(R()*(i+1))|0;const t=a[i];a[i]=a[j];a[j]=t}return a}
+function _hood(R,p){const h=HOOD[p]||['downtown'];return _pick(R,h)}
+function _tr(R,p){const t=TRANSIT[p];return t?_pick(R,t):null}
+const WK=Object.keys(PLACE_W), WT=WK.reduce((s,k)=>s+PLACE_W[k],0);
+function _place(R){let x=R()*WT;for(const k of WK){x-=PLACE_W[k];if(x<=0)return k}return 'bk'}
+function _places(R,n){const out=[],seen={};let g=0;while(out.length<n&&g++<400){const p=_place(R);if(seen[p])continue;seen[p]=1;out.push(p)}return out}
+function _ago(R){const r=R();return _NOW0-(r<.15?R()*4:r<.40?R()*24:r<.70?R()*72:R()*336)*_HOUR}
+const _w=R=>[280,300,320,340,360][(R()*5)|0];
+const L=(t,o)=>Object.assign({text:t,color:null,shiny:false,collapsed:false,children:[]},o||{});
+const G_=(t)=>({text:t,color:GRAY,shiny:false,collapsed:false,children:[]});
+const B_=(t)=>({text:t,color:BLUE,shiny:false,collapsed:false,children:[]});
 
-/* ══ housing ══ */
-{"name":"housing","x":600,"y":0,"statements":[
-  {"text":"1BR in Bed-Stuy — $1,850","x":0,"y":0,"w":340,"collapsed":false,"children":[
-    {"text":"Brownstone, third floor walkup. Available Nov 1.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Heat and hot water included. You pay electric + internet.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Laundry in the basement. Free.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"No broker fee. Direct from the owner.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-    {"text":"About the apartment:","color":null,"shiny":false,"collapsed":true,"children":[
-      {"text":"Windows face the backyard. Quiet.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Galley kitchen, new stove last year.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Living room fits a couch + a desk + a small dining table.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Bedroom fits a queen.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"About the block:","color":null,"shiny":false,"collapsed":true,"children":[
-      {"text":"Two blocks from the C at Kingston-Throop.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"The bodega on the corner is very good.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Street parking is hard. Don't count on it.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"12-month lease. 1 month deposit. Credit check, references.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Cat ok. Dog maybe. No smokers.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"room in a house — Ridgewood, $1,100","x":380,"y":0,"w":340,"collapsed":false,"children":[
-    {"text":"2-bedroom house, one room open. Available now.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Two of us already live here:","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"One works nights, you'll rarely see him.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"One works from home, she's around but quiet.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"The room: fits a full bed, a desk, a dresser. Window faces the yard.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"The house: shared kitchen, shared bath, yard, grill, laundry.","color":null,"shiny":false,"collapsed":true,"children":[
-      {"text":"We cook. We're not precious about the kitchen but we do clean it.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Sunday dinners happen. You're welcome to join or not.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Looking for: someone calm, employed, cleans up after themselves.","color":"#0091ff","shiny":false,"collapsed":false,"children":[
-      {"text":"No couples. No pets (allergies).","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Month-to-month is fine. Prefer 6+.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"sublet — 6 months, Dec–May","x":760,"y":0,"w":340,"collapsed":false,"children":[
-    {"text":"1BR in Bushwick. Furnished.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"$1,600/month, utilities included.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"December 1 through May 31. Dates are firm.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"About the place:","color":null,"shiny":false,"collapsed":true,"children":[
-      {"text":"Jefferson L, two blocks.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Top floor, big windows, very bright.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Furnished: couch, bed, desk, kitchen stuff. All of it works.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"About you:","color":null,"shiny":false,"collapsed":true,"children":[
-      {"text":"You'll be on the sublease as a guest. Standard.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"No parties, no sub-subleasing.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Cat ok, dog no.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Photos on request. Walkthrough by appointment.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"looking for: a room, March 1","x":0,"y":420,"w":340,"collapsed":false,"children":[
-    {"text":"I'm a 30-something woman, moving back to the city after two years away.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Looking for a room in Brooklyn, $1,200-ish.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"About me:","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"I work in publishing. Remote 3 days, in-office 2.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"I have a cat. She's 14, she sleeps, she's fine.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"I cook, I clean, I'm quiet.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Move-in March 1. Month-to-month or 6+.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"References available.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]}
-]},
+/* ── for sale ───────────────────────────────────────────────── */
+const FS_ITEMS=[
+['floor lamp',[30,70],['adjustable arm, brass finish. real brass, or at least it looks like it.','missing the top screw on the shade. it holds fine.','both bulbs are new.'],['slight dent on the base, hidden by the couch.','the switch is a little crunchy but it works.']],
+['desk lamp',[15,45],['articulating arm, weighted base.','clamp mount included if you want it.','led bulb, warm white.'],['paint is chipped on the base.','the arm is stiff, but that\'s by design.']],
+['dining table',[120,400],['solid oak. seats four comfortably, six if you like each other.','one water ring on the top. mostly comes out with oil.','comes apart for moving.'],['the legs have a couple of dings from a past move.','we refinished it two years ago.']],
+['coffee table',[40,150],['walnut veneer, mid-century shape.','two drawers, both slide.','no glass, so nothing to chip.'],['one corner has a scuff you can see in the right light.','it was my grandmother\'s. i just have no room.']],
+['side table',[20,60],['small. round. teak.','good plant stand if you don\'t need it as a table.'],['a ring on the top from a candle.','slight wobble, easily fixed with a shim.']],
+['bookshelf',[40,120],['five shelves, solid pine.','painted a chalky off-white. could be stripped.','tall. bring a friend.'],['one shelf has a repaired crack. it\'s fine.','the back panel is a little warped.']],
+['dresser',[60,220],['six drawers. dovetail joints.','the top is walnut, the body is painted.'],['one drawer sticks in humid weather.','we replaced the handles with brass pulls.']],
+['couch',[150,600],['two-seater. good bones.','upholstered in a dark green that hides everything.'],['there\'s a small tear on the back left arm.','it\'s been a cat couch. we have a lint roller.']],
+['armchair',[60,250],['mid-century, walnut frame.','reupholstered two years ago in a wool blend.'],['the foam is a little soft on the seat.','one of the buttons is loose.']],
+['mattress',[80,300],['queen, memory foam, three years old.','no stains, always had a protector.'],['it\'s a little softer than when we bought it.','we\'re upgrading to a king.']],
+['bed frame',[80,300],['queen, solid wood.','slats included. no box spring needed.'],['some paint chipped on the footboard.','it was assembled twice. all the hardware is there.']],
+['desk',[40,150],['40x24, oak laminate.','one drawer on the left.'],['a couple of pen marks on the top.','it\'s been under a monitor for four years.']],
+['office chair',[60,250],['herman miller, older model.','gas cylinder works. arms adjust.'],['the mesh has a small pull on the left edge.','i replaced the casters last year.']],
+['standing desk',[150,500],['jarvis, bamboo top, 60x30.','motor works. presets work.'],['it\'s heavy. bring a friend or a dolly.','we\'re moving and need it gone by sunday.']],
+['filing cabinet',[20,60],['two drawers, key included.','some rust on the base.'],['one drawer lock is finicky.','the key works in both drawers if you jiggle it.']],
+['mirror',[20,90],['full-length, leaning style.','brass frame.'],['a small chip in the top corner.','it\'s heavy enough to stay put on its own.']],
+['rug',[40,200],['5x8, wool, hand-knotted.','a little faded on one side, on purpose.'],['we had it cleaned last month.','no pets, no smoking.']],
+['record player',[60,300],['belt-drive, plays 33 and 45.','new belt and new stylus.'],['the dust cover has a crack on the hinge.','it\'s a solid mid-range player.']],
+['receiver',[60,250],['60 watts per channel.','two phono inputs, which is rare now.'],['one of the speaker terminals is a little loose.','it runs warm. that\'s normal.']],
+['speakers',[80,400],['pair of bookshelf speakers.','real wood veneer.'],['the grills have some pilling.','no dents in the cones.']],
+['headphones',[40,200],['over-ear, wired.','new pads.'],['the headband is a little loose.','they\'ve been well-loved.']],
+['laptop',[200,900],['macbook pro, 2019.','new battery last year.'],['a few scratches on the lid.','comes with the charger and a sleeve.']],
+['monitor',[60,250],['27 inch, 1440p.','two hdmi inputs, one displayport.'],['no dead pixels.','i upgraded to a bigger one.']],
+['keyboard',[40,180],['mechanical, brown switches.','wireless and wired.'],['some shine on the keycaps.','i swapped the escape key for a red one.']],
+['synth',[150,600],['korg minilogue xd.','bought it in 2022, used it maybe ten hours.'],['nothing wrong with it. i just don\'t play it.','comes with the power supply and original box.']],
+['guitar',[100,600],['fender strat, mexican.','plays well, sounds better.'],['a few scratches on the body.','i had it set up last year.']],
+['bass',[100,500],['squier jazz bass.','new strings.'],['the neck has a ding from a past gig.','it plays fine.']],
+['pedal',[40,200],['boss delay, the classic one.','works. no box.'],['a little scuffed on the bottom.','velcro already on the back.']],
+['camera',[120,600],['canon ae-1.','new light seals.'],['the meter is accurate.','i\'ve shot ten rolls through it this year.']],
+['lens',[60,400],['50mm 1.8.','clean glass.'],['no fungus, no haze.','comes with the caps.']],
+['road bike',[150,800],['1988 trek, steel frame, 54cm.','new chain, new brake pads, new tires last spring.'],['some rust spots on the top tube. nothing structural.','i\'m 5\'9" and it fits me well.']],
+['commuter bike',[80,400],['single speed, flip-flop hub.','fenders and a rack included.'],['it\'s been my daily for four years.','sold with a u-lock if you want it.']],
+['bike trainer',[40,150],['fluid trainer, fits most bikes.','barely used.'],['the resistance knob works.','i bought it in january and never committed.']],
+['espresso machine',[100,500],['gaggia classic.','descaled last month.'],['needs a new group gasket soon.','comes with the portafilter and a tamper.']],
+['stand mixer',[80,300],['kitchenaid, 5qt.','works. all attachments present.'],['the paint on the base is chipped.','it was a wedding gift. we\'re not bakers.']],
+['cast iron set',[40,150],['lodge 12-inch skillet, plus a 10-inch.','well seasoned.'],['the 10-inch has a slightly rough patch.','they both cook great.']],
+['dutch oven',[40,150],['5.5qt, enameled, blue.','no chips.'],['it\'s been used maybe twenty times.','the lid fits tight.']],
+['food processor',[40,150],['cuisinart 11-cup.','works. blade and discs included.'],['the bowl has a faint stain.','the feed tube is intact.']],
+['vacuum',[40,200],['miele canister.','new bags included.'],['the hose has a small tape repair.','suction is strong.']],
+['sewing machine',[60,250],['singer, older, metal body.','serviced last year.'],['comes with a box of bobbins.','the foot pedal is original.']],
+['drill',[30,120],['dewalt 18v.','two batteries, one charger.'],['one battery holds charge longer than the other.','the case is scuffed but intact.']],
+['table saw',[100,400],['porter-cable jobsite saw.','blade is sharp.'],['the fence is square.','the stand folds, sort of.']],
+['air conditioner',[80,250],['window unit, 8000 btu.','cools a bedroom easily.'],['the remote is lost.','the filter is clean.']],
+['space heater',[20,80],['oil-filled radiator.','quiet. no fan.'],['one of the feet has a chip.','it still stands fine.']],
+['dehumidifier',[40,150],['30-pint, for basements.','new filter.'],['the tank is intact.','it\'s a little loud.']],
+['tent',[60,300],['rei half dome, 2-person.','used maybe six times.'],['no leaks. stakes and poles included.','it\'s been stored dry.']],
+['sleeping bag',[40,150],['20-degree, down.','always used with a liner.'],['it\'s been cleaned once.','stuff sack included.']],
+['skis',[80,400],['all-mountain, 170cm.','bindings included.'],['the bases have a light scratch.','i had them tuned at the end of last season.']],
+['snowboard',[80,350],['155cm, all-mountain.','bindings included.'],['some edge wear. nothing deep.','it\'s a good first board or a loaner.']],
+['kayak',[150,600],['10-foot recreational.','paddle included.'],['a couple of scratches on the hull.','it\'s stable and it floats.']],
+['stroller',[60,250],['uppababy cruz.','works. folds fine.'],['the canopy has a small tear.','the basket is intact.']],
+['crib',[60,250],['convertible, gray.','all hardware and instructions included.'],['one side has a teeth mark from an older sibling.','it\'s structurally perfect.']],
+['lego bulk',[40,150],['about 4 lbs of assorted bricks.','some minifigs.'],['i make no promises about what sets are in there.','it\'s all clean.']],
+['records',[40,200],['about 80 records. jazz, soul, some rock.','mostly VG+ or better.'],['nothing rare. nothing trashed.','i\'m moving and don\'t want to box them again.']],
+['books',[20,80],['a box of about 40.','literary fiction, mostly.'],['some have cracked spines.','take the whole box, please.']],
+['houseplants',[15,60],['a pothos, a monstera, and a snake plant.','all healthy.'],['the monstera needs a repot.','the pothos is basically unkillable.']]
+];
 
-/* ══ jobs (with sub-board layer) ══ */
-{"name":"jobs","x":900,"y":0,"statements":[],"subs":[
+/* ── free ───────────────────────────────────────────────────── */
+const FREE_ITEMS=[
+['moving boxes',['about 30 boxes, various sizes.','all flattened and stacked.'],['no tape, sorry.','gone by sunday.']],
+['firewood',['a half cord, seasoned.','you haul, i help load.'],['no splitting, it\'s already split.','someone claimed half of it last week, the rest is here.']],
+['piano',['upright, needs a tuning.','plays. pedals work.'],['you move it. i can\'t.','it weighs about 400 lbs.']],
+['couch',['three-seater, gray.','the middle cushion is a little sunken.'],['i\'m moving and can\'t take it.','first to show up with a truck gets it.']],
+['bike',['kids bike, 20 inch.','outgrown.'],['one training wheel is missing.','brakes work.']],
+['crt tv',['a 27 inch sony trinitron.','it works.'],['why do you want this.','seriously, why.']],
+['plants',['a tray of tomato seedlings.','cherry and roma.'],['started indoors, ready to go out.','bring your own tray.']],
+['bookshelf',['ikea billy, white.','disassembles with an allen key.'],['one shelf is missing.','no hardware, you\'ll need to improvise.']],
+['dresser',['seven drawers, maple.','sturdy.'],['one drawer sticks.','curb pickup.']],
+['fridge',['small under-counter fridge.','works.'],['the seal is a little loose.','it holds temperature fine.']],
+['air conditioner',['window unit, 5000 btu.','cools a small room.'],['it hums.','free.']],
+['books',['a shelf of paperbacks.','mysteries, mostly.'],['take what you want, leave the rest.','no resellers.']],
+['kitchen stuff',['mismatched plates, glasses, a couple of pans.','all functional.'],['we just moved in with nicer stuff.','one box, you carry it.']],
+['yard dirt',['about a cubic yard of topsoil.','screened.'],['already in a pile near the alley.','bring a shovel and buckets.']],
+['gravel',['a pallet of gravel, maybe half.','for a path or a driveway.'],['we over-ordered.','bring a truck.']],
+['toddler toys',['a bin of duplos and wooden blocks.','clean.'],['some pieces are missing from the sets.','the bin itself is included.']]
+];
 
-  /* ── hospitality ── */
-  {"name":"hospitality","x":0,"y":0,"statements":[
-    {"text":"line cook — $22/hr + meals","x":0,"y":0,"w":340,"collapsed":false,"postedAt":_NOW0-3*_HOUR,"children":[
-      {"text":"Small seasonal restaurant in Williamsburg. About 40 seats.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Full-time. Evenings, Wednesday through Sunday.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Closed Mondays and Tuesdays.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Service 5:30–10:30, plus prep and close.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"What we're looking for:","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"2+ years on a line, ideally fine-ish dining.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Knife skills are non-negotiable. We'll test them.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"You read the ticket, you call the ticket, you don't guess.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"What we offer:","color":null,"shiny":false,"collapsed":true,"children":[
-        {"text":"$22/hr, paid weekly.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Family meal every shift. Good food, not scraps.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Two consecutive days off. We mean it.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"To apply:","color":"#0091ff","shiny":false,"collapsed":false,"children":[
-        {"text":"Email with a line about your last kitchen.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"No resume required. One line is fine.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"weekend barista — $18/hr + tips","x":340,"y":0,"w":340,"collapsed":false,"postedAt":_NOW0-11*_HOUR,"children":[
-      {"text":"Small coffee shop in Greenpoint.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Saturdays and Sundays, 7am–2pm.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"What we're looking for:","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"You've pulled shots before. Even at home.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"You're ok on bar alone for an hour if it happens.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"You're nice to people who order 'a coffee'.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"What we offer:","color":null,"shiny":false,"collapsed":true,"children":[
-        {"text":"$18/hr plus pooled tips. Tips average $8–12/hr more.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Free drink and a pastry per shift.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Real training if you want to learn more.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"Starts as a weekend thing. Could grow.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
-      {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]}
-  ]},
+/* ── housing ────────────────────────────────────────────────── */
+const HOUSING=[
+[['studio in ','',''],'studio',[1400,2400],
+ ['one room plus a kitchen. you know what a studio is.','the kitchen is a real kitchen, not a hot plate.','the bathroom is off the main room.'],
+ ['no closet, but there\'s a wardrobe.','the light is good in the afternoon.'],
+ ['available the 1st.','12-month lease. one month deposit.']],
+[['1BR in ','',''],'one-bedroom',[1600,3200],
+ ['bedroom fits a queen. living room fits a couch and a desk.','galley kitchen. new stove.','heat and hot water included.'],
+ ['the bedroom faces the backyard. it\'s quiet.','the floors are original, with the creaks that implies.'],
+ ['12-month lease. 1 month deposit. credit check, references.','cat ok. dog maybe. no smokers.']],
+[['2BR in ','',''],'two-bedroom',[2200,4500],
+ ['two bedrooms, one bath.','living room is big enough for a dining table.','the second bedroom fits a full.'],
+ ['there\'s a small back porch.','the kitchen was redone two years ago.'],
+ ['12-month lease. first + last + deposit.','no pets, sorry.']],
+[['room in a shared house in ','',''],'room in a house',[800,1600],
+ ['the room fits a full bed, a desk, and a dresser.','window faces the yard.','shared kitchen, shared bath.'],
+ ['two of us already live here. one works nights, one works from home.','we cook. we clean up after ourselves.'],
+ ['month-to-month is fine. prefer 6+.','no couples. no pets.']],
+[['sublet in ','',''],'sublet',[1200,2800],
+ ['furnished. everything works.','short-term only — dates are firm.','utilities included.'],
+ ['you\'ll be on the sublease as a guest. standard.','no parties, no sub-subleasing.'],
+ ['photos on request. walkthrough by appointment.','']],
+[['basement apartment in ','',''],'basement apartment',[1100,2200],
+ ['separate entrance. private bath.','low ceilings in the back half.','window in the front room.'],
+ ['it stays cool in summer, which is either a feature or a bug.','no dishwasher.'],
+ ['12-month lease. no pets.','']],
+[['in-law suite in ','',''],'in-law suite',[1200,2200],
+ ['attached to the main house but fully private.','kitchenette. full bath.','its own entrance.'],
+ ['the owners are quiet and travel a lot.','shared laundry in the basement.'],
+ ['month-to-month. utilities included.','']],
+[['loft in ','',''],'loft',[1800,3800],
+ ['open plan. high ceilings. big windows.','the bedroom is a platform, not a room.','concrete floors.'],
+ ['it\'s loud. it\'s a loft.','the freight elevator runs 7am–7pm.'],
+ ['12-month lease.','']],
+[['cottage in ','',''],'cottage',[1400,2600],
+ ['standalone, one bedroom.','small yard.','the kitchen is small but functional.'],
+ ['it\'s behind the main house, off the alley.','parking is on the street.'],
+ ['12-month lease.','']],
+[['townhouse floor in ','',''],'townhouse floor',[2000,4200],
+ ['you get a whole floor of a brownstone.','front room, back room, bath, kitchenette.','original moldings.'],
+ ['the stairs are steep.','shared entrance with one other unit.'],
+ ['12-month lease. one month deposit.','']]
+];
 
-  /* ── design & creative ── */
-  {"name":"design & creative","x":380,"y":0,"statements":[
-    {"text":"freelance designer — 6-week project","x":0,"y":0,"w":340,"collapsed":false,"postedAt":_NOW0-26*_HOUR,"children":[
-      {"text":"Rebrand + website for a small nonprofit in the arts.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"6 weeks. Starts when we find the right person.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Remote, ~15 hrs/week, with 2 in-person kickoff days in Manhattan.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Rate: $65–85/hr depending on experience. Firm budget of $12k.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-      {"text":"What you'll do:","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Audit the existing brand (it's 12 years old).","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Propose 2 directions, not 6.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Wireframe 5–6 pages.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Work with our dev to ship it.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"What we're looking for:","color":null,"shiny":false,"collapsed":true,"children":[
-        {"text":"Portfolio, obviously.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"One reference we can actually call.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Someone who has shipped, not just pitched.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"What this is not:","color":null,"shiny":false,"collapsed":true,"children":[
-        {"text":"Not a rebrand-plus-campaign.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Not an ongoing retainer. Six weeks, done.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"Reply: hi@dab.cx with 2–3 projects and your rate.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"photo assist — one shoot, $250","x":340,"y":0,"w":320,"collapsed":false,"postedAt":_NOW0-30*_HOUR,"children":[
-      {"text":"Editorial shoot for a small magazine. One long day.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Call time 7am, wrap around 6.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Two locations, both in Brooklyn.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"What you'll do:","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Carry gear. Set lights. Hold a reflector.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Backup cards at end of day.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"You don't shoot. You assist.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"$250 flat, cash at wrap. Lunch is on the shoot.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-      {"text":"Need someone with their own kit and a car if possible.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]}
-  ]},
+/* ── jobs (by sub-board) ────────────────────────────────────── */
+const JOBS={
+ 'hospitality':[
+ ['line cook',[18,26],['small seasonal restaurant. about 40 seats.','evenings, wednesday through sunday.','closed mondays and tuesdays.'],['2+ years on a line.','knife skills non-negotiable, we\'ll test them.','you read the ticket, you call the ticket.']],
+ ['prep cook',[16,22],['mornings, 6am–2pm.','monday through friday.','two people in the kitchen, that\'s it.'],['you can hold a knife.','you can work clean.','you don\'t need to have cooked professionally before.']],
+ ['dishwasher',[15,20],['evenings, thursday through sunday.','we have a working machine, you\'re not hand-washing.','shift meal included.'],['you show up.','you work at a reasonable pace.','that\'s it.']],
+ ['server',[12,18],['small dining room. two servers on the floor.','evenings, wednesday through sunday.'],['you\'ve served before.','you can carry three plates.','you\'re nice to regulars without being fake.']],
+ ['barista',[16,22],['small coffee shop.','weekends, 7am–2pm.'],['you\'ve pulled shots before, even at home.','you\'re ok on bar alone for an hour if it happens.','you\'re nice to people who order "a coffee".']],
+ ['bartender',[18,28],['neighborhood bar. 30 seats.','thursday, friday, saturday nights.'],['you know the classics.','you can pour a proper pint.','you don\'t need a cocktail list to make a drink.']],
+ ['pastry assistant',[16,22],['mornings, tuesday through saturday.','small bakery, everything from scratch.'],['you\'ve laminated dough.','you can lift 50 lbs.','you\'re ok getting up early.']],
+ ['food truck help',[17,22],['lunch service, monday through friday.','we park in the same spot every day.'],['you can work a flat top.','you don\'t mind the weather.','cash tips daily.']]
+],
+ 'design & creative':[
+ ['freelance designer',[65,95],['rebrand + website for a small nonprofit.','6 weeks. remote, ~15 hrs/week.','2 in-person kickoff days.'],['portfolio, obviously.','one reference we can actually call.','someone who has shipped, not just pitched.']],
+ ['brand designer',[70,110],['identity work for a new product.','contract-to-hire. 3 months.'],['you\'ve built a system, not just a logo.','you can defend a decision.','you can let go of a decision.']],
+ ['photo assist',[200,300],['editorial shoot, one long day.','call time 7am, wrap around 6.'],['you have your own kit.','you don\'t shoot, you assist.','a car is a plus.']],
+ ['video editor',[50,90],['short-form documentary, 15 minutes.','remote. 3-week turnaround.'],['premiere or resolve.','you can cut to music without being asked.','you can also cut without music.']],
+ ['copywriter',[60,100],['landing pages, emails, the usual.','ongoing, ~10 hrs/week.'],['you can write in a voice that isn\'t yours.','you can take a note.','you can give one.']],
+ ['illustrator',[60,120],['children\'s book, 24 spreads.','6-month project.','royalties negotiable.'],['you have a style.','you can hit a deadline.','you can draw a dog.']],
+ ['webflow dev',[70,110],['marketing site, 8 pages.','remote. 4-week build.'],['you know webflow, obviously.','you can also just write css if that\'s faster.','you can work with a designer without fighting them.']],
+ ['motion designer',[70,120],['brand idents, 5 of them.','2-week sprint.'],['after effects, obviously.','you can work to a brief.','you don\'t need a soundtrack to make a thing move.']]
+],
+ 'trades':[
+ ['electrician',[35,55],['residential work, mostly older buildings.','full-time, monday through friday.'],['licensed, or willing to work under one.','you can fish a wire through a plaster wall.','you have your own hand tools.']],
+ ['plumber',[40,65],['service calls, mostly residential.','on-call rotation, one week a month.'],['you know your way around a 100-year-old drain.','you can explain things to a homeowner without condescending.','you have a van, or access to one.']],
+ ['carpenter',[30,50],['custom built-ins and trim.','shop in the neighborhood.'],['you can read a plan.','you can also work off a sketch.','you have your own hand tools.']],
+ ['painter',[22,35],['interior repaints, mostly apartments.','full-time.'],['you cut a clean line.','you can move furniture without being asked.','you have your own brushes.']],
+ ['hvac tech',[30,50],['residential service and install.','full-time, plus on-call.'],['you know your way around a mini-split.','you can explain what you did in plain english.','you have your own gauges.']],
+ ['handyperson',[30,50],['small jobs, mostly punch lists.','flexible hours.'],['you can hang a shelf straight.','you can fix a running toilet.','you can say no to a job you can\'t do.']]
+],
+ 'general labor':[
+ ['moving help',[25,35],['4 hours. 9am to 1pm.','two flights of stairs, no elevator, both ends.'],['everything is boxed and stacked by the door.','need 2 people.','a truck is a plus, not required.']],
+ ['yard cleanup',[200,300],['backyard, roughly 20x30ft.','overgrown but not feral.'],['weed, rake, bag.','trim back the ivy along the fence.','haul bags to the curb.']],
+ ['painting help',[20,30],['interior repaint, 2-bedroom.','3 days, 8am–4pm.'],['you can tape.','you can roll a wall without leaving lines.','lunch is on me.']],
+ ['demo work',[25,40],['gutting a kitchen. one week.','sledgehammers provided.'],['you can lift.','you can wear a mask.','you can stop when i say stop.']],
+ ['delivery driver',[22,32],['small van, local deliveries.','monday through friday, 8am–4pm.'],['clean driving record.','you can lift 50 lbs.','you know the neighborhood.']],
+ ['event setup',[20,30],['weddings and parties, weekends.','load-in, setup, load-out.'],['you can lift.','you can follow a diagram.','you\'re ok working outdoors.']],
+ ['farm help',[18,25],['small vegetable farm, just outside town.','saturdays, 7am–1pm.'],['you don\'t mind getting dirty.','you can lift 40 lbs.','you like being outside.']]
+],
+ 'care & home':[
+ ['dog walker',[20,30],['two dogs, near the park.','monday, wednesday, friday. midday, 30-minute loop.'],['looking for someone consistent, not a service.','if you\'re sick, text. don\'t send a substitute.','the dogs get weird around new people.']],
+ ['babysitter',[22,30],['two kids, 4 and 7.','friday evenings, 6–10pm.'],['you\'ve sat before.','you can make dinner without being asked.','you can put them to bed without a fight.']],
+ ['house cleaner',[25,40],['2-bedroom apartment, biweekly.','3 hours a visit.'],['you bring your own supplies.','you\'re ok with a cat.','you\'re reliable. that\'s the whole job.']],
+ ['elder companion',[22,32],['my mother, 84, sharp but lonely.','tuesday and thursday afternoons.'],['you can make conversation.','you can drive, or you can take the bus with her.','you don\'t need medical training.']],
+ ['pet sitter',[25,45],['two cats, one week in october.','drop-ins, twice a day.'],['you can scoop a litter box.','you can send a photo every day.','you don\'t need to stay over.']],
+ ['plant waterer',[20,30],['a lot of plants. seriously.','while i\'m away, 10 days.'],['you can tell dry from wet.','you can follow a schedule.','you can send a photo if something looks wrong.']],
+ ['receptionist',[18,25],['yoga studio. two teachers, one room.','saturdays 8am–1pm. sundays 9am–2pm.'],['you\'re on time. consistently.','you can figure out the booking software.','you\'re ok with silence between classes.']]
+],
+ 'tech':[
+ ['front-end dev',[70,120],['react + typescript, mostly.','remote, full-time.'],['you\'ve shipped something.','you can read someone else\'s code without complaining.','you can write a test.']],
+ ['back-end dev',[80,140],['node + postgres.','remote, full-time, or contract.'],['you know sql.','you know why indexes matter.','you can debug a slow query.']],
+ ['it support',[25,40],['small office, ~40 people.','on-site, monday through friday.'],['you can fix a printer.','you can re-image a laptop.','you can explain what you did to a non-technical person.']],
+ ['data analyst',[60,100],['sql + a bi tool.','remote, contract-to-hire.'],['you can write a query.','you can make a chart that isn\'t misleading.','you can say "i don\'t know" when you don\'t.']],
+ ['qa engineer',[60,90],['manual + some automation.','remote, full-time.'],['you can break things on purpose.','you can write a clear bug report.','you can be patient with devs.']],
+ ['devops',[90,150],['aws + terraform.','remote, full-time.'],['you\'ve been on call.','you know what a runbook is.','you can automate a thing that annoys you.']],
+ ['product manager',[90,150],['small team, b2b saas.','remote, full-time.'],['you can write a spec.','you can say no.','you can say yes and mean it.']]
+],
+ 'retail & service':[
+ ['bookseller',[16,22],['small independent bookstore.','weekends + one weekday.'],['you read.','you can recommend a book to a stranger.','you don\'t mind shelving.']],
+ ['bike shop mechanic',[20,30],['full-service shop.','tuesday through saturday.'],['you can true a wheel.','you can build a bike from a box.','you can talk a customer out of a bad idea.']],
+ ['florist assistant',[16,22],['small flower shop.','mornings, tuesday through saturday.'],['you can handle flowers without bruising them.','you can wrap a bouquet.','you don\'t mind the cold.']],
+ ['barista',[16,22],['specialty coffee.','mornings or afternoons.'],['you\'ve pulled shots.','you can talk about coffee without being insufferable.','you can work a rush.']],
+ ['retail associate',[15,20],['small boutique, women\'s clothing.','weekends + 2 weekdays.'],['you have a sense of style.','you can fold.','you can be honest with a customer.']],
+ ['farmers market help',[15,20],['saturdays, 6am–2pm.','setup, sales, breakdown.'],['you\'re ok getting up early.','you can do math in your head.','you can lift a crate.']]
+],
+ 'education':[
+ ['tutor',[40,80],['high school math, mostly algebra and geometry.','2 hrs/week per student.'],['you know the material.','you can explain it three ways.','you don\'t mind repeating yourself.']],
+ ['sat tutor',[60,120],['one-on-one, at the student\'s home or yours.','6–8 weeks per student.'],['you\'ve scored well, or you\'ve taught it.','you can teach strategy as well as content.','you can keep a teenager engaged.']],
+ ['after-school teacher',[22,32],['small program, ages 6–10.','monday through friday, 3–6pm.'],['you can keep a room of kids calm.','you can plan an activity.','you don\'t need a teaching license.']],
+ ['piano teacher',[40,70],['beginners and re-beginners.','weekends and evenings.'],['you play.','you can teach.','those are different skills and you have both.']],
+ ['language tutor',[35,60],['spanish, conversational.','remote or in-person.'],['you\'re fluent.','you\'re patient.','you can explain a subjunctive.']]
+],
+ 'music & events':[
+ ['sound engineer',[40,70],['small venue, ~200 cap.','weekends, mostly.'],['you can run a board.','you can deal with a band that\'s late.','you know how to mic a drum kit.']],
+ ['stagehand',[22,35],['load-in, load-out, shows.'],['you can lift.','you can follow a call sheet.','you don\'t mind late nights.']],
+ ['door person',[18,25],['small club.','thursday through saturday, 8pm–2am.'],['you can check ids.','you can be firm without being a jerk.','you don\'t drink on the job.']],
+ ['band booking',[25,45],['small venue. local bands, mostly.'],['you know the local scene.','you can write an email.','you can say no to a bad fit.']],
+ ['event photographer',[200,500],['weddings and small events.','weekends.'],['you have your own kit.','you can shoot a room without being noticed.','you deliver on time.']]
+]
+};
 
-  /* ── general labor ── */
-  {"name":"general labor","x":760,"y":0,"statements":[
-    {"text":"moving help — Saturday, $25/hr cash","x":0,"y":0,"w":340,"collapsed":false,"postedAt":_NOW0-2*_DAY,"children":[
-      {"text":"4 hours. 9am to 1pm.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Two flights of stairs, no elevator. Both ends.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Everything is boxed and stacked by the door.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Big stuff: a couch, a bed, a dresser, a desk.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Everything else is boxes.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"Need 2 people. A truck is a plus, not required.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Lunch is on me. Cash at the end of the shift.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Text a number to set it up. hi@dab.cx","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"yard cleanup — one Saturday, $200 flat","x":340,"y":0,"w":320,"collapsed":false,"postedAt":_NOW0-4*_DAY,"children":[
-      {"text":"Backyard in Ridgewood. Overgrown but not feral.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Roughly 20x30ft.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Leaves, weeds, some ivy that got ideas.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"What you'll do:","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Weed, rake, bag.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Trim back the ivy along the fence.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"Haul bags to the curb.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"$200 flat. Bring your own gloves; I have bags.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-      {"text":"Saturday morning works best. Rain date is Sunday.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]}
-  ]},
+/* ── services ───────────────────────────────────────────────── */
+const SERVICES=[
+['sourdough lessons',[40,80],['i\'ve been baking weekly for 11 years. i\'ve made every mistake.','two hours, your kitchen or mine.','you leave with a jar of starter and a loaf.'],['$60 for two. $40 if it\'s just you.','weekends work best. weeknights possible with notice.']],
+['houseplant rescue',[40,100],['i take in sad plants. i bring them back, or i tell you what\'s wrong.','you drop the plant off, or i come to you.','sliding scale if money is tight. ask. i mean it.'],['what i\'m good at: ficuses, monsteras, pothos.','what i\'m not: orchids. they win.']],
+['guitar lessons',[40,80],['i\'ve played for 20 years. i teach beginners and re-beginners.','not a shredder. not a theory guy.','30 minutes is enough for a lesson. 60 if you\'re serious.'],['$40 for 30. $70 for the hour.','first lesson is $20, no commitment.']],
+['bike repair',[20,100],['tune-ups, flat fixes, brake work, chain work.','i come to you. bring the bike downstairs.'],['flat: $20. tune-up: $60. brake work: $40.','parts are extra, at cost. i don\'t markup.']],
+['resume review',[0,100],['i hire designers. i\'ve read thousands of resumes.','line-edit for clarity, or walk through your portfolio.'],['pay what you want. $0 is fine. $100 is fine.','not a recruiter. not a coach. just someone on the other side.']],
+['apartment cleaning',[80,200],['3 hours, kitchen and bath deep clean.','i bring my own supplies.'],['flat rate, no surprises.','biweekly gets a discount.']],
+['moving help',[25,40],['two people, a van, and a dolly.','local moves, small jobs.'],['$25/hr per person, 3-hour minimum.','no pianos. no safes.']],
+['furniture assembly',[40,120],['ikea, wayfair, the usual suspects.','i have the allen keys.'],['flat rate for most pieces.','i take the cardboard with me if you want.']],
+['tutoring (math)',[40,90],['algebra through calculus.','high school and early college.'],['$60/hr. sliding scale for students.','in person or over video.']],
+['dog walking',[15,30],['one dog at a time. on-leash.'],['$20 for a 30-minute walk.','$30 for an hour.']],
+['cat sitting',[20,40],['drop-ins, twice a day.','photos sent every visit.'],['$25 a visit.','overnights are extra.']],
+['plantsitting',[20,45],['indoor plants, in your home.','i can also water the outdoor ones.'],['$30 a week for most apartments.','i kill nothing. i promise.']],
+['house sitting',[30,60],['i stay over while you\'re away.','mail, plants, the usual.'],['$50 a night.','references available.']],
+['pet portraits',[80,300],['i draw pets. from photos or from life.','colored pencil, mostly.'],['$120 for one pet, $180 for two.','a portion goes to the local shelter.']],
+['graphic design',[50,120],['logos, flyers, album covers, whatever.','small jobs, quick turnaround.'],['$75/hr. hourly, not project.','no spec work. sorry.']],
+['web design',[60,120],['small business sites. 5 pages, usually.','i can also just do the design and hand off.'],['$70/hr.','i don\'t do e-commerce.']],
+['copyediting',[40,80],['essays, applications, newsletters.','i\'m gentle.'],['$0.04 a word.','first 500 words free.']],
+['tax help',[100,400],['small business and freelance returns.','i\'m not a cpa. i\'m careful.'],['flat rate for simple returns.','february through april, mostly.']],
+['notary',[10,40],['i come to you.','evenings and weekends ok.'],['$20 a signature.','i bring the stamp.']],
+['knife sharpening',[10,30],['i sharpen by hand.','kitchen knives, scissors, the occasional chisel.'],['$8 a knife, $40 for six.','turnaround is a day.']],
+['shoe repair',[15,80],['resoling, heel repair, the basics.','leather only.'],['$40 for a resole.','i don\'t do sneakers.']],
+['bike build',[40,120],['frame-up builds, mostly.','i can also true a wheel.'],['$80 flat.','parts at cost.']],
+['carpentry',[40,100],['shelves, built-ins, small repairs.','no kitchens, no bathrooms.'],['$60/hr.','i clean up after myself.']],
+['painting',[30,60],['interior repaints, small rooms.','one or two days, usually.'],['$40/hr plus paint.','i tape. i mean it.']],
+['massage',[60,150],['swedish and deep tissue.','i come to you, or you come to me.'],['$90 for an hour.','sliding scale for regulars.']],
+['haircut',[30,80],['i cut hair in my kitchen.','all textures, all lengths.'],['$45.','cash or venmo.']],
+['tattoo',[80,300],['small pieces, mostly.','line work and blackwork.'],['$120/hr, 1-hour minimum.','i don\'t do cover-ups.']],
+['photo restoration',[30,120],['old photos, scanned and cleaned up.','i can also do color.','i can also do black and white.'],['$40 per photo.','turnaround is a week.']],
+['language lessons',[35,70],['spanish, french, portuguese.','conversational, mostly.'],['$50/hr.','first lesson free.']],
+['yoga (private)',[40,100],['one-on-one, your place or a park.','all levels.'],['$80 a session.','packages available.']],
+['personal training',[50,120],['strength, mostly. some conditioning.','i don\'t yell.'],['$90 a session.','$700 for ten.']],
+['meal prep',[80,250],['i cook, you eat. five days of lunches and dinners.','mostly vegetarian, some fish.'],['$180 a week.','you supply the containers.']],
+['cake',[40,200],['custom cakes. birthdays, small weddings.','i don\'t do fondant.'],['$80 and up.','two weeks notice.']],
+['bread',[8,25],['weekly sourdough. two loaves a week.','pickup at my place on saturdays.'],['$10 a loaf.','$18 for two.']],
+['fermentation',[30,80],['i teach kimchi, kraut, and kombucha.','2 hours, your kitchen.'],['$60 for two.','you leave with jars.']],
+['bike fitting',[80,200],['road and commuter fits.','2 hours.','you bring your bike and your shoes.'],['$150 flat.','includes a follow-up.']],
+['interior design',[60,150],['one room at a time.','i work with what you have, mostly.'],['$100/hr.','i don\'t do full renovations.']],
+['bookkeeping',[50,120],['small business, monthly.','quickbooks, mostly.'],['$60/hr.','i don\'t do taxes.']],
+['logo',[200,800],['one mark, one lockup, one color.','three rounds of revisions.'],['flat rate.','no spec work.']]
+];
 
-  /* ── care & home ── */
-  {"name":"care & home","x":0,"y":380,"statements":[
-    {"text":"dog walker — part-time, $20/walk","x":0,"y":0,"w":340,"collapsed":false,"postedAt":_NOW0-3*_DAY,"children":[
-      {"text":"Two dogs. Ridgewood, near the park.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"One is 7, one is 3. Both are friendly.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"The 3-year-old pulls. Bring a good leash.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"Monday, Wednesday, Friday. Midday, 30-minute loop.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Time is flexible. Somewhere between 11 and 2.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"$20/walk, cash or venmo.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-      {"text":"Looking for someone consistent, not a service.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"If you're sick, text. Don't send a substitute.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"The dogs get weird around new people.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"Bonus if you're around on weekends — occasional longer walks.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"weekend receptionist — yoga studio","x":340,"y":0,"w":340,"collapsed":false,"postedAt":_NOW0-7*_DAY,"children":[
-      {"text":"Studio in Fort Greene. Two teachers, one room, no drama.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Saturdays 8am–1pm. Sundays 9am–2pm.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"$20/hr. Mostly checking people in and answering the phone.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"What we need:","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"You're on time. Consistently.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"You can figure out the booking software. It's not hard.","color":null,"shiny":false,"collapsed":false,"children":[]},
-        {"text":"You're ok with silence. Lots of silence between classes.","color":null,"shiny":false,"collapsed":false,"children":[]}
-      ]},
-      {"text":"Yoga experience not required. Most of us don't do it either.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
-      {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]}
-  ]}
-]},
+/* ── wanted ─────────────────────────────────────────────────── */
+const WANTED=[
+['a good dentist',['mine retired. i need a new one.'],['takes insurance (aetna).','isn\'t a lecture.','doesn\'t try to sell me a $4k treatment i don\'t need.']],
+['a used monitor',[['24 or 27 inch. 1080p is fine. 4k is nicer.'],['budget: $80–120.'],['i can pick up anywhere on the subway.']]],
+['someone to fix a leak',[['under the kitchen sink. slow drip.'],['not urgent but getting annoying.'],['i\'ve tried to tighten it. it doesn\'t want to be tightened.']]],
+['a used bike',[['something i can commute on.','single speed or 3-speed, nothing fancy.'],['budget: $150–300.'],['frame size 54cm.']]],
+['a roommate',[['looking for one more in a 3-bedroom.','the room is small but the common space is big.'],['we\'re two women in our late 20s.','no couples, no pets.']]],
+['a used fridge',[['under-counter size.','doesn\'t need to be pretty.'],['budget: $100–200.','i can pick up with a van.']]],
+['a good barber',[['mine moved.','looking for someone who can do a fade without a lot of talking.'],['brooklyn preferred.']]],
+['a used couch',[['two-seater, no sleeper.'],['must be clean. must not smell.'],['budget: $200–500.']]],
+['a used car',[['something reliable. under $6k.'],['no projects. i\'ve done the project thing.'],['manual is a plus.']]],
+['a piano teacher',[['adult beginner. i have a keyboard.'],['weekends or evenings.'],['patient is the main thing.']]],
+['a used desk',[['40x24 or bigger.','solid, not particle board.'],['budget: $80–150.']]],
+['a moving company',[['small move, 1-bedroom.','two flights of stairs, no elevator.'],['looking for a quote.']]],
+['a used bike trailer',[['for a kid.','any condition, as long as it rolls.'],['budget: $80–150.']]],
+['a good mechanic',[['mine retired too.'],['someone honest. someone who calls before they do the work.'],['anywhere in the city.']]],
+['a used sewing machine',[['something that works.','doesn\'t need to be fancy.'],['budget: $80–200.']]],
+['a roommate for spring',[['sublet, 4 months, march–june.','furnished if possible.'],['budget: $1,200–1,500.']]],
+['a used guitar',[['acoustic, steel string.','something i can learn on.'],['budget: $100–200.']]],
+['a good therapist',[['someone who takes insurance.','in person, not telehealth.'],['anywhere on the subway.']]],
+['a used bike lock',[['u-lock, kryptonite or similar.','i don\'t need the keys, i\'ll change the core.'],['budget: $20–40.']]],
+['a good tailor',[['i need some things taken in.','nothing fancy. just someone who does it well.'],['anywhere in the city.']]]
+];
 
-/* ══ services ══ */
-{"name":"services","x":0,"y":300,"statements":[
-  {"text":"sourdough lessons — $60","x":0,"y":0,"w":340,"collapsed":false,"children":[
-    {"text":"I've been baking weekly for 11 years. I've made every mistake.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Two hours, your kitchen or mine.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"What we'll do:","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Feed a starter and talk about why it matters.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Mix, fold, shape, score. You'll do the shaping.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Bake one loaf in my oven, one in yours.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"You leave with a jar of starter and a loaf.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Kitchen in Bushwick, or yours if you have an oven and a counter.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Weekends work best. Weeknights possible with notice.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"$60 for two. $40 if it's just you.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"houseplant rescue — sliding scale","x":380,"y":0,"w":340,"collapsed":false,"children":[
-    {"text":"I take in sad plants. I bring them back, or I tell you what's wrong.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Two ways to work with me:","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"You drop the plant off. I keep it as long as it takes. $40.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"I come to you. I diagnose, repot, teach you. $60.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Sliding scale if money is tight. Ask. I mean it.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-    {"text":"What I'm good at:","color":null,"shiny":false,"collapsed":true,"children":[
-      {"text":"Ficuses, monsteras, pothos, anything variegated.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Overwatering. It's the answer 80% of the time.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Pests. I've seen them all.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"What I'm not:","color":null,"shiny":false,"collapsed":true,"children":[
-      {"text":"Orchids. They win.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Anything that needs a greenhouse.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"I've kept a 40-year-old ficus alive for 6 years. Ask me anything.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"guitar lessons — $40/30min","x":760,"y":0,"w":340,"collapsed":false,"children":[
-    {"text":"I've played for 20 years. I teach beginners and re-beginners.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Not a shredder. Not a theory guy.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"If you want to play songs, I can get you there.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"If you want to play jazz, find someone else.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"30 minutes is enough for a lesson. 60 if you're serious.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"$40 for 30. $70 for the hour. First lesson is $20, no commitment.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-    {"text":"Park Slope. I have two amps and one spare guitar.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"bike repair — I come to you","x":0,"y":460,"w":340,"collapsed":false,"children":[
-    {"text":"Tune-ups, flat fixes, brake adjustments, chain work.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"I come to you. Bring the bike downstairs.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Flat: $20. Tune-up: $60. Brake work: $40. Chain + cassette: $50.","color":"#0091ff","shiny":false,"collapsed":false,"children":[
-      {"text":"Parts are extra, at cost. I don't markup.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"I don't do:","color":null,"shiny":false,"collapsed":true,"children":[
-      {"text":"Full rebuilds. Internal hubs. Anything hydraulic on a Sunday.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Same-week appointments most weeks. Text a photo of the bike.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"resume + portfolio review — pay what you want","x":380,"y":460,"w":340,"collapsed":false,"children":[
-    {"text":"I hire designers. I've read thousands of resumes.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Two things I can do:","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Line-edit your resume for clarity. 30 minutes.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Walk through your portfolio and tell you what's not working.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Pay what you want. $0 is fine. $100 is fine.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-    {"text":"Not a recruiter. Not a coach. Just someone who's been on the other side.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]}
-]},
+/* ── events ─────────────────────────────────────────────────── */
+const EVENTS=[
+['yard sale',[['saturday, 9am–2pm.','rain or shine, mostly rain.'],['furniture, books, kitchen stuff.','no early birds. seriously.']]],
+['book swap',[['bring a book, take a book.','sunday, 2–5pm, at the park.'],['all genres. no textbooks.']]],
+['neighborhood cleanup',[['saturday morning, 9am.','meet at the corner, gloves and bags provided.'],['we do the block between the two lights.']]],
+['free film screening',[['thursday, 8pm.','outdoor, bring a blanket.'],['the projector is fine, don\'t worry.']]],
+['plant swap',[['sunday, 1–4pm.','cuttings welcome.'],['bring something, take something.']]],
+['record fair',[['saturday, 10am–4pm.','about 20 tables.'],['$5 at the door.']]],
+['community meeting',[['first tuesday of the month, 7pm.','the library, back room.'],['agenda posted on the door.']]],
+['clothing swap',[['sunday, 3pm.','bring what you don\'t wear, take what you will.'],['no money changes hands.']]],
+['bike ride',[['saturday, 10am.','about 15 miles, casual pace.'],['meet at the fountain.']]],
+['music night',[['friday, 9pm.','three bands, small room.'],['$10 suggested, nobody turned away.']]],
+['farmers market',[['saturdays, 8am–1pm.','year-round, rain or shine.'],['in the parking lot behind the church.']]],
+['story hour for adults',[['second thursday, 7pm.','people read things they wrote.'],['sign-up at the door, 5 minutes each.']]],
+['repair cafe',[['sunday, 11am–3pm.','bring something broken, someone will look at it.'],['no guarantees, but we try.']]],
+['tree planting',[['saturday, 9am.','we\'re putting in 30 saplings along the block.'],['wear boots.']]],
+['potluck',[['sunday, 6pm.','bring a dish, bring a chair.'],['the park, near the big tree.']]]
+];
 
-/* ══ wanted ══ */
-{"name":"wanted","x":300,"y":300,"statements":[
-  {"text":"wanted: a good dentist","x":0,"y":0,"w":320,"collapsed":false,"children":[
-    {"text":"Mine retired. I need a new one.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Requirements:","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Takes insurance (Aetna).","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Isn't a lecture.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Doesn't try to sell me a $4k treatment I don't need.","color":null,"shiny":false,"collapsed":false,"children":[]},
-      {"text":"Somewhere in Brooklyn. Willing to go to Manhattan for the right person.","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]},
-    {"text":"Recommendations welcome. Both directions — good and bad.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"wanted: a used monitor","x":350,"y":0,"w":300,"collapsed":false,"children":[
-    {"text":"24 or 27 inch. 1080p is fine. 4K is nicer.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Doesn't need to be fancy. Just needs to work.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Budget: $80–120.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},
-    {"text":"I'm in Bed-Stuy. I can pick up anywhere on the A/C/G.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}
-  ]},
-  {"text":"wanted: someone to fix a leak","x":700,"y":0,"w":300,"collapsed":false,"children":[
-    {"text":"Under the kitchen sink. Slow drip.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Not urgent but getting annoying.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"I've tried to tighten it. It doesn't want to be tightened.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Looking for a handyperson who knows what they're doing.","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Cash. Same week preferred.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}
-  ]}
-]},
+/* ── community ──────────────────────────────────────────────── */
+const COMMUNITY=[
+['anyone else hear that noise',[['every night around 11.','sounds like a fan or a compressor.'],['trying to figure out if it\'s a neighbor or the building.']]],
+['best coffee in the neighborhood',[['i\'ve tried three places. all fine.','looking for the one that\'s actually good.'],['drip, not espresso.']]],
+['lost cat',[['gray tabby, no collar.','last seen tuesday near the park.'],['she\'s shy. don\'t chase her, just call me.']]],
+['anyone know a good vet',[['cat, mostly healthy, needs a checkup.'],['would prefer a small practice to a big one.']]],
+['street parking tips',[['moving to the area next month.','is it as bad as everyone says?'],['any streets that are easier?']]],
+['water pressure',[['third floor. it\'s a trickle.'],['building says it\'s fine. it\'s not fine.'],['anyone else?']]],
+['best pizza',[['i\'ve been told three different answers.','help me settle this.'],['no chains.']]],
+['looking for a running buddy',[['5k pace, mornings.'],['anyone else training for anything?']]],
+['laundromat recommendation',[['mine closed.','looking for one that\'s clean and doesn\'t eat quarters.']]],
+['dog park etiquette',[['new to the neighborhood.','what are the unwritten rules?'],['my dog is friendly but weird.']]],
+['noise complaint',[['the bar on the corner has been loud until 3am.'],['i\'ve talked to them twice.'],['what do i do next?']]],
+['good hardware store',[['the one on the corner closed.'],['looking for a place that has actual screws, not just the prepacked ones.']]],
+['farmers market?',[['is there one?','i haven\'t found it yet.']]],
+['anyone have a truck',[['i need to move a couch, two blocks.'],['will pay. will help load.']]],
+['neighborhood watch',[['a few break-ins on the block this month.'],['anyone want to start a group chat?']]],
+['best place to work remotely',[['i need wifi and a chair that doesn\'t hurt.'],['somewhere i can stay for 3 hours without guilt.']]],
+['bike stolen',[['locked to a pole on the corner.'],['black, single speed, orange grips.'],['if you see it, please ping me.']]],
+['community garden plot',[['is there a waitlist?','how long is it?']]],
+['school recommendations',[['we\'re moving in june.','kid is 6.'],['public, mostly.']]],
+['someone to split a CSA',[['i want the vegetables but not that many.'],['half share, half price.']]]
+];
 
-/* ══ dabbling (meta) ══ */
-{"name":"dabbling","x":600,"y":300,"statements":[
-  {"text":"dab.","x":0,"y":0,"w":264,"collapsed":false,"children":[
-    {"text":"It's a board. That's the whole pitch.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]}
-  ]},
-  {"text":"how it works","x":292,"y":0,"w":264,"collapsed":false,"children":[
-    {"text":"Post.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"digress.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"digress.","color":null,"shiny":false,"collapsed":false,"children":[
-          {"text":"digress","color":null,"shiny":false,"collapsed":false,"children":[]}
-        ]}
-      ]},
-      {"text":"rinse & repeat","color":null,"shiny":false,"collapsed":false,"children":[]}
-    ]}
-  ]},
-  {"text":"the rest of it","x":584,"y":0,"w":342,"collapsed":false,"children":[
-    {"text":"how to:","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"right click for color options","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"hold shift ⇧ for menu","color":null,"shiny":false,"collapsed":false,"children":[
-          {"text":"hold alt+scroll to re-order lines","color":null,"shiny":false,"collapsed":false,"children":[
-            {"text":"cmd / ctrl + z → undo · + shift → redo","color":null,"shiny":false,"collapsed":false,"children":[
-              {"text":"supports images, mp4s, and urls.","color":null,"shiny":false,"collapsed":false,"children":[
-                {"text":"type an email and it becomes mailto:","color":null,"shiny":false,"collapsed":false,"children":[]}
-              ]}
-            ]}
-          ]}
-        ]}
+/* ── lost & found ───────────────────────────────────────────── */
+const LOSTFOUND=[
+['lost: keys',[['a small ring, three keys, a blue tag.'],['probably near the park or the coffee place.'],['reward, small but real.']]],
+['found: wallet',[['on the sidewalk near the corner.'],['has an id. i\'m not posting the name.'],['describe it and it\'s yours.']]],
+['lost: cat',[['gray, shy, no collar.'],['last seen tuesday.'],['please don\'t chase her.']]],
+['found: phone',[['on the bench at the park.'],['locked, so i can\'t call anyone.'],['tell me the wallpaper and it\'s yours.']]],
+['lost: umbrella',[['black, compact, a little bent.'],['left it on the bus.'],['i know. it\'s an umbrella. but it\'s a good one.']]],
+['found: dog',[['friendly, no collar, no chip (vet checked).'],['holding her at my place for now.'],['if she\'s yours, please come get her.']]],
+['lost: glasses',[['tortoiseshell, prescription.'],['probably on the bench near the library.'],['i can\'t see without them. help.']]],
+['found: bag',[['a tote, left at the coffee shop.'],['has a book and a notebook.'],['the shop is holding it.']]],
+['lost: earring',[['gold, small hoop.'],['one of a pair, obviously.'],['if you find it, i\'ll know.']]],
+['found: bike',[['a bike locked to nothing, sitting by the fence for a week.'],['if it\'s yours, describe it.']]],
+['lost: notebook',[['black, spiral, a lot of handwriting.'],['not valuable but i need it.']],['']],
+['found: kid\'s toy',[['a stuffed rabbit, at the playground.'],['i put it on the fence post.']],['']]
+];
+
+/* ── rides ──────────────────────────────────────────────────── */
+const RIDES=[
+['carpool to the city',[['leaving monday, 7am.','back friday evening.'],['one seat. split gas.']]],
+['airport run',[['thursday morning, 5am.','one passenger, one bag.'],['i don\'t need gas money, i just don\'t want to drive alone.']]],
+['weekend trip',[['friday after work, back sunday night.'],['about 4 hours each way.']]],
+['bike to work',[['anyone else going that way?','7:30am, roughly.']]],
+['ride share to a show',[['out of town, saturday night.'],['two seats available.']]],
+['moving day',[['need a van and a driver, saturday.'],['will pay. it\'s a small move.']]],
+['ski trip',[['february, long weekend.'],['looking for one more to split a cabin.']]],
+['carpool to a wedding',[['saturday, out and back.'],['one seat, no luggage.']]]
+];
+
+/* ── dabbling (meta) ────────────────────────────────────────── */
+const DABBLING=[
+['dab.',GRAD,['it\'s a board. that\'s the whole pitch.']],
+['how it works',null,['post.','digress.','rinse & repeat.']],
+['the rest of it',null,['right click for color options.','hold shift for the wheel.','alt + scroll to reorder lines.','cmd/ctrl + z → undo.']],
+['on boards',null,['each board is its own space.','rename one by clicking its name at the top.','make a new one from the wheel.']],
+['that\'s it.',GRAD,['for direct q&a: hi@dab.cx','say something new or say something else.']]
+];
+
+/* ── layout helpers ─────────────────────────────────────────── */
+function _lines(a){let n=0;for(const x of a){n++;n+=_lines(x.children||[])}return n}
+const _h=p=>52+_lines(p.children||[])*23+26;
+function _pack(posts){
+  const n=posts.length;
+  const cols=Math.max(3,Math.min(7,Math.round(Math.sqrt(n/1.4))));
+  const dx=340, dy=56;
+  const col=new Array(cols).fill(0);
+  posts.forEach(p=>{
+    let c=0;for(let i=1;i<cols;i++)if(col[i]<col[c])c=i;
+    p.x=c*dx; p.y=col[c];
+    col[c]+=_h(p)+dy;
+  });
+}
+const _post=(title,children,loc,ts,w)=>({
+  text:title, collapsed:false, ...(loc?{loc}:{}),
+  ...(ts?{postedAt:ts}:{}), ...(w?{w}:{}),
+  x:0,y:0, children
+});
+
+/* ── buildSeed ──────────────────────────────────────────────── */
+function buildSeed(){
+  const R=_rng(0x7dab2026);
+  const mail=()=>_pick(R,MAIL);
+  const cats=[];
+
+  /* ── start here (loc '*') ── */
+  cats.push({name:'start here',x:0,y:0,statements:[
+    {text:'dab.',x:0,y:0,w:300,loc:'*',postedAt:_NOW0-11*_DAY,children:[
+      {text:'A board for boards. Post what you mean, reply if you\'re interested. That\'s the whole thing.',color:GRAD,shiny:true,children:[]},
+      {text:'No accounts. No algorithm. No app.',color:null,children:[
+        {text:'Everything lives in your browser. Export a backup if you want to keep it.',color:null,children:[]}
       ]}
-    ]}
-  ]},
-  {"text":"on boards","x":954,"y":0,"w":300,"collapsed":false,"children":[
-    {"text":"Each board is its own space.","color":null,"shiny":false,"collapsed":false,"children":[
-      {"text":"Rename one by clicking its name at the top.","color":null,"shiny":false,"collapsed":false,"children":[
-        {"text":"Make a new one from the wheel: \"+ New board\".","color":null,"shiny":false,"collapsed":false,"children":[
-          {"text":"Delete one with the ✕ {it asks twice}.","color":null,"shiny":false,"collapsed":false,"children":[]}
-        ]}
+    ]},
+    {text:'Rules (all of them)',x:330,y:0,w:340,loc:'*',postedAt:_NOW0-10*_DAY,children:[
+      {text:'1. Be a person.',color:null,children:[]},
+      {text:'2. Post what you mean.',color:null,children:[]},
+      {text:'3. Reply if you\'re interested.',color:null,children:[]},
+      {text:'4. Don\'t be a jerk.',color:null,children:[]},
+      {text:'That\'s the list.',color:GRAY,children:[
+        {text:'If it feels like more than this, it is.',color:null,children:[]},
+        {text:'The moment it needs a policy, we\'ve already lost.',color:null,children:[]}
       ]}
+    ]},
+    {text:'How to read this',x:700,y:0,w:320,loc:'*',postedAt:_NOW0-9*_DAY,children:[
+      {text:'Each board is a place. Cards are posts. Lines are the details.',color:null,children:[]},
+      {text:'Left-click to open. Right-click for actions.',color:null,children:[]},
+      {text:'Reply to any line by branching underneath it.',color:null,children:[
+        {text:'Nested replies stay with the line they belong to.',color:null,children:[]},
+        {text:'You can go as deep as you need to.',color:null,children:[]}
+      ]}
+    ]},
+    {text:'What counts as a reply',x:1050,y:0,w:300,loc:'*',postedAt:_NOW0-8*_DAY,children:[
+      {text:'Anything you\'d say in an email, but shorter.',color:null,children:[]},
+      {text:'A price. A question. A yes.',color:null,children:[]},
+      {text:'You don\'t need to introduce yourself.',color:GRAY,children:[]}
     ]}
-  ]},
-  {"text":"that's it.","x":1282,"y":0,"w":264,"collapsed":false,"children":[
-    {"text":"For direct Q&A: hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]},
-    {"text":"Say something new or say something else.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]}
-  ]}
-]}
+  ]});
 
-]};
+  /* ── for sale ── */
+  {
+    const out=[];
+    FS_ITEMS.forEach(it=>{
+      const [name,[lo,hi],core,notes]=it;
+      const n=2+((R()*5)|0);
+      const places=_places(R,n);
+      places.forEach(p=>{
+        const price=Math.round((lo+R()*(hi-lo))/5)*5;
+        const hood=_hood(R,p), tr=_tr(R,p);
+        const cs=_shuf(R,core.slice());
+        const kids=[];
+        kids.push(L(cs[0]));
+        if(cs[1])kids.push(L(cs[1]));
+        const note=_pick(R,notes);
+        if(note&&R()<.75)kids.push(L(note,{collapsed:true}));
+        if(cs[2])kids.push(L(cs[2]));
+        const pickup=tr?`pickup in ${hood}. near ${tr}.`:`pickup in ${hood}.`;
+        kids.push({text:pickup,color:GRAY,children:[
+          L('no delivery, no holds, no "is this still available."'),
+          L("if it's up, it's up.")
+        ]});
+        kids.push(L(`cash or venmo. ${mail()}`));
+        out.push(_post(`${name} — $${price}`,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'for sale',x:300,y:0,statements:out});
+  }
+
+  /* ── free ── */
+  {
+    const out=[];
+    FREE_ITEMS.forEach(it=>{
+      const [name,core,notes]=it;
+      const places=_places(R,2+((R()*3)|0));
+      places.forEach(p=>{
+        const hood=_hood(R,p);
+        const kids=[L(core[0])];
+        if(core[1])kids.push(L(core[1]));
+        const note=_pick(R,notes); if(note)kids.push(L(note,{collapsed:true}));
+        kids.push({text:`on the curb in ${hood}. first come.`,color:GRAY,children:[L("don't message me and then not show up.")]});
+        kids.push(L(`i don't want money. i want it gone. ${mail()}`));
+        out.push(_post(`${name} — free`,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'free',x:0,y:400,statements:out});
+  }
+
+  /* ── housing ── */
+  {
+    const out=[];
+    HOUSING.forEach(([,[,],[lo,hi],core,extra,terms])=>{
+      const places=_places(R,3+((R()*4)|0));
+      places.forEach(p=>{
+        const hood=_hood(R,p), tr=_tr(R,p);
+        const rent=Math.round((lo+R()*(hi-lo))/50)*50;
+        const kids=[L(core[0])];
+        if(core[1])kids.push(L(core[1]));
+        if(core[2])kids.push(L(core[2]));
+        const e=_pick(R,extra); if(e)kids.push(L(e,{collapsed:true}));
+        kids.push({text:`about the block:`,color:null,children:[
+          L(tr?`${tr}.`:'close to the bus.'),
+          L('the bodega on the corner is very good.'),
+          L('street parking is hard. don\'t count on it.')
+        ]});
+        kids.push(L(terms[0]));
+        if(terms[1])kids.push(L(terms[1],{color:BLUE}));
+        kids.push(L(`${mail()}`));
+        // headline composed from the archetype name + hood
+        const head=`${hood} — $${rent.toLocaleString()}`;
+        out.push(_post(head,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'housing',x:600,y:0,statements:out});
+  }
+
+  /* ── jobs (sub-boards) ── */
+  {
+    const subs=[];
+    Object.keys(JOBS).forEach(sname=>{
+      const out=[];
+      JOBS[sname].forEach(it=>{
+        const [title,[lo,hi],core,need]=it;
+        const places=_places(R,3+((R()*4)|0));
+        places.forEach(p=>{
+          const hood=_hood(R,p);
+          const pay=`$${lo}–${hi}/hr`;
+          const kids=[L(core[0])];
+          if(core[1])kids.push(L(core[1]));
+          if(core[2])kids.push(L(core[2]));
+          kids.push({text:'what we\'re looking for:',color:null,children:need.map(x=>L(x))});
+          kids.push({text:'what we offer:',color:null,collapsed:true,children:[
+            L(`${pay}, paid weekly.`),
+            L('two consecutive days off. we mean it.'),
+            L('meal or coffee included, depending.')
+          ]});
+          kids.push({text:'to apply:',color:BLUE,children:[
+            L('email with a line about your last job.'),
+            L('no resume required. one line is fine.')
+          ]});
+          kids.push(L(mail()));
+          out.push(_post(`${title} — ${pay}`,kids,p,_ago(R),_w(R)));
+        });
+      });
+      // pack each sub-board on its own grid
+      _pack(out);
+      subs.push({name:sname,x:0,y:0,statements:out});
+    });
+    // lay the sub-board cards out in a grid
+    subs.forEach((s,i)=>{s.x=(i%4)*380;s.y=Math.floor(i/4)*420});
+    cats.push({name:'jobs',x:900,y:0,statements:[],subs});
+  }
+
+  /* ── services ── */
+  {
+    const out=[];
+    SERVICES.forEach(it=>{
+      const [name,[lo,hi],core,terms]=it;
+      const places=_places(R,3+((R()*4)|0));
+      places.forEach(p=>{
+        const hood=_hood(R,p);
+        const kids=core.map(x=>L(x));
+        kids.push({text:'details:',color:null,collapsed:true,children:terms.map(x=>L(x))});
+        kids.push({text:`based in ${hood}.`,color:GRAY,children:[
+          L('i come to you, or you come to me. your pick.'),
+          L('cash, venmo, or whatever you\'ve got.')
+        ]});
+        kids.push(L(`${mail()}`));
+        out.push(_post(name,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'services',x:0,y:300,statements:out});
+  }
+
+  /* ── wanted ── */
+  {
+    const out=[];
+    WANTED.forEach(it=>{
+      const [name,groups]=it;
+      const places=_places(R,3+((R()*3)|0));
+      places.forEach(p=>{
+        const hood=_hood(R,p);
+        const kids=[];
+        groups.forEach(g=>{
+          if(Array.isArray(g))kids.push(L(g[0],{children:g.slice(1).map(x=>L(x))}));
+          else kids.push(L(g));
+        });
+        kids.push({text:`in ${hood}.`,color:GRAY,children:[L('recommendations welcome. both directions.')]});
+        kids.push(L(`${mail()}`));
+        out.push(_post(`wanted: ${name}`,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'wanted',x:300,y:300,statements:out});
+  }
+
+  /* ── events ── */
+  {
+    const out=[];
+    EVENTS.forEach(it=>{
+      const [name,groups]=it;
+      const places=_places(R,2+((R()*3)|0));
+      places.forEach(p=>{
+        const hood=_hood(R,p);
+        const kids=[];
+        groups.forEach(g=>kids.push(L(g[0],{children:g.slice(1).map(x=>L(x))})));
+        kids.push({text:`in ${hood}.`,color:GRAY,children:[L('all are welcome. bring a friend.')]});
+        out.push(_post(name,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'events',x:600,y:300,statements:out});
+  }
+
+  /* ── community ── */
+  {
+    const out=[];
+    COMMUNITY.forEach(it=>{
+      const [name,groups]=it;
+      const places=_places(R,2+((R()*3)|0));
+      places.forEach(p=>{
+        const hood=_hood(R,p);
+        const kids=groups.map(g=>L(g));
+        kids.push({text:`in ${hood}.`,color:GRAY,children:[]});
+        out.push(_post(name,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'community',x:900,y:300,statements:out});
+  }
+
+  /* ── lost & found ── */
+  {
+    const out=[];
+    LOSTFOUND.forEach(it=>{
+      const [name,groups]=it;
+      const places=_places(R,2+((R()*2)|0));
+      places.forEach(p=>{
+        const hood=_hood(R,p);
+        const kids=groups.map(g=>L(g));
+        kids.push({text:`near ${hood}.`,color:GRAY,children:[]});
+        out.push(_post(name,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'lost & found',x:0,y:900,statements:out});
+  }
+
+  /* ── rides ── */
+  {
+    const out=[];
+    RIDES.forEach(it=>{
+      const [name,groups]=it;
+      const places=_places(R,2);
+      places.forEach(p=>{
+        const hood=_hood(R,p);
+        const kids=groups.map(g=>L(g));
+        kids.push({text:`from ${hood}.`,color:GRAY,children:[L('message me if you want in.')]});
+        kids.push(L(mail()));
+        out.push(_post(name,kids,p,_ago(R),_w(R)));
+      });
+    });
+    _pack(out);
+    cats.push({name:'rides',x:300,y:900,statements:out});
+  }
+
+  /* ── dabbling ── */
+  cats.push({name:'dabbling',x:600,y:900,statements:DABBLING.map(([title,color,lines],i)=>({
+    text:title, x:i*292, y:0, w:i===2?342:264, loc:'*', postedAt:_NOW0-(4+i)*_DAY,
+    children: lines.map(l=>L(l,{color:color||null,shiny:!!color}))
+  }))});
+
+  return {app:'dab',version:2,theme:'light',currentCategory:'start here',categories:cats};
+}
+return {buildSeed,PLACE_TABLE};
+})();
+
 
 const seedDemo=()=>[
   CT('start here',0,0,
@@ -1008,6 +1342,7 @@ function seedFromExport(d){
     y:isFinite(s.y)?+s.y:0,
     ...(isFinite(s.w)&&s.w?{w:+s.w}:{}),
     ...(isFinite(s.postedAt)?{postedAt:+s.postedAt}:{}),
+    ...(s.loc?{loc:String(s.loc)}:{}),
     tree:conv(s.children)
   });
   const buildTrees=(statements)=>{
@@ -1047,7 +1382,7 @@ function seedFromExport(d){
   });
 }
 /* ══ BULK DEMO CONTENT — seeded RNG, so every reset gives the same "busy" marketplace ══ */
-const BULK_PLACES=[['jc','Jersey City','city'],['hbk','Hoboken','city'],['bal','Baltimore','city'],['dc','Washington DC','city'],['den','Denver','city'],['atl','Atlanta','city'],['nsh','Nashville','city'],['det','Detroit','city'],['msp','Minneapolis','city'],['avl','Asheville','city'],['hud','Hudson','town'],['nph','New Paltz','village']];
+const BULK_PLACES=[];
 const bulkFill=cats=>{
  let a=20261001;const R=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
  const pk=x=>x[Math.floor(R()*x.length)],ri=(lo,hi)=>Math.floor(lo+R()*(hi-lo+1)),rd=(n,s=5)=>Math.round(n/s)*s;
@@ -1094,13 +1429,13 @@ const bulkFill=cats=>{
   if(c.subs&&c.subs.length)c.subs.forEach(s=>{const n=SUBN[(s.name||'').toLowerCase()];if(n)fill(s.trees,n,l=>job((s.name||'').toLowerCase(),l))});
   else if(specs[nm]){const[n,fn]=specs[nm];if(nm==='dabbling'){const ps=gen(n,dabbling);pack(ps,Y0);c.trees.push(...ps)}else fill(c.trees,n,fn)}});
 };
-const seed=()=>{const c=seedFromExport(SEED_DATA);bulkFill(c);return c};
+const seed=()=>seedFromExport(SEEDGEN.buildSeed());
 
 let C,V=null,S_=null,F=[],lastCat=null,cur,cam={x:0,y:0,s:1},rc={x:0,y:0,s:1},cams={},theme='light',needFit=true,H=[],hi=0;
 let PLC=null,LS=null,PS=false,LM=false;try{LM=localStorage.getItem('dab:list')==='1'}catch(_){}
 const lmSave=()=>{try{localStorage.setItem('dab:list',LM?'1':'0')}catch(_){}};
 const KIND=['city','town','village','borough'];
-const SPL=[['*','everywhere','all'],['phl','Philadelphia','city'],['nyc','New York City','city'],['bk','Brooklyn','borough','nyc'],['mn','Manhattan','borough','nyc'],['qn','Queens','borough','nyc'],['pit','Pittsburgh','city'],['bos','Boston','city'],['chi','Chicago','city'],['aus','Austin','city'],['pdx','Portland','city'],['sf','San Francisco','city'],['la','Los Angeles','city'],['sea','Seattle','city'],['dyl','Doylestown','borough'],['wdk','Woodstock','town'],['slh','Sleepy Hollow','village']];
+const SPL=SEEDGEN.PLACE_TABLE;
 const seedPlaces=()=>[...SPL,...BULK_PLACES].map(([id,name,k,i],n)=>({id,name,k,...(i?{in:i}:{}),x:(n%4)*260,y:Math.floor(n/4)*230}));
 const nzPl=p=>({id:String(p.id||nid()),name:String(p.name||''),k:String(p.k||'city'),...(p.in?{in:String(p.in)}:{}),x:fin(p.x),y:fin(p.y)});
 const pnm=id=>(PLC.find(p=>p.id===id)||{}).name||'';
@@ -1114,7 +1449,8 @@ const atPlaces=()=>!V&&!PS;
 function migrate(){const G=['start here','dabbling'];
  C.forEach(c=>poolOf(c).forEach(t=>{if(t.loc!==undefined)return;const g=((t.name||'')+JSON.stringify(t.tree)).toLowerCase(),a=/manhattan/.test(g)?'mn':/brooklyn|park slope|bed-stuy|williamsburg/.test(g)?'bk':null;t.loc=G.includes((c.name||'').toLowerCase())||!a?'*':(/remote/.test(g)?'remote:':'')+a}));
  const add=(b,name,loc,...ls)=>{const c=C.find(x=>(x.name||'').toLowerCase()===b);if(!c||(c.subs&&c.subs.length))return;c.trees.push({id:nid(),name,x:c.trees.length?Math.max(...c.trees.map(t=>t.x+(t.w||FW)))+56:0,y:0,loc,tree:ls.map(l=>mk(l))})};
- add('for sale','standing desk — $120','phl','solid oak, 60 inch.','pickup in fishtown.');add('housing','room in a rowhouse — $950','phl','south philly. utilities included.','lease through june.');add('services','bike tune-ups — $45','phl','i come to you. west philly + university city.');add('wanted','wanted: a used upright piano','phl','will haul it myself.')}
+
+}
 
 
 /* ── sub-board helpers ── */
@@ -1284,6 +1620,29 @@ function spacePosts(auto){
  if(moved||!auto)save();
  if(!auto){fit(true);toast('Spaced out '+it.length+' posts')}
  return moved;
+}
+/* space out folders — same masonry idea for the boards grid, the places grid and the jobs sub-board picker. Cards are uniform, so this lands as a tidy grid sized to the viewport. */
+function spaceFolders(){
+ if(lvOn()||(V&&!inSubsView()))return false;
+ const L=currentPool().filter(f=>fel(f.id));if(L.length<2){toast('Nothing to space out');return false}
+ const G=40,VW=Math.max(320,innerWidth-48),VH=Math.max(240,innerHeight-170);
+ const it=L.map(f=>{const e=fel(f.id);return{f,e,w:e.offsetWidth||200,h:(e.offsetHeight||148)+14}}).sort((a,b)=>a.f.y-b.f.y||a.f.x-b.f.x);
+ let best=null;
+ for(let n=1;n<=Math.min(it.length,24);n++){
+  const cw=Array(n).fill(0),ch=Array(n).fill(0),col=[];
+  it.forEach(o=>{let c=0;for(let i=1;i<n;i++)if(ch[i]<ch[c])c=i;col.push(c);ch[c]+=o.h+G;cw[c]=Math.max(cw[c],o.w)});
+  const xs=[];let x=0;cw.forEach((w,i)=>{xs[i]=x;x+=w+G});
+  const bw=x-G,bh=Math.max(...ch)-G,sc=Math.min(VW/bw,VH/bh,1);
+  if(!best||sc>best.sc+1e-6)best={n,sc,xs,col};
+ }
+ const ch=Array(best.n).fill(0);
+ it.forEach((o,i)=>{const c=best.col[i],nx=Math.round(best.xs[c]),ny=Math.round(ch[c]);ch[c]+=o.h+G;
+  o.f.x=nx;o.f.y=ny;
+  o.e.style.transition='left .55s cubic-bezier(.22,1,.36,1),top .55s cubic-bezier(.22,1,.36,1)';
+  o.e.style.left=nx+'px';o.e.style.top=ny+'px';
+  setTimeout(()=>{o.e.style.transition=''},650)});
+ save();fit(true);toast('Spaced out '+it.length+' '+(!V&&!PS?'places':'boards'));
+ return true;
 }
 const autoSpace=()=>{if(!V||inSubsView()||lvOn())return false;const B=S_||V;return B.auto===false?false:spacePosts(true)};
 function fit(anim){const L=currentPool();if(!L.length||lvOn())return;
@@ -1866,7 +2225,7 @@ const catMenu=c=>{
 const canvasMenu=(x,y)=>lvOn()?lvMenu():[
 {l:'search & commands',k:mod+'K',f:openPal},'-',
 V?(inSubsView()?null:{l:'new post here',f:()=>newFolder(wx(x),wy(y))}):{l:'new board here',f:()=>newCat(wx(x)-100,wy(y)-60)},'-',
-{l:'fit all',f:()=>fit(true)},V&&!inSubsView()?{l:'space out posts',f:()=>spacePosts()}:null,{l:'zoom 100%',k:'0',f:()=>zoomTo(1)},{l:'go to zero',f:home},'-',
+{l:'fit all',f:()=>fit(true)},V&&!inSubsView()?{l:'space out posts',f:()=>spacePosts()}:{l:!V&&!PS?'space out places':'space out boards',f:()=>spaceFolders()},{l:'zoom 100%',k:'0',f:()=>zoomTo(1)},{l:'go to zero',f:home},'-',
 {l:'undo',k:mod+'Z',f:undo},{l:'redo',k:mod+'⇧Z',f:redo},'-',
 S_?{l:'back to sub-boards',k:'Esc',f:closeSub}:V?{l:'back to boards',k:'Esc',f:closeCat}:null,
 {l:'switch board',k:'hold ⇧',f:()=>ow('tap')},'-',
@@ -1969,10 +2328,10 @@ coarse.addEventListener&&coarse.addEventListener('change',hall);hall();
 
 /* boot */
 paintTheme();chrome();renderAll();apply();
-/* first load on the places grid: 120% zoom, grid centered, top row below the header */
+/* first load on the places grid: 89% zoom, grid centered, top row below the header */
 function firstView(){const L=currentPool();if(!L.length)return fit();let a=1e9,b=1e9,c=-1e9;
  L.forEach(f=>{const e=fel(f.id);a=Math.min(a,f.x);b=Math.min(b,f.y);c=Math.max(c,f.x+(e?e.offsetWidth:264))});
- const k=1.2;Object.assign(cam,{s:k,x:innerWidth/2-(a+c)/2*k,y:Math.max(96,innerHeight*.2)-b*k});apply();zsync()}
+ const k=.89;Object.assign(cam,{s:k,x:innerWidth/2-(a+c)/2*k,y:Math.max(96,innerHeight*.2)-b*k});apply();zsync()}
 if(needFit){const fv=()=>(!V&&!PS&&!coarse.matches)?firstView():fit();fv();document.fonts&&document.fonts.ready.then(fv)}
 /* self-heal: if nothing is on screen after boot, recover the camera first, then fall back to the seed (old save is kept) */
 function healCheck(final){
