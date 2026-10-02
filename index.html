@@ -405,6 +405,33 @@ body.lst #cv,body.lst #zg,body.lst #zero,body.lst #edge,body.lst #ring,body.lst 
 .gp{background:linear-gradient(var(--mute),var(--mute)) 0 0/100% 1.5px no-repeat,linear-gradient(var(--mute),var(--mute)) 3px 50%/11px 1.5px no-repeat,linear-gradient(var(--mute),var(--mute)) 6px 100%/8px 1.5px no-repeat}
 @media(pointer:fine){.lrw{min-height:36px}}
 @media(max-width:900px){#lst{padding-top:calc(env(safe-area-inset-top,0px) + 112px)}body.lst.sub #lst{padding-top:calc(env(safe-area-inset-top,0px) + 160px)}body.ps #bc{display:none}}
+
+/* accounts · threads · profile canvas */
+body:not(.in) #stw{display:none}
+.dx{margin:10px -16px -14px;padding:8px 16px 12px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:7px;font:300 11px/1.35 var(--mono);color:var(--mute);cursor:default}
+.dxt{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.dxb{margin-right:auto;overflow:hidden;text-overflow:ellipsis}
+.dx button,.dxo button,#pfs button.sm{font:400 10px/1 var(--mono);padding:6px 9px;border:1px solid var(--line);background:none;border-radius:8px;color:var(--ink);cursor:pointer}
+.dx button:active,.dxo button:active{background:var(--ink);color:var(--bg)}
+.dxth{border-left:1.5px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:5px}
+.dxh{font:300 10px/1 var(--mono);color:var(--mute)}
+.dxr{display:flex;gap:6px;align-items:baseline;color:var(--ink);font:400 12px/1.3 var(--sans)}.dxr.re{margin-left:14px}
+.dxr b{font:400 10px/1 var(--mono);color:var(--mute);flex:none}.dxr i{margin-left:auto;font:300 10px/1 var(--mono);color:var(--mute);font-style:normal;flex:none}
+.dxbx{display:flex;gap:6px}.dx input,.dxo input,.dxo select,#pfs input{flex:1;min-width:0;font:400 12px/1 var(--sans);color:var(--ink);background:none;border:1px solid var(--line);border-radius:8px;padding:8px 9px;outline:0}
+.dx input:focus,.dxo input:focus,#pfs input:focus{border-color:var(--ink)}
+.dxo{position:fixed;inset:0;z-index:45;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 55%,transparent);backdrop-filter:blur(6px)}
+.dxo>div{width:min(360px,calc(100vw - 32px));background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--s3);display:flex;flex-direction:column;gap:10px}
+.dxo h3{margin:0;font:500 16px/1.2 var(--sans)}.dxo p{margin:0;font:300 11px/1.45 var(--mono);color:var(--mute)}
+#pf{position:fixed;inset:0;z-index:35;background:var(--bg);display:none;background-image:radial-gradient(color-mix(in srgb,var(--ink) 10%,transparent) 1px,transparent 1.3px);background-size:24px 24px}
+#pf.on{display:block}
+#pfh{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;gap:10px;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 0;pointer-events:none}
+#pfh>*{pointer-events:auto}#pfn{font:500 20px/1 var(--sans);letter-spacing:-.02em}#pfr{font:300 11px/1 var(--mono);color:var(--mute);margin-right:auto}
+#pfc{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}#pfw{position:absolute;left:0;top:0}
+#pfe{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:300 12px/1.5 var(--mono);color:var(--mute);text-align:center;max-width:34ch;pointer-events:none}
+#pfs{position:absolute;top:0;right:0;bottom:0;z-index:3;width:min(340px,100vw);background:var(--bg);border-left:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 62px) 16px 16px;display:none;flex-direction:column;gap:10px;overflow:auto}
+#pfs.on{display:flex}.pfm{font:300 10px/1.4 var(--mono);color:var(--mute)}
+.pfrow{display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:8px 0;font:400 13px/1.25 var(--sans)}
+.pfrow .t{flex:1;min-width:0;text-align:left;border:0;background:none;color:var(--ink);font:inherit;cursor:pointer;padding:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pfrow i{font:300 10px/1 var(--mono);color:var(--mute);font-style:normal}
 </style>
 </head>
 <body>
@@ -422,7 +449,7 @@ body.lst #cv,body.lst #zg,body.lst #zero,body.lst #edge,body.lst #ring,body.lst 
   </div>
   <div class="r">
     <button class="b" id="rmt" aria-pressed="false" title="Include remote posts from anywhere">+ remote</button><span id="sv" class="ci" aria-hidden="true" title="Saved"></span>
-    <button class="b" id="mb">menu</button>
+    <button class="b" id="stw" title="Stow this board + place as its own folder on your profile canvas">stow</button><button class="b" id="me">sign in</button><button class="b" id="mb">menu</button>
   </div>
 </div>
 <div id="hint" role="status"></div>
@@ -508,6 +535,7 @@ body.lst #cv,body.lst #zg,body.lst #zero,body.lst #edge,body.lst #ring,body.lst 
 <div id="lt" role="region" aria-label="Letters"><div id="ltk"></div><div class="lz l" id="lzl" aria-hidden="true"></div><div class="lz r" id="lzr" aria-hidden="true"></div></div>
 <div id="lh" role="group" aria-label="Letter navigation"><button class="b icon" id="lprev" aria-label="Previous letter">‹</button><span class="n" id="ln" role="status" aria-live="polite"></span><button class="b icon" id="lnext" aria-label="Next letter">›</button></div>
 <div id="fx" aria-hidden="true"><div class="fxh l" id="fxl" aria-hidden="true"></div><div class="fxh r" id="fxr" aria-hidden="true"></div><button id="fxb" type="button">back to canvas</button></div>
+<div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div><div id="pfs"></div></div>
 <script>
 const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
@@ -2712,6 +2740,81 @@ function storeFail(err){if(ebDis)return;const q=err&&(err.name==='QuotaExceededE
 function storeOk(){if(ebEl.classList.contains('on')&&!ebDis)ebEl.classList.remove('on')}
 let errT=0;const onErr=()=>{const n=Date.now();if(n-errT<8000)return;errT=n;toast('Something went wrong. Reloading usually fixes it — your work autosaves.',{kind:'error',action:'reload',onAction:()=>location.reload(),duration:8000})};
 addEventListener('error',e=>{if(e&&/ResizeObserver|Script error/i.test(e.message||''))return;onErr()});addEventListener('unhandledrejection',onErr);
+
+/* ── accounts · threads · profile canvas (local demo; swap A for a backend) ── */
+(function(){
+const AK='dab:acct:v1';let A={me:null,users:{},own:{},cm:{},stow:{}};
+try{const d=JSON.parse(localStorage.getItem(AK));if(d&&d.users)A=Object.assign(A,d)}catch(_){}
+const sv=()=>{try{localStorage.setItem(AK,JSON.stringify(A))}catch(_){}};
+const me=()=>A.me&&A.users[A.me]||null,rnd=n=>Math.random().toString(36).slice(2,2+n);
+const ago=t=>{const m=(Date.now()-t)/6e4;return m<1?'now':m<60?(m|0)+'m':m<1440?(m/60|0)+'h':(m/1440|0)+'d'};
+const relay=mode=>mode==='phone'?'+1 267 555 01'+(10+Math.random()*89|0):'p-'+rnd(6)+'@relay.dab.cx';
+const OP=new Set();let SEL=null,pfOn=false,pan={x:40,y:90};
+const label=()=>{$('me').textContent=me()?'@'+me().handle:'sign in'};
+function dlg(build){const m=h('div','dxo'),b=h('div');m.append(b);const close=()=>{m.remove();document.removeEventListener('keydown',esc,true)};
+  const esc=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};document.addEventListener('keydown',esc,true);
+  m.onpointerdown=e=>{if(e.target===m)close()};build(b,close);document.body.append(m);const i=b.querySelector('input');i&&i.focus()}
+function authDlg(cb){dlg((b,close)=>{const u=me(),hs=Object.keys(A.users);
+  b.append(h('h3','','Account'),h('p','','Post, reply and stow folders. Your real email or phone is never shown: each post gets its own masked relay that forwards to you.'));
+  const hi=h('input'),fi=h('input'),md=h('select');hi.placeholder='handle';fi.placeholder='forward replies to (email or phone)';md.innerHTML='<option value=email>masked email relay</option><option value=phone>masked phone relay</option>';
+  const go=h('button','b','create account');
+  go.onclick=()=>{const hn=hi.value.trim().toLowerCase();if(!/^[a-z0-9_]{2,20}$/.test(hn)){toast('Handle: 2-20 letters, numbers, _',{kind:'error'});return}
+    if(A.users[hn]){toast('Handle taken',{kind:'error'});return}if(!fi.value.trim()){toast('Add somewhere to forward replies',{kind:'error'});return}
+    A.users[hn]={handle:hn,fwd:fi.value.trim(),mode:md.value};A.me=hn;sv();label();close();pfOn&&pfRender();cb&&cb()};
+  b.append(hi,fi,md,go);
+  if(hs.length){b.append(h('p','','or switch'));hs.filter(x=>x!==A.me).forEach(x=>{const s=h('button','b','@'+x);s.onclick=()=>{A.me=x;sv();label();close();pfOn&&pfRender();cb&&cb()};b.append(s)})}
+  if(u){const o=h('button','b','sign out');o.onclick=()=>{A.me=null;sv();label();close();pfOn&&closePf()};b.append(o)}})}
+const reg=f=>{const u=me();if(u&&f&&!A.own[f.id]){A.own[f.id]={by:u.handle,relay:relay(u.mode)};sv()}};
+function box(ph,fn,extra){const w=h('div','dxbx'),i=h('input'),s=h('button','','send');i.placeholder=ph;
+  const go=()=>{const t=i.value.trim();if(t)fn(t)};s.onclick=go;i.onkeydown=e=>{if(e.key==='Enter')go()};w.append(i,s);if(extra)w.append(extra);return w}
+function paint(el,f){if(!el)return;let d=el.querySelector(':scope>.dx');
+  if(!d){d=h('div','dx');el.insertBefore(d,el.querySelector('.rz'));['pointerdown','dblclick','keydown','contextmenu'].forEach(t=>d.addEventListener(t,e=>e.stopPropagation()))}
+  d.replaceChildren();const o=A.own[f.id],u=me(),mine=!!(u&&o&&o.by===u.handle),th=A.cm[f.id]||[],vis=mine?th:th.filter(t=>u&&t.u===u.handle),poster=o?o.by:'poster';
+  const top=h('div','dxt');top.append(h('span','dxb',(o?'@'+o.by+' · ':'')+(mine?'your relay ':o?'reply via ':'')+(o?o.relay:'')));
+  if(o){const c=h('button','','copy');c.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(o.relay);toast('Relay copied',{duration:1400})};top.append(c)}
+  const tg=h('button','',(mine?th.length:vis.length)+(mine?(th.length===1?' thread':' threads'):' yours')+(OP.has(f.id)?' \u2212':' +'));tg.onclick=()=>{OP.has(f.id)?OP.delete(f.id):OP.add(f.id);paint(el,f)};top.append(tg);d.append(top);
+  if(!OP.has(f.id))return;
+  vis.forEach(t=>{const w=h('div','dxth');w.append(h('div','dxh','@'+t.u+' \u2192 @'+poster));
+    t.m.forEach((m,i)=>{const r=h('div','dxr'+(i?' re':''));r.append(h('b','',m.u===poster?'poster':'@'+m.u),h('span','',m.t),h('i','',ago(m.at)));w.append(r)});
+    if(u&&(mine||t.u===u.handle)){let x=null;if(mine&&o){x=h('button','','share relay');x.onclick=()=>{t.m.push({u:u.handle,t:'contact: '+o.relay,at:Date.now()});sv();paint(el,f)}}
+      w.append(box('reply\u2026',s=>{t.m.push({u:u.handle,t:s,at:Date.now()});sv();paint(el,f)},x))}d.append(w)});
+  if(!u){const b=h('button','','sign in to message');b.onclick=()=>authDlg(()=>paint(el,f));d.append(b)}
+  else if(!mine&&!th.some(t=>t.u===u.handle))d.append(box('ask about this post\u2026',s=>{(A.cm[f.id]=A.cm[f.id]||[]).push({id:rnd(6),u:u.handle,m:[{u:u.handle,t:s,at:Date.now()}]});sv();paint(el,f)}));
+  else if(mine&&!th.length)d.append(h('div','dxh','no messages yet. replies from others open a private thread with you.'))}
+const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);return el};
+const nf0=newFolder;newFolder=function(x,y){if(!me()){authDlg(()=>newFolder(x,y));return}const f=nf0.apply(this,arguments);if(f){reg(f);paint(fel(f.id),f)}return f};
+const ln0=lvNew;lvNew=function(){if(!me()){authDlg(()=>lvNew());return}const n=F.length,r=ln0.apply(this,arguments);if(F.length>n)reg(F[F.length-1]);return r};
+/* profile canvas: stowed folders = (board x place) views, each sovereign: own name, position and trimmed post list */
+const stowL=()=>{const u=me();return u?(A.stow[u.handle]=A.stow[u.handle]||[]):[]};
+const pool=s=>{const c=C.find(x=>x.id===s.b);return c?poolOf(c).filter(f=>inSc(f,s.p,c)&&!s.hide.includes(f.id)).sort((a,b)=>(b.postedAt||0)-(a.postedAt||0)):[]};
+function stow(){if(!me()){authDlg(stow);return}if(!V){toast('Open a board first',{kind:'error'});return}const L=stowL(),i=L.length;
+  L.push({id:'s'+rnd(6),name:(V.name||'untitled')+' \u00b7 '+(LS?pnm(LS):'everywhere'),b:V.id,p:LS||null,x:(i%3)*240,y:(i/3|0)*200,hide:[]});sv();toast('Stowed as its own folder',{action:'view',onAction:openPf})}
+function jump(s,f){closePf();const c=C.find(x=>x.id===s.b);if(!c)return;if(S_)closeSub();if(V)closeCat();LS=s.p;
+  if(!PS)openPlace(PLC.find(p=>p.id===(s.p||'*'))||PLC[0]);else{renderAll();chromeP()}openCat(c);setTimeout(()=>{try{goFolder(c,f)}catch(_){}},60)}
+function pfDrag(el,s){el.onpointerdown=e=>{e.stopPropagation();const x0=e.clientX,y0=e.clientY,sx=s.x,sy=s.y;let mv=0;try{el.setPointerCapture(e.pointerId)}catch(_){}
+  el.onpointermove=ev=>{const dx=ev.clientX-x0,dy=ev.clientY-y0;if(!mv&&Math.hypot(dx,dy)<5)return;mv=1;s.x=sx+dx;s.y=sy+dy;el.style.left=s.x+'px';el.style.top=s.y+'px'};
+  el.onpointerup=()=>{el.onpointermove=el.onpointerup=null;if(mv)sv();else{SEL=s.id;pfRender()}}}}
+function pfRender(){const u=me();$('pfn').textContent=u?'@'+u.handle:'';$('pfr').textContent=u?(u.mode==='phone'?'phone':'email')+' relay \u00b7 forwards privately':'';
+  const w=$('pfw'),L=stowL();w.replaceChildren();$('pfe').style.display=L.length?'none':'';
+  L.forEach(s=>{const el=h('div','cat'+(s.id===SEL?' cur':''));el.style.left=s.x+'px';el.style.top=s.y+'px';
+    el.innerHTML='<span class="cb"></span><span class="cf"><span class="cl"></span><span class="cs"></span></span>';el.querySelector('.cl').textContent=s.name;
+    const n=pool(s).length;el.querySelector('.cs').textContent=n+(n===1?' post':' posts');pfDrag(el,s);w.append(el)});
+  w.style.transform='translate('+pan.x+'px,'+pan.y+'px)';sheet()}
+function sheet(){const p=$('pfs'),s=stowL().find(x=>x.id===SEL);p.classList.toggle('on',!!s);if(!s)return;p.replaceChildren();
+  const c=C.find(x=>x.id===s.b),nm=h('input');nm.value=s.name;nm.onchange=()=>{s.name=nm.value.trim()||s.name;sv();pfRender()};
+  p.append(nm,h('div','pfm',c?'board \u00b7 '+(c.name||'untitled')+' \u00b7 '+(s.p?pnm(s.p):'everywhere')+' \u00b7 live view, trimmed by you':'source board no longer exists'));
+  pool(s).slice(0,80).forEach(f=>{const r=h('div','pfrow'),t=h('button','t',pTitle(f)||'untitled'),x=h('button','sm','hide');t.onclick=()=>jump(s,f);x.onclick=()=>{s.hide.push(f.id);sv();pfRender()};r.append(t,h('i','',f.postedAt?ago(f.postedAt):''),x);p.append(r)});
+  if(s.hide.length){const b=h('button','sm','restore '+s.hide.length+' hidden');b.onclick=()=>{s.hide=[];sv();pfRender()};p.append(b)}
+  const d=h('button','sm','unstow folder');d.onclick=()=>{A.stow[me().handle]=stowL().filter(x=>x!==s);SEL=null;sv();pfRender()};p.append(d)}
+function openPf(){if(!me()){authDlg(openPf);return}pfOn=true;$('pf').classList.add('on');$('pf').setAttribute('aria-hidden','false');pfRender()}
+function closePf(){pfOn=false;$('pf').classList.remove('on');$('pf').setAttribute('aria-hidden','true')}
+$('pfx').onclick=closePf;$('pfa').onclick=()=>authDlg();$('me').onclick=openPf;$('stw').onclick=stow;
+$('pfc').onpointerdown=e=>{if(e.target.closest('.cat'))return;SEL=null;sheet();const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y,c=$('pfc');try{c.setPointerCapture(e.pointerId)}catch(_){}
+  c.onpointermove=ev=>{pan.x=px+ev.clientX-x0;pan.y=py+ev.clientY-y0;$('pfw').style.transform='translate('+pan.x+'px,'+pan.y+'px)'};c.onpointerup=()=>{c.onpointermove=c.onpointerup=null;pfRender()}};
+addEventListener('keydown',e=>{if(e.key==='Escape'&&pfOn&&!document.querySelector('.dxo'))closePf()});
+const pa0=palActs;palActs=function(){const a=pa0();if(V&&!inSubsView())a.push(['Stow board to my canvas',stow]);a.push(['My profile canvas',openPf],[me()?'Account / switch':'Sign in',()=>authDlg()]);return a};
+label();
+})();
 </script>
 <script type="text/plain" id="ns-src"><!DOCTYPE html>
 <html lang="en">
