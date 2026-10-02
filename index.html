@@ -410,7 +410,7 @@ body.lst #cv,body.lst #zg,body.lst #zero,body.lst #edge,body.lst #ring,body.lst 
 body:not(.in) #stw{display:none}
 .dx{margin:10px -16px -14px;padding:8px 16px 12px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:7px;font:300 11px/1.35 var(--mono);color:var(--mute);cursor:default}
 .dxt{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.dxb{margin-right:auto;overflow:hidden;text-overflow:ellipsis}
-.dx button,.dxo button,#pfs button.sm{font:400 10px/1 var(--mono);padding:6px 9px;border:1px solid var(--line);background:none;border-radius:8px;color:var(--ink);cursor:pointer}
+.dx button,.dxo button{font:400 10px/1 var(--mono);padding:6px 9px;border:1px solid var(--line);background:none;border-radius:8px;color:var(--ink);cursor:pointer}
 .dx button:active,.dxo button:active{background:var(--ink);color:var(--bg)}
 .dxth{border-left:1.5px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:5px}
 .dxh{font:300 10px/1 var(--mono);color:var(--mute)}
@@ -427,11 +427,6 @@ body:not(.in) #stw{display:none}
 #pfh>*{pointer-events:auto}#pfn{font:500 20px/1 var(--sans);letter-spacing:-.02em}#pfr{font:300 11px/1 var(--mono);color:var(--mute);margin-right:auto}
 #pfc{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}#pfw{position:absolute;left:0;top:0}
 #pfe{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:300 12px/1.5 var(--mono);color:var(--mute);text-align:center;max-width:34ch;pointer-events:none}
-#pfs{position:absolute;top:0;right:0;bottom:0;z-index:3;width:min(340px,100vw);background:var(--bg);border-left:1px solid var(--line);padding:calc(env(safe-area-inset-top,0px) + 62px) 16px 16px;display:none;flex-direction:column;gap:10px;overflow:auto}
-#pfs.on{display:flex}.pfm{font:300 10px/1.4 var(--mono);color:var(--mute)}
-.pfrow{display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:8px 0;font:400 13px/1.25 var(--sans)}
-.pfrow .t{flex:1;min-width:0;text-align:left;border:0;background:none;color:var(--ink);font:inherit;cursor:pointer;padding:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pfrow i{font:300 10px/1 var(--mono);color:var(--mute);font-style:normal}
 </style>
 </head>
 <body>
@@ -535,7 +530,7 @@ body:not(.in) #stw{display:none}
 <div id="lt" role="region" aria-label="Letters"><div id="ltk"></div><div class="lz l" id="lzl" aria-hidden="true"></div><div class="lz r" id="lzr" aria-hidden="true"></div></div>
 <div id="lh" role="group" aria-label="Letter navigation"><button class="b icon" id="lprev" aria-label="Previous letter">‹</button><span class="n" id="ln" role="status" aria-live="polite"></span><button class="b icon" id="lnext" aria-label="Next letter">›</button></div>
 <div id="fx" aria-hidden="true"><div class="fxh l" id="fxl" aria-hidden="true"></div><div class="fxh r" id="fxr" aria-hidden="true"></div><button id="fxb" type="button">back to canvas</button></div>
-<div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div><div id="pfs"></div></div>
+<div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div></div>
 <script>
 const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
@@ -2749,7 +2744,7 @@ const sv=()=>{try{localStorage.setItem(AK,JSON.stringify(A))}catch(_){}};
 const me=()=>A.me&&A.users[A.me]||null,rnd=n=>Math.random().toString(36).slice(2,2+n);
 const ago=t=>{const m=(Date.now()-t)/6e4;return m<1?'now':m<60?(m|0)+'m':m<1440?(m/60|0)+'h':(m/1440|0)+'d'};
 const relay=mode=>mode==='phone'?'+1 267 555 01'+(10+Math.random()*89|0):'p-'+rnd(6)+'@relay.dab.cx';
-const OP=new Set();let SEL=null,pfOn=false,pan={x:40,y:90};
+const OP=new Set();let pfOn=false,pan={x:40,y:90};
 const label=()=>{$('me').textContent=me()?'@'+me().handle:'sign in'};
 function dlg(build){const m=h('div','dxo'),b=h('div');m.append(b);const close=()=>{m.remove();document.removeEventListener('keydown',esc,true)};
   const esc=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};document.addEventListener('keydown',esc,true);
@@ -2784,32 +2779,71 @@ function paint(el,f){if(!el)return;let d=el.querySelector(':scope>.dx');
 const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);return el};
 const nf0=newFolder;newFolder=function(x,y){if(!me()){authDlg(()=>newFolder(x,y));return}const f=nf0.apply(this,arguments);if(f){reg(f);paint(fel(f.id),f)}return f};
 const ln0=lvNew;lvNew=function(){if(!me()){authDlg(()=>lvNew());return}const n=F.length,r=ln0.apply(this,arguments);if(F.length>n)reg(F[F.length-1]);return r};
-/* profile canvas: stowed folders = (board x place) views, each sovereign: own name, position and trimmed post list */
+/* profile canvas: stowed folders = (board x place) views, each sovereign: own name, position and trimmed post list.
+   Behaves exactly like every other dab canvas — click a folder to open the underlying board (with the location scope set),
+   pan empty space, drag folders to reposition. No separate sidebar; the folder card IS the post. */
 const stowL=()=>{const u=me();return u?(A.stow[u.handle]=A.stow[u.handle]||[]):[]};
 const pool=s=>{const c=C.find(x=>x.id===s.b);return c?poolOf(c).filter(f=>inSc(f,s.p,c)&&!s.hide.includes(f.id)).sort((a,b)=>(b.postedAt||0)-(a.postedAt||0)):[]};
 function stow(){if(!me()){authDlg(stow);return}if(!V){toast('Open a board first',{kind:'error'});return}const L=stowL(),i=L.length;
   L.push({id:'s'+rnd(6),name:(V.name||'untitled')+' \u00b7 '+(LS?pnm(LS):'everywhere'),b:V.id,p:LS||null,x:(i%3)*240,y:(i/3|0)*200,hide:[]});sv();toast('Stowed as its own folder',{action:'view',onAction:openPf})}
-function jump(s,f){closePf();const c=C.find(x=>x.id===s.b);if(!c)return;if(S_)closeSub();if(V)closeCat();LS=s.p;
-  if(!PS)openPlace(PLC.find(p=>p.id===(s.p||'*'))||PLC[0]);else{renderAll();chromeP()}openCat(c);setTimeout(()=>{try{goFolder(c,f)}catch(_){}},60)}
-function pfDrag(el,s){el.onpointerdown=e=>{e.stopPropagation();const x0=e.clientX,y0=e.clientY,sx=s.x,sy=s.y;let mv=0;try{el.setPointerCapture(e.pointerId)}catch(_){}
-  el.onpointermove=ev=>{const dx=ev.clientX-x0,dy=ev.clientY-y0;if(!mv&&Math.hypot(dx,dy)<5)return;mv=1;s.x=sx+dx;s.y=sy+dy;el.style.left=s.x+'px';el.style.top=s.y+'px'};
-  el.onpointerup=()=>{el.onpointermove=el.onpointerup=null;if(mv)sv();else{SEL=s.id;pfRender()}}}}
-function pfRender(){const u=me();$('pfn').textContent=u?'@'+u.handle:'';$('pfr').textContent=u?(u.mode==='phone'?'phone':'email')+' relay \u00b7 forwards privately':'';
-  const w=$('pfw'),L=stowL();w.replaceChildren();$('pfe').style.display=L.length?'none':'';
-  L.forEach(s=>{const el=h('div','cat'+(s.id===SEL?' cur':''));el.style.left=s.x+'px';el.style.top=s.y+'px';
-    el.innerHTML='<span class="cb"></span><span class="cf"><span class="cl"></span><span class="cs"></span></span>';el.querySelector('.cl').textContent=s.name;
-    const n=pool(s).length;el.querySelector('.cs').textContent=n+(n===1?' post':' posts');pfDrag(el,s);w.append(el)});
-  w.style.transform='translate('+pan.x+'px,'+pan.y+'px)';sheet()}
-function sheet(){const p=$('pfs'),s=stowL().find(x=>x.id===SEL);p.classList.toggle('on',!!s);if(!s)return;p.replaceChildren();
-  const c=C.find(x=>x.id===s.b),nm=h('input');nm.value=s.name;nm.onchange=()=>{s.name=nm.value.trim()||s.name;sv();pfRender()};
-  p.append(nm,h('div','pfm',c?'board \u00b7 '+(c.name||'untitled')+' \u00b7 '+(s.p?pnm(s.p):'everywhere')+' \u00b7 live view, trimmed by you':'source board no longer exists'));
-  pool(s).slice(0,80).forEach(f=>{const r=h('div','pfrow'),t=h('button','t',pTitle(f)||'untitled'),x=h('button','sm','hide');t.onclick=()=>jump(s,f);x.onclick=()=>{s.hide.push(f.id);sv();pfRender()};r.append(t,h('i','',f.postedAt?ago(f.postedAt):''),x);p.append(r)});
-  if(s.hide.length){const b=h('button','sm','restore '+s.hide.length+' hidden');b.onclick=()=>{s.hide=[];sv();pfRender()};p.append(b)}
-  const d=h('button','sm','unstow folder');d.onclick=()=>{A.stow[me().handle]=stowL().filter(x=>x!==s);SEL=null;sv();pfRender()};p.append(d)}
+function jump(s,f){
+  closePf();
+  const c=C.find(x=>x.id===s.b); if(!c) return;
+  if(S_)closeSub(); if(V)closeCat();
+  LS=s.p;
+  if(!PS)openPlace(PLC.find(p=>p.id===(s.p||'*'))||PLC[0]);
+  else{renderAll();chromeP()}
+  openCat(c);
+  if(f)setTimeout(()=>{try{goFolder(c,f)}catch(_){}},60)
+}
+function pfDrag(el,s){
+  el.onpointerdown=e=>{
+    e.stopPropagation();
+    const x0=e.clientX,y0=e.clientY,sx=s.x,sy=s.y;let mv=0;
+    try{el.setPointerCapture(e.pointerId)}catch(_){}
+    el.onpointermove=ev=>{
+      const dx=ev.clientX-x0,dy=ev.clientY-y0;
+      if(!mv&&Math.hypot(dx,dy)<5)return;
+      mv=1;s.x=sx+dx;s.y=sy+dy;
+      el.style.left=s.x+'px';el.style.top=s.y+'px'
+    };
+    el.onpointerup=()=>{
+      el.onpointermove=el.onpointerup=null;
+      if(mv)sv(); else jump(s)
+    }
+  };
+  el.oncontextmenu=e=>{
+    e.preventDefault();e.stopPropagation();
+    if(confirm('Unstow "'+s.name+'"?')){
+      A.stow[me().handle]=stowL().filter(x=>x!==s);
+      sv();pfRender();
+    }
+  };
+}
+function pfRender(){
+  const u=me();
+  $('pfn').textContent=u?'@'+u.handle:'';
+  $('pfr').textContent=u?(u.mode==='phone'?'phone':'email')+' relay \u00b7 forwards privately':'';
+  const w=$('pfw'),L=stowL();
+  w.replaceChildren();
+  $('pfe').style.display=L.length?'none':'';
+  L.forEach(s=>{
+    const el=h('div','cat');
+    el.style.left=s.x+'px';el.style.top=s.y+'px';
+    el.innerHTML='<span class="cb"></span><span class="cf"><span class="cl"></span><span class="cs"></span></span>';
+    el.querySelector('.cl').textContent=s.name;
+    const n=pool(s).length;
+    el.querySelector('.cs').textContent=n+(n===1?' post':' posts');
+    rExtras(el,{trees:pool(s).slice(0,6)});
+    pfDrag(el,s);
+    w.append(el);
+  });
+  w.style.transform='translate('+pan.x+'px,'+pan.y+'px)';
+}
 function openPf(){if(!me()){authDlg(openPf);return}pfOn=true;$('pf').classList.add('on');$('pf').setAttribute('aria-hidden','false');pfRender()}
 function closePf(){pfOn=false;$('pf').classList.remove('on');$('pf').setAttribute('aria-hidden','true')}
 $('pfx').onclick=closePf;$('pfa').onclick=()=>authDlg();$('me').onclick=openPf;$('stw').onclick=stow;
-$('pfc').onpointerdown=e=>{if(e.target.closest('.cat'))return;SEL=null;sheet();const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y,c=$('pfc');try{c.setPointerCapture(e.pointerId)}catch(_){}
+$('pfc').onpointerdown=e=>{if(e.target.closest('.cat'))return;const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y,c=$('pfc');try{c.setPointerCapture(e.pointerId)}catch(_){}
   c.onpointermove=ev=>{pan.x=px+ev.clientX-x0;pan.y=py+ev.clientY-y0;$('pfw').style.transform='translate('+pan.x+'px,'+pan.y+'px)'};c.onpointerup=()=>{c.onpointermove=c.onpointerup=null;pfRender()}};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&pfOn&&!document.querySelector('.dxo'))closePf()});
 const pa0=palActs;palActs=function(){const a=pa0();if(V&&!inSubsView())a.push(['Stow board to my canvas',stow]);a.push(['My profile canvas',openPf],[me()?'Account / switch':'Sign in',()=>authDlg()]);return a};
