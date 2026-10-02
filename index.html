@@ -1472,10 +1472,10 @@ const nzTree = t => (Array.isArray(t)?t:[]).map(x=>({
 }));
 const nzCat = c => {
   const r = {id:c.id||nid(),name:c.name||'',x:fin(c.x),y:fin(c.y),trees:nzTree(c.trees)};
-  if(typeof c.rem==='boolean')r.rem=c.rem;if(c.auto===false)r.auto=false;
+  if(typeof c.rem==='boolean')r.rem=c.rem;/* hand-placed opt-out is session-only: a stale saved auto:false is what left boards scattered on load */
   if(Array.isArray(c.subs)&&c.subs.length){
     r.subs = c.subs.map(s => ({
-      id:s.id||nid(),name:s.name||'',x:fin(s.x),y:fin(s.y),trees:nzTree(s.trees),...(s.auto===false?{auto:false}:{})
+      id:s.id||nid(),name:s.name||'',x:fin(s.x),y:fin(s.y),trees:nzTree(s.trees)
     }));
   }
   return r;
@@ -1622,9 +1622,9 @@ function spacePosts(auto){
  return moved;
 }
 /* space out folders — same masonry idea for the boards grid, the places grid and the jobs sub-board picker. Cards are uniform, so this lands as a tidy grid sized to the viewport. */
-function spaceFolders(){
+function spaceFolders(auto){
  if(lvOn()||(V&&!inSubsView()))return false;
- const L=currentPool().filter(f=>fel(f.id));if(L.length<2){toast('Nothing to space out');return false}
+ const L=currentPool().filter(f=>fel(f.id));if(L.length<2){if(!auto)toast('Nothing to space out');return false}
  const G=40,VW=Math.max(320,innerWidth-48),VH=Math.max(240,innerHeight-170);
  const it=L.map(f=>{const e=fel(f.id);return{f,e,w:e.offsetWidth||200,h:(e.offsetHeight||148)+14}}).sort((a,b)=>a.f.y-b.f.y||a.f.x-b.f.x);
  let best=null;
@@ -1635,16 +1635,28 @@ function spaceFolders(){
   const bw=x-G,bh=Math.max(...ch)-G,sc=Math.min(VW/bw,VH/bh,1);
   if(!best||sc>best.sc+1e-6)best={n,sc,xs,col};
  }
- const ch=Array(best.n).fill(0);
+ const ch=Array(best.n).fill(0);let moved=false;
  it.forEach((o,i)=>{const c=best.col[i],nx=Math.round(best.xs[c]),ny=Math.round(ch[c]);ch[c]+=o.h+G;
-  o.f.x=nx;o.f.y=ny;
-  o.e.style.transition='left .55s cubic-bezier(.22,1,.36,1),top .55s cubic-bezier(.22,1,.36,1)';
+  if(nx!==o.f.x||ny!==o.f.y)moved=true;o.f.x=nx;o.f.y=ny;
+  if(!auto)o.e.style.transition='left .55s cubic-bezier(.22,1,.36,1),top .55s cubic-bezier(.22,1,.36,1)';
   o.e.style.left=nx+'px';o.e.style.top=ny+'px';
-  setTimeout(()=>{o.e.style.transition=''},650)});
+  if(!auto)setTimeout(()=>{o.e.style.transition=''},650)});
+ if(auto){if(moved)save();return moved}
+ delete FM[fkey()];fmSave();
  save();fit(true);toast('Spaced out '+it.length+' '+(!V&&!PS?'places':'boards'));
  return true;
 }
-const autoSpace=()=>{if(!V||inSubsView()||lvOn())return false;const B=S_||V;return B.auto===false?false:spacePosts(true)};
+/* auto space-out: global toggle (context menu). Posts opt out per board when dragged by hand; folder grids (places, boards, sub-boards) opt out per level the same way. */
+let AS=(()=>{try{return localStorage.getItem('dab:autospace')!=='off'}catch(_){return true}})();
+let FM=(()=>{try{return JSON.parse(localStorage.getItem('dab:fman'))||{}}catch(_){return {}}})();
+const fmSave=()=>{try{localStorage.setItem('dab:fman',JSON.stringify(FM))}catch(_){}};
+const fkey=()=>atPlaces()?'@places':!V?'@boards':'subs:'+V.id;
+const autoSpaceF=()=>{if(!AS||lvOn()||(V&&!inSubsView())||FM[fkey()])return false;return spaceFolders(true)};
+function toggleAS(){AS=!AS;try{localStorage.setItem('dab:autospace',AS?'on':'off')}catch(_){}
+ if(AS){if(V&&!inSubsView())delete (S_||V).auto;else{delete FM[fkey()];fmSave()}
+  const m=V?autoSpace():autoSpaceF();if(m){save();fit(true)}}
+ toast('auto space-out '+(AS?'on':'off'))}
+const autoSpace=()=>{if(!AS||!V||inSubsView()||lvOn())return false;const B=S_||V;return B.auto===false?false:spacePosts(true)};
 function fit(anim){const L=currentPool();if(!L.length||lvOn())return;
 if(V&&!inSubsView()&&coarse.matches&&L.length>1){const o=[...L].sort((p,q)=>p.x-q.x||p.y-q.y),e0=fel(o[0].id),e1=fel(o[1].id);if(e0&&e1){const w0=e0.offsetWidth,w1=e1.offsetWidth,g=Math.max(0,o[1].x-o[0].x-w0),s=clamp((innerWidth-44)/(w0+g+w1*.5),.35,.7),t={s,x:22-o[0].x*s,y:128-Math.min(...L.map(f=>f.y))*s};anim?fly(t):(Object.assign(cam,t),apply());return}}
 let a=1e9,b=1e9,c=-1e9,d=-1e9;L.forEach(f=>{const e=fel(f.id);if(!e)return;a=Math.min(a,f.x);b=Math.min(b,f.y);c=Math.max(c,f.x+e.offsetWidth);d=Math.max(d,f.y+e.offsetHeight)});if(a>c)return;const s=clamp(Math.min((innerWidth-48)/(c-a),(innerHeight-150)/(d-b),1),ZMIN,1),t={s,x:innerWidth/2-(a+c)/2*s,y:innerHeight/2-(b+d)/2*s};anim?fly(t):(Object.assign(cam,t),apply())}
@@ -1845,7 +1857,7 @@ function openCat(c){
   else {F=c.trees;cur=F[0]?F[0].id:null;}
   const has=cams[viewKey()];
   if(has)Object.assign(cam,has);
-  renderAll();const sp=autoSpace();chrome();has&&!sp?apply():fit();swap();
+  renderAll();const sp=autoSpace()||autoSpaceF();chrome();has&&!sp?apply():fit();swap();
 }
 function openSub(s){
   if(!V||S_===s)return;
@@ -1865,7 +1877,7 @@ function closeSub(){
   cams[S_.id]={...cam};
   S_=null;cur=V.subs[0]?V.subs[0].id:null;F=[];
   Object.assign(cam,cams[viewKey()]||rc);
-  renderAll();chrome();apply();swap();
+  renderAll();const sp=autoSpaceF();chrome();sp?fit():apply();swap();
 }
 function closeCat(){
   if(!V)return;
@@ -1873,7 +1885,7 @@ function closeCat(){
   if(!lvOn())cams[V.id]={...cam};
   lastCat=V.id;V=null;F=[];lvCat=null;
   Object.assign(cam,rc);cur=lastCat;
-  renderAll();chrome();apply();swap();
+  renderAll();const sp=autoSpaceF();chrome();sp?fit():apply();swap();
 }
 function navUp(){ if(S_) closeSub(); else if(V) closeCat(); else if(PS) closePlace(); }
 function newCat(x,y){const c={id:nid(),name:'',x,y,trees:[{id:nid(),name:'',x:0,y:0,tree:[mk()]}]};C.push(c);openCat(c);$('cn').focus()}
@@ -1949,7 +1961,7 @@ cv.addEventListener('pointermove',e=>{const p=P.get(e.pointerId);if(!p||!G)retur
 if(G.t==='pinch'){if(P.size<2)return;const[a,b]=[...P.values()],d=Math.hypot(a.x-b.x,a.y-b.y)||1;zoomAt((a.x+b.x)/2,(a.y+b.y)/2,cam.s*d/G.d);G.d=d;return}
 if(G.t==='none')return;const dx=e.clientX-G.sx,dy=e.clientY-G.sy;
 if(!G.moved){if(Math.hypot(dx,dy)<6)return;if(G.ta&&!G.touch){G.t='none';return}G.moved=true;getSelection().removeAllRanges();try{cv.setPointerCapture(e.pointerId)}catch(_){}document.body.classList.add('grab')}
-if(G.t==='drag'){if(V&&!inSubsView())(S_||V).auto=false;G.f.x=G.fx+dx/cam.s;G.f.y=G.fy+dy/cam.s;const el=fel(G.f.id);el.style.left=G.f.x+'px';el.style.top=G.f.y+'px';save()}
+if(G.t==='drag'){if(V&&!inSubsView())(S_||V).auto=false;else if(!FM[fkey()]){FM[fkey()]=1;fmSave()}G.f.x=G.fx+dx/cam.s;G.f.y=G.fy+dy/cam.s;const el=fel(G.f.id);el.style.left=G.f.x+'px';el.style.top=G.f.y+'px';save()}
 else{cam.x=G.cx+dx;cam.y=G.cy+dy;apply()}});
 const end=e=>{P.delete(e.pointerId);if(!G)return;if(G.t==='pinch'){if(P.size<2){G=null;save()}return}
 const g=G;G=null;document.body.classList.remove('grab');if(g.moved||g.t==='none')return;
@@ -2120,7 +2132,7 @@ function resetDemo(msg){
   cw(false);closeMenu();closeHelp();try{closePal()}catch(_){}
   C=seed();PLC=seedPlaces();migrate();LS=null;PS=false;V=null;S_=null;F=[];lastCat=null;rc={x:0,y:0,s:1};cams={};H=[];hi=0;
   Object.assign(cam,{x:0,y:0,s:1});
-  chrome();renderAll();fit();save();toast(typeof msg==='string'?msg:'Demo reset');
+  chrome();renderAll();FM={};fmSave();autoSpaceF();fit();save();toast(typeof msg==='string'?msg:'Demo reset');
 }
 let rs=0;
 document.querySelectorAll('#acts [data-a]').forEach(b=>b.onclick=async()=>{const a=b.dataset.a;
@@ -2140,7 +2152,7 @@ else if(a==='search'){cw(false);openPal()}
 else if(a==='help'){cw(false);openHelp()}
 else if(a==='delcat'){cw(false);delCat()}
 else if(a==='reset'){if(rs){resetDemo()}else{rs=1;b.textContent='tap again to reset';setTimeout(()=>{rs=0;b.textContent='reset demo'},2500)}}});
-$('file').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(s=>{try{const d=JSON.parse(s),L=d.categories||d.folders;if(!L||!L.length)throw 0;C=seedFromExport({categories:L});V=null;S_=null;F=[];cams={};cw(false);chrome();renderAll();fit();save();toast('Imported '+C.length+' boards',{kind:'ok'})}catch(_){toast('Could not read that file',{kind:'error'})}}).catch(()=>toast('Could not read that file',{kind:'error'}))};
+$('file').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(s=>{try{const d=JSON.parse(s),L=d.categories||d.folders;if(!L||!L.length)throw 0;C=seedFromExport({categories:L});V=null;S_=null;F=[];cams={};FM={};fmSave();cw(false);chrome();renderAll();autoSpaceF();fit();save();toast('Imported '+C.length+' boards',{kind:'ok'})}catch(_){toast('Could not read that file',{kind:'error'})}}).catch(()=>toast('Could not read that file',{kind:'error'}))};
 
 /* context menu */
 const cm=$('cm'),mod=/Mac|iP(hone|ad)/.test(navigator.platform||'')?'⌘':'Ctrl+';let mb=[],mh=-1;
@@ -2225,7 +2237,7 @@ const catMenu=c=>{
 const canvasMenu=(x,y)=>lvOn()?lvMenu():[
 {l:'search & commands',k:mod+'K',f:openPal},'-',
 V?(inSubsView()?null:{l:'new post here',f:()=>newFolder(wx(x),wy(y))}):{l:'new board here',f:()=>newCat(wx(x)-100,wy(y)-60)},'-',
-{l:'fit all',f:()=>fit(true)},V&&!inSubsView()?{l:'space out posts',f:()=>spacePosts()}:{l:!V&&!PS?'space out places':'space out boards',f:()=>spaceFolders()},{l:'zoom 100%',k:'0',f:()=>zoomTo(1)},{l:'go to zero',f:home},'-',
+{l:'fit all',f:()=>fit(true)},V&&!inSubsView()?{l:'space out posts',f:()=>spacePosts()}:{l:!V&&!PS?'space out places':'space out boards',f:()=>spaceFolders()},{l:'auto space-out: '+(AS?'on':'off'),f:toggleAS},{l:'zoom 100%',k:'0',f:()=>zoomTo(1)},{l:'go to zero',f:home},'-',
 {l:'undo',k:mod+'Z',f:undo},{l:'redo',k:mod+'⇧Z',f:redo},'-',
 S_?{l:'back to sub-boards',k:'Esc',f:closeSub}:V?{l:'back to boards',k:'Esc',f:closeCat}:null,
 {l:'switch board',k:'hold ⇧',f:()=>ow('tap')},'-',
@@ -2332,7 +2344,9 @@ paintTheme();chrome();renderAll();apply();
 function firstView(){const L=currentPool();if(!L.length)return fit();let a=1e9,b=1e9,c=-1e9;
  L.forEach(f=>{const e=fel(f.id);a=Math.min(a,f.x);b=Math.min(b,f.y);c=Math.max(c,f.x+(e?e.offsetWidth:264))});
  const k=.89;Object.assign(cam,{s:k,x:innerWidth/2-(a+c)/2*k,y:Math.max(96,innerHeight*.2)-b*k});apply();zsync()}
-if(needFit){const fv=()=>(!V&&!PS&&!coarse.matches)?firstView():fit();fv();document.fonts&&document.fonts.ready.then(fv)}
+const bootSpace=()=>V?autoSpace():autoSpaceF();
+if(needFit){const fv=()=>{bootSpace();(!V&&!PS&&!coarse.matches)?firstView():fit()};fv();document.fonts&&document.fonts.ready.then(fv)}
+else{if(bootSpace())fit();document.fonts&&document.fonts.ready.then(()=>{if(bootSpace())fit()})}
 /* self-heal: if nothing is on screen after boot, recover the camera first, then fall back to the seed (old save is kept) */
 function healCheck(final){
   try{
@@ -2431,8 +2445,8 @@ addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.shiftKey&&e.key.toLo
 
 /* places + list */
 function pl0(){return PLC.find(p=>p.id===(LS||'*'))||PLC[0]}
-function openPlace(p){if(PS)return;cams['@p']={...cam};LS=p.id==='*'?null:p.id;PS=true;Object.assign(cam,rc);cur=lastCat;renderAll();chrome();fit();swap();save()}
-function closePlace(){if(!PS||V)return;rc={...cam};PS=false;cur=LS||'*';renderAll();chrome();const c=cams['@p'];c?(Object.assign(cam,c),apply()):fit();swap()}
+function openPlace(p){if(PS)return;cams['@p']={...cam};LS=p.id==='*'?null:p.id;PS=true;Object.assign(cam,rc);cur=lastCat;renderAll();autoSpaceF();chrome();fit();swap();save()}
+function closePlace(){if(!PS||V)return;rc={...cam};PS=false;cur=LS||'*';renderAll();const sp=autoSpaceF();chrome();const c=cams['@p'];c&&!sp?(Object.assign(cam,c),apply()):fit();swap()}
 function newPlace(x,y){const s=(prompt('New place: name, optionally ", kind" (city, town, village, borough)')||'').trim();if(!s)return;const[n,k]=s.split(',').map(z=>z.trim()),i=PLC.length;PLC.push({id:nid(),name:n,k:KIND.includes((k||'').toLowerCase())?k.toLowerCase():'city',x:isFinite(x)?x:(i%4)*260,y:isFinite(y)?y:Math.floor(i/4)*230});renderAll();save();toast('Added '+n)}
 function placeMenu(p){if(!p)return[];return[{l:'open',f:()=>openPlace(p)},{l:'rename',f:()=>{const n=(prompt('Rename place',p.name)||'').trim();if(n){p.name=n;renderAll();save()}}},p.id!=='*'&&'-',p.id!=='*'&&{l:'delete place',danger:true,f:()=>{const g=new Set([p.id,...PLC.filter(x=>x.in===p.id).map(x=>x.id)]);C.flatMap(poolOf).forEach(f=>{if(g.has(f.loc))f.loc='*'});PLC=PLC.filter(x=>!g.has(x.id));renderAll();save()}}]}
 function chromeP(){const b=document.body;b.classList.toggle('ps',PS);b.classList.toggle('scoped',PS&&!!LS);$('pl').textContent=LS?pnm(LS)||'place':'everywhere';const r=$('rmt');if(V){const on=remOn(V);r.setAttribute('aria-pressed',String(on));r.textContent=on?'+ remote ✓':'+ remote'}}
