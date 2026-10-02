@@ -428,6 +428,11 @@ body:not(.in) #stw{display:none}
 #pfc{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}#pfw{position:absolute;left:0;top:0}
 #pfe{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:300 12px/1.5 var(--mono);color:var(--mute);text-align:center;max-width:34ch;pointer-events:none}
 #pfw .fold .fd{display:none}#pfw .fold .fd.pn{display:block;opacity:1}#pfw .fold .rz{display:none}#pfw .fold .fbody{pointer-events:none}#pfw .fold .fh{cursor:grab}.fd.pn.on{opacity:1;color:var(--ink)}
+#pfs{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 22px rgba(0,0,0,.08)}
+#pfs button{all:unset;box-sizing:border-box;min-height:36px;padding:0 13px;display:inline-flex;align-items:center;gap:6px;border-radius:11px;font:400 12px/1 var(--mono);color:var(--mute);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+#pfs button:hover{color:var(--ink)}#pfs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}#pfs button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+#pfs button i{font-style:normal;opacity:.6}
+@media(max-width:900px){#pfs{top:calc(env(safe-area-inset-top,0px) + 58px)}}
 </style>
 </head>
 <body>
@@ -531,7 +536,7 @@ body:not(.in) #stw{display:none}
 <div id="lt" role="region" aria-label="Letters"><div id="ltk"></div><div class="lz l" id="lzl" aria-hidden="true"></div><div class="lz r" id="lzr" aria-hidden="true"></div></div>
 <div id="lh" role="group" aria-label="Letter navigation"><button class="b icon" id="lprev" aria-label="Previous letter">‹</button><span class="n" id="ln" role="status" aria-live="polite"></span><button class="b icon" id="lnext" aria-label="Next letter">›</button></div>
 <div id="fx" aria-hidden="true"><div class="fxh l" id="fxl" aria-hidden="true"></div><div class="fxh r" id="fxr" aria-hidden="true"></div><button id="fxb" type="button">back to canvas</button></div>
-<div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfv">pins</button><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div></div>
+<div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfs" role="group" aria-label="Canvas view"><button data-v="folders">stowed</button><button data-v="pins">pinned</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div></div>
 <script>
 const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
@@ -2867,8 +2872,8 @@ function pfRender(){
   $('pfr').textContent=u?(u.mode==='phone'?'phone':'email')+' relay \u00b7 forwards privately':'';
   const w=$('pfw'),L=stowL(),PL=pinL();
   w.replaceChildren();
-  $('pfv').textContent=pins?'folders':'pins'+(PL.length?' \u00b7 '+PL.length:'');
-  $('pfv').setAttribute('aria-pressed',String(pins));
+  document.querySelectorAll('#pfs button').forEach(b=>{const on=b.dataset.v==='pins'?pins:!pins,n=b.dataset.v==='pins'?PL.length:L.length;
+    b.setAttribute('aria-pressed',String(on));b.replaceChildren(b.dataset.v==='pins'?'pinned':'stowed');if(n)b.append(h('i','',String(n)))});
   const shown=pins?PL:L;
   $('pfe').style.display=shown.length?'none':'';
   $('pfe').innerHTML=pins?'no pinned posts yet.<br>hit pin on any post. each pin stays where you put it.':'your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.';
@@ -2893,10 +2898,12 @@ function pfRender(){
     w.append(el);
   });
   w.style.transform='translate('+pan.x+'px,'+pan.y+'px)';
+  hplace('pfs');
 }
 function openPf(){if(!me()){authDlg(openPf);return}pfOn=true;$('pf').classList.add('on');$('pf').setAttribute('aria-hidden','false');pfRender()}
 function closePf(){pfOn=false;$('pf').classList.remove('on');$('pf').setAttribute('aria-hidden','true')}
-$('pfx').onclick=closePf;$('pfv').onclick=()=>{pfView=pfView==='pins'?'folders':'pins';pfRender()};$('pfa').onclick=()=>authDlg();$('me').onclick=openPf;$('stw').onclick=stow;
+$('pfx').onclick=closePf;document.querySelectorAll('#pfs button').forEach(b=>b.onclick=()=>{pfView=b.dataset.v;pfRender()});
+HID.push('pfs');HGRIP.push('pfs');HCEN.add('pfs');HNAME.pfs='stowed / pinned toggle';$('pfs').classList.add('hudw');hgrip('pfs');$('pfa').onclick=()=>authDlg();$('me').onclick=openPf;$('stw').onclick=stow;
 $('pfc').onpointerdown=e=>{if(e.target.closest('.cat,.fold'))return;const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y,c=$('pfc');try{c.setPointerCapture(e.pointerId)}catch(_){}
   c.onpointermove=ev=>{pan.x=px+ev.clientX-x0;pan.y=py+ev.clientY-y0;$('pfw').style.transform='translate('+pan.x+'px,'+pan.y+'px)'};c.onpointerup=()=>{c.onpointermove=c.onpointerup=null;pfRender()}};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&pfOn&&!document.querySelector('.dxo'))closePf()});
