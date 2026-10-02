@@ -390,7 +390,7 @@ body:not(.in) #acts [data-a=delcat]{display:none}#acts [data-a=delcat]{color:#c0
 #eb button{border:0;background:none;color:inherit;font:500 12px/1 var(--mono);cursor:pointer;padding:10px 8px;text-decoration:underline;text-underline-offset:3px}
 #pl,.pc{display:none}body.ps #pl{display:inline-block}body.ps .pc{display:inline}
 #pl{border:0;background:none;padding:6px 0;font:500 15px/1 var(--sans);color:var(--ink);cursor:pointer;max-width:30vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#rmt{display:none}body.in.scoped #rmt{display:inline-flex;align-items:center}#rmt[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+
 .plc .cs{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.plc.all .cb{border-style:dotted}
 #lst{position:fixed;inset:0;z-index:3;display:none;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:calc(env(safe-area-inset-top,0px) + 70px) 14px calc(env(safe-area-inset-bottom,0px) + 96px)}
 body.lst #lst{display:block}body.lst.sub #lst{padding-top:calc(env(safe-area-inset-top,0px) + 118px)}
@@ -443,7 +443,7 @@ body:not(.in) #stw{display:none}
     <span id="bc" class="ci" aria-live="polite"></span>
   </div>
   <div class="r">
-    <button class="b" id="rmt" aria-pressed="false" title="Include remote posts from anywhere">+ remote</button><span id="sv" class="ci" aria-hidden="true" title="Saved"></span>
+    <span id="sv" class="ci" aria-hidden="true" title="Saved"></span>
     <button class="b" id="stw" title="Stow this board + place as its own folder on your profile canvas">stow</button><button class="b" id="me">sign in</button><button class="b" id="mb">menu</button>
   </div>
 </div>
@@ -2502,9 +2502,8 @@ function openPlace(p){if(PS)return;cams['@p']={...cam};LS=p.id==='*'?null:p.id;P
 function closePlace(){if(!PS||V)return;rc={...cam};PS=false;cur=LS||'*';renderAll();const sp=autoSpaceF();chrome();const c=cams['@p'];c&&!sp?(Object.assign(cam,c),apply()):fit();swap()}
 function newPlace(x,y){const s=(prompt('New place: name, optionally ", kind" (city, town, village, borough)')||'').trim();if(!s)return;const[n,k]=s.split(',').map(z=>z.trim()),i=PLC.length;PLC.push({id:nid(),name:n,k:KIND.includes((k||'').toLowerCase())?k.toLowerCase():'city',x:isFinite(x)?x:(i%4)*260,y:isFinite(y)?y:Math.floor(i/4)*230});renderAll();save();toast('Added '+n)}
 function placeMenu(p){if(!p)return[];return[{l:'open',f:()=>openPlace(p)},{l:'rename',f:()=>{const n=(prompt('Rename place',p.name)||'').trim();if(n){p.name=n;renderAll();save()}}},p.id!=='*'&&'-',p.id!=='*'&&{l:'delete place',danger:true,f:()=>{const g=new Set([p.id,...PLC.filter(x=>x.in===p.id).map(x=>x.id)]);C.flatMap(poolOf).forEach(f=>{if(g.has(f.loc))f.loc='*'});PLC=PLC.filter(x=>!g.has(x.id));renderAll();save()}}]}
-function chromeP(){const b=document.body;b.classList.toggle('ps',PS);b.classList.toggle('scoped',PS&&!!LS);$('pl').textContent=LS?pnm(LS)||'place':'everywhere';const r=$('rmt');if(V){const on=remOn(V);r.setAttribute('aria-pressed',String(on));r.textContent=on?'+ remote ✓':'+ remote'}}
+function chromeP(){const b=document.body;b.classList.toggle('ps',PS);b.classList.toggle('scoped',PS&&!!LS);$('pl').textContent=LS?pnm(LS)||'place':'everywhere';}
 $('pl').onclick=()=>{if(S_)closeSub();if(V)closeCat();closePlace()};
-$('rmt').onclick=()=>{if(!V)return;V.rem=!remOn(V);renderAll();if(autoSpace())fit(true);chromeP();save()};
 /* compact list surface */
 const lstEl=id=>LM?$('lr').querySelector('[data-id="'+id+'"]'):null;
 var lvlK='';
@@ -2785,6 +2784,7 @@ const ln0=lvNew;lvNew=function(){if(!me()){authDlg(()=>lvNew());return}const n=F
 const stowL=()=>{const u=me();return u?(A.stow[u.handle]=A.stow[u.handle]||[]):[]};
 const pool=s=>{const c=C.find(x=>x.id===s.b);return c?poolOf(c).filter(f=>inSc(f,s.p,c)&&!s.hide.includes(f.id)).sort((a,b)=>(b.postedAt||0)-(a.postedAt||0)):[]};
 function stow(){if(!me()){authDlg(stow);return}if(!V){toast('Open a board first',{kind:'error'});return}const L=stowL(),i=L.length;
+  if(L.some(x=>x.b===V.id&&(x.p||null)===(LS||null))){toast('Already stowed',{action:'view',onAction:openPf});return}
   L.push({id:'s'+rnd(6),name:(V.name||'untitled')+' \u00b7 '+(LS?pnm(LS):'everywhere'),b:V.id,p:LS||null,x:(i%3)*240,y:(i/3|0)*200,hide:[]});sv();toast('Stowed as its own folder',{action:'view',onAction:openPf})}
 function jump(s,f){
   closePf();
