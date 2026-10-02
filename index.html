@@ -2756,7 +2756,15 @@ function authDlg(cb){dlg((b,close)=>{const u=me(),hs=Object.keys(A.users);
     if(A.users[hn]){toast('Handle taken',{kind:'error'});return}if(!fi.value.trim()){toast('Add somewhere to forward replies',{kind:'error'});return}
     A.users[hn]={handle:hn,fwd:fi.value.trim(),mode:md.value};A.me=hn;sv();label();close();pfOn&&pfRender();cb&&cb()};
   b.append(hi,fi,md,go);
-  if(hs.length){b.append(h('p','','or switch'));hs.filter(x=>x!==A.me).forEach(x=>{const s=h('button','b','@'+x);s.onclick=()=>{A.me=x;sv();label();close();pfOn&&pfRender();cb&&cb()};b.append(s)})}
+  const rm=x=>{if(!confirm('Remove @'+x+' from this device? Its stowed folders, relays and threads are deleted too.'))return;
+    if(A.me===x){A.me=null;pfOn&&closePf()}delete A.users[x];delete A.stow[x];
+    Object.keys(A.own).forEach(k=>{if(A.own[k].by===x)delete A.own[k]});
+    Object.keys(A.cm).forEach(k=>{A.cm[k]=A.cm[k].filter(t=>t.u!==x);if(!A.cm[k].length)delete A.cm[k]});
+    sv();label();close();toast('Removed @'+x,{duration:1800});authDlg(cb)};
+  if(hs.length){b.append(h('p','',hs.length>1?'or switch / remove':'saved on this device'));hs.forEach(x=>{const row=h('div');row.style.cssText='display:flex;gap:6px;align-items:center';
+    if(x!==A.me){const s=h('button','b','@'+x);s.onclick=()=>{A.me=x;sv();label();close();pfOn&&pfRender();cb&&cb()};row.append(s)}
+    else row.append(h('span','','@'+x+' (signed in)'));
+    const r=h('button','b','remove');r.title='Remove @'+x+' from this device';r.onclick=()=>rm(x);row.append(r);b.append(row)})}
   if(u){const o=h('button','b','sign out');o.onclick=()=>{A.me=null;sv();label();close();pfOn&&closePf()};b.append(o)}})}
 const reg=f=>{const u=me();if(u&&f&&!A.own[f.id]){A.own[f.id]={by:u.handle,relay:relay(u.mode)};sv()}};
 function box(ph,fn,extra){const w=h('div','dxbx'),i=h('input'),s=h('button','','send');i.placeholder=ph;
