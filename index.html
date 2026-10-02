@@ -432,6 +432,7 @@ body:not(.in) #stw{display:none}
 #pfs button{all:unset;box-sizing:border-box;min-height:36px;padding:0 13px;display:inline-flex;align-items:center;gap:6px;border-radius:11px;font:400 12px/1 var(--mono);color:var(--mute);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 #pfs button:hover{color:var(--ink)}#pfs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}#pfs button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 #pfs button i{font-style:normal;opacity:.6}
+body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 @media(max-width:900px){#pfs{top:calc(env(safe-area-inset-top,0px) + 58px)}}
 </style>
 </head>
@@ -2750,7 +2751,7 @@ const me=()=>A.me&&A.users[A.me]||null,rnd=n=>Math.random().toString(36).slice(2
 const ago=t=>{const m=(Date.now()-t)/6e4;return m<1?'now':m<60?(m|0)+'m':m<1440?(m/60|0)+'h':(m/1440|0)+'d'};
 const relay=mode=>mode==='phone'?'+1 267 555 01'+(10+Math.random()*89|0):'p-'+rnd(6)+'@relay.dab.cx';
 const OP=new Set();let pfOn=false,pfView='folders',pan={x:40,y:90};
-const label=()=>{$('me').textContent=me()?'@'+me().handle:'sign in'};
+const label=()=>{$('me').textContent=me()?'@'+me().handle:'sign in';if(typeof syncPins==='function')syncPins()};
 function dlg(build){const m=h('div','dxo'),b=h('div');m.append(b);const close=()=>{m.remove();document.removeEventListener('keydown',esc,true)};
   const esc=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};document.addEventListener('keydown',esc,true);
   m.onpointerdown=e=>{if(e.target===m)close()};build(b,close);document.body.append(m);const i=b.querySelector('input');i&&i.focus()}
@@ -2814,6 +2815,7 @@ function stow(){if(!me()){authDlg(stow);return}if(!V){toast('Open a board first'
   if(L.some(x=>x.b===V.id&&(x.p||null)===(LS||null))){toast('Already stowed',{action:'view',onAction:openPf});return}
   L.push({id:'s'+rnd(6),name:(V.name||'untitled')+' \u00b7 '+(LS?pnm(LS):'everywhere'),b:V.id,p:LS||null,x:(i%3)*240,y:(i/3|0)*200,hide:[]});sv();toast('Stowed as its own folder',{action:'view',onAction:openPf})}
 function jump(s,f){
+  if(pfLP){pfLP=0;return}
   closePf();
   const c=C.find(x=>x.id===s.b); if(!c) return;
   if(S_)closeSub(); if(V)closeCat();
@@ -2837,13 +2839,6 @@ function pfDrag(el,s){
     el.onpointerup=()=>{
       el.onpointermove=el.onpointerup=null;
       if(mv)sv(); else jump(s)
-    }
-  };
-  el.oncontextmenu=e=>{
-    e.preventDefault();e.stopPropagation();
-    if(confirm('Unstow "'+s.name+'"?')){
-      A.stow[me().handle]=stowL().filter(x=>x!==s);
-      sv();pfRender();
     }
   };
 }
@@ -2890,7 +2885,7 @@ function pfRender(){
     const el=h('div','cat');
     el.style.left=s.x+'px';el.style.top=s.y+'px';
     el.innerHTML='<span class="cb"></span><span class="cf"><span class="cl"></span><span class="cs"></span></span>';
-    el.querySelector('.cl').textContent=s.name;
+    el.dataset.sid=s.id;el.querySelector('.cl').textContent=s.name;
     const n=pool(s).length;
     el.querySelector('.cs').textContent=n+(n===1?' post':' posts');
     rExtras(el,{trees:pool(s).slice(0,6)});
@@ -2900,8 +2895,38 @@ function pfRender(){
   w.style.transform='translate('+pan.x+'px,'+pan.y+'px)';
   hplace('pfs');
 }
-function openPf(){if(!me()){authDlg(openPf);return}pfOn=true;$('pf').classList.add('on');$('pf').setAttribute('aria-hidden','false');pfRender()}
-function closePf(){pfOn=false;$('pf').classList.remove('on');$('pf').setAttribute('aria-hidden','true')}
+let pfLP=0,pfLT=0,pfLX=0,pfLY=0;
+const syncPins=()=>document.querySelectorAll('.fold .fd.pn').forEach(b=>{const fo=b.closest('.fold'),on=!!fo&&isPin(fo.dataset.id);b.textContent=on?'unpin':'pin';b.classList.toggle('on',on)});
+function unstow(s){const L=stowL(),i=L.indexOf(s);if(i<0)return;L.splice(i,1);sv();pfRender();
+  toast('Unstowed "'+s.name+'"',{action:'undo',onAction:()=>{const M=stowL();M.splice(Math.min(i,M.length),0,s);sv();pfRender()}})}
+function unpin(pin){const L=pinL(),i=L.indexOf(pin);if(i<0)return;L.splice(i,1);sv();pfRender();syncPins();
+  toast('Unpinned',{action:'undo',onAction:()=>{const M=pinL();M.splice(Math.min(i,M.length),0,pin);sv();pfRender();syncPins()}})}
+function clearView(pins){const u=me();if(!u)return;if(pins){A.pins=A.pins||{};A.pins[u.handle]=[]}else A.stow[u.handle]=[];sv();pfRender();syncPins();toast(pins?'Unpinned all':'Unstowed all',{duration:1600})}
+function tidy(){const pins=pfView==='pins';
+  if(pins){const cols=[0,0,0];pinL().forEach(pn=>{const el=[...$('pfw').children].find(e=>e.dataset.id===pn.id);if(!el)return;
+    const c=cols.indexOf(Math.min(...cols));pn.x=c*320;pn.y=cols[c];cols[c]+=el.offsetHeight+24})}
+  else stowL().forEach((o,i)=>{o.x=(i%3)*240;o.y=(i/3|0)*200});
+  pan={x:40,y:90};sv();pfRender()}
+function pfMenu(x,y,t){const u=me();if(!u)return;const pins=pfView==='pins',ce=t.closest('.cat'),fe=t.closest('.fold');let items;
+  if(!pins&&ce&&ce.dataset.sid){const s=stowL().find(o=>o.id===ce.dataset.sid);if(!s)return;
+    items=[{l:'open board',f:()=>jump(s)},
+      {l:'rename\u2026',f:()=>{const n=(prompt('Rename stowed folder',s.name)||'').trim();if(n){s.name=n;sv();pfRender()}}},'-',
+      {l:'unstow',danger:1,f:()=>unstow(s)}]}
+  else if(pins&&fe){const pin=pinL().find(o=>o.id===fe.dataset.id);if(!pin)return;const c=C.find(q=>q.id===pin.b),f=c&&poolOf(c).find(q=>q.id===pin.id);
+    items=[{l:'open post',f:()=>jump(pin,f)},'-',{l:'unpin',f:()=>unpin(pin)}]}
+  else{const n=(pins?pinL():stowL()).length;
+    items=[{l:pins?'show stowed folders':'show pinned posts',f:()=>{pfView=pins?'folders':'pins';pfRender()}},'-',
+      {l:'tidy up',f:tidy,off:!n},{l:'recenter',f:()=>{pan={x:40,y:90};pfRender()}},'-',
+      {l:pins?'unpin all':'unstow all',danger:1,off:!n,f:()=>clearView(pins)},'-',
+      {l:'account / switch',f:()=>authDlg()},{l:'close canvas',k:'Esc',f:closePf}]}
+  openMenu(items,x,y)}
+$('pf').addEventListener('contextmenu',e=>{e.stopPropagation();e.preventDefault();if(e.target.closest('#pfh,#pfs'))return;pfMenu(e.clientX,e.clientY,e.target)});
+$('pf').addEventListener('pointerdown',e=>{pfLP=0;clearTimeout(pfLT);if(e.pointerType!=='touch'||e.target.closest('#pfh,#pfs'))return;
+  const t=e.target;pfLX=e.clientX;pfLY=e.clientY;pfLT=setTimeout(()=>{pfLP=1;pfMenu(pfLX,pfLY,t)},550)},true);
+$('pf').addEventListener('pointermove',e=>{if(pfLT&&Math.hypot(e.clientX-pfLX,e.clientY-pfLY)>8){clearTimeout(pfLT);pfLT=0}},true);
+['pointerup','pointercancel'].forEach(n=>$('pf').addEventListener(n,()=>{clearTimeout(pfLT);pfLT=0;setTimeout(()=>{pfLP=0},0)},true));
+function openPf(){if(!me()){authDlg(openPf);return}pfOn=true;document.body.classList.add('pfon');$('pf').classList.add('on');$('pf').setAttribute('aria-hidden','false');pfRender()}
+function closePf(){pfOn=false;document.body.classList.remove('pfon');closeMenu();$('pf').classList.remove('on');$('pf').setAttribute('aria-hidden','true')}
 $('pfx').onclick=closePf;document.querySelectorAll('#pfs button').forEach(b=>b.onclick=()=>{pfView=b.dataset.v;pfRender()});
 HID.push('pfs');HGRIP.push('pfs');HCEN.add('pfs');HNAME.pfs='stowed / pinned toggle';$('pfs').classList.add('hudw');hgrip('pfs');$('pfa').onclick=()=>authDlg();$('me').onclick=openPf;$('stw').onclick=stow;
 $('pfc').onpointerdown=e=>{if(e.target.closest('.cat,.fold'))return;const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y,c=$('pfc');try{c.setPointerCapture(e.pointerId)}catch(_){}
