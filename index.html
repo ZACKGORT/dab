@@ -330,7 +330,7 @@ body.lv #lh{display:flex}body.lv.ed #lh{display:none}
 
 /* ══ SORT HUD ══ */
 #sorthud{position:fixed;top:calc(env(safe-area-inset-top,0px) + 58px);left:50%;transform:translateX(-50%);z-index:6;display:none;gap:2px;padding:3px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 22px rgba(0,0,0,.08)}
-body.sub #sorthud{display:flex}
+body.srt #sorthud{display:flex}
 #sorthud button{all:unset;box-sizing:border-box;min-height:32px;padding:0 11px;display:inline-flex;align-items:center;border-radius:11px;font:400 11px/1 var(--mono);color:var(--mute);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 #sorthud button:hover{color:var(--ink)}
 #sorthud button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
@@ -1600,7 +1600,7 @@ function spacePosts(auto){
  const L=F.filter(inScope).filter(f=>fel(f.id));if(L.length<2){if(!auto)toast('Nothing to space out');return false}
  const G=44,VW=Math.max(320,innerWidth-48),VH=Math.max(240,innerHeight-170);
  const it=L.map(f=>{const e=fel(f.id);return{f,e,w:e.offsetWidth,h:e.offsetHeight}});
- if(S_)it.sort((a,b)=>a.f.y-b.f.y||a.f.x-b.f.x);else it.sort((a,b)=>(b.f.postedAt||0)-(a.f.postedAt||0)||a.f.y-b.f.y||a.f.x-b.f.x);
+ if(S_)it.sort((a,b)=>a.f.y-b.f.y||a.f.x-b.f.x);else it.sort(sortMode==='az'?(a,b)=>pTitle(a.f).localeCompare(pTitle(b.f))||a.f.y-b.f.y||a.f.x-b.f.x:(a,b)=>(b.f.postedAt||0)-(a.f.postedAt||0)||a.f.y-b.f.y||a.f.x-b.f.x);
  let best=null;
  for(let n=1;n<=Math.min(it.length,24);n++){
   const cw=Array(n).fill(0),ch=Array(n).fill(0),col=[];
@@ -1799,7 +1799,7 @@ function renderAll(){world.innerHTML='';
       const hidden=S_._hidden||new Set();
       S_.trees.forEach(f=>{ if(!hidden.has(f.id)&&inScope(f)) world.append(rFold(f)); });
     } else {
-      F.filter(inScope).forEach(f=>world.append(rFold(f)));
+      F.filter(f=>inScope(f)&&!HIDV.has(f.id)).forEach(f=>world.append(rFold(f)));
     }
   }
   lvRender();lstRender();
@@ -1808,6 +1808,7 @@ const cnt=a=>a.reduce((s,n)=>s+1+cnt(n.k),0),swap=()=>{world.classList.remove('s
 function chrome(){
   chromeP();document.body.classList.toggle('in',!!V);
   document.body.classList.toggle('sub',!!S_);
+  document.body.classList.toggle('srt',!!V&&!inSubsView());
   const name = S_ ? S_.name : (V ? V.name : '');
   $('cn').value = name;
   paintSort();
@@ -1857,7 +1858,7 @@ function openCat(c){
   else {F=c.trees;cur=F[0]?F[0].id:null;}
   const has=cams[viewKey()];
   if(has)Object.assign(cam,has);
-  renderAll();const sp=autoSpace()||autoSpaceF();chrome();has&&!sp?apply():fit();swap();
+  applyBoardSort();renderAll();const sp=autoSpace()||autoSpaceF();chrome();has&&!sp?apply():fit();swap();
 }
 function openSub(s){
   if(!V||S_===s)return;
@@ -1895,9 +1896,22 @@ function newFolder(x,y){
   const f={id:nid(),name:'',x:x-FW/2,y:y-30,...(LS?{loc:LS}:{}),tree:[mk()]};F.push(f);world.append(rFold(f));setCur(f.id);save();rename(f);return f
 }
 
-/* ══ SORT for sub-boards ══ */
-let sortMode='recent';
+/* ══ SORT — one global mode shared by every board and sub-board (persisted) ══ */
 const SORT_LABELS={recent:'newest',today:'today',week:'this week',az:'a–z'};
+let sortMode=(()=>{try{const m=localStorage.getItem('dab:sort');return SORT_LABELS[m]?m:'recent'}catch(_){return 'recent'}})();
+const HIDV=new Set();
+const pTitle=f=>(f.name&&f.name.trim())||ft(f.tree)||'';
+function applyBoardSort(){
+  HIDV.clear();
+  if(!V||S_||inSubsView())return false;
+  const now=Date.now(),L=F.filter(inScope);
+  const inRange=t=>sortMode==='today'?(t.postedAt||0)>=now-864e5:sortMode==='week'?(t.postedAt||0)>=now-6048e5:true;
+  const vis=L.filter(inRange);L.filter(t=>!inRange(t)).forEach(t=>HIDV.add(t.id));
+  const slots=vis.map(t=>({x:t.x,y:t.y,w:t.w})).sort((a,b)=>a.y-b.y||a.x-b.x);
+  if(sortMode==='az')vis.sort((a,b)=>pTitle(a).localeCompare(pTitle(b)));else vis.sort((a,b)=>(b.postedAt||0)-(a.postedAt||0));
+  vis.forEach((t,i)=>{const b=slots[i];if(b){t.x=b.x;t.y=b.y;if(b.w)t.w=b.w}});
+  return true;
+}
 function paintSort(){
   const el=$('sorthud');
   if(!el)return;
@@ -1906,7 +1920,7 @@ function paintSort(){
     el.append(h('span','lbl','sort'));
     Object.keys(SORT_LABELS).forEach(m=>{
       const b=h('button','',SORT_LABELS[m]);b.type='button';b.dataset.m=m;
-      b.onclick=()=>{sortMode=m;applySubSort();renderAll();if(autoSpace())fit(true);paintSort();};
+      b.onclick=()=>{sortMode=m;try{localStorage.setItem('dab:sort',m)}catch(_){}S_?applySubSort():applyBoardSort();renderAll();if(autoSpace())fit(true);paintSort();};
       el.append(b);
     });
   }
@@ -2344,6 +2358,7 @@ paintTheme();chrome();renderAll();apply();
 function firstView(){const L=currentPool();if(!L.length)return fit();let a=1e9,b=1e9,c=-1e9;
  L.forEach(f=>{const e=fel(f.id);a=Math.min(a,f.x);b=Math.min(b,f.y);c=Math.max(c,f.x+(e?e.offsetWidth:264))});
  const k=.89;Object.assign(cam,{s:k,x:innerWidth/2-(a+c)/2*k,y:Math.max(96,innerHeight*.2)-b*k});apply();zsync()}
+if(V&&!S_&&!inSubsView()&&applyBoardSort())renderAll();
 const bootSpace=()=>V?autoSpace():autoSpaceF();
 if(needFit){const fv=()=>{bootSpace();(!V&&!PS&&!coarse.matches)?firstView():fit()};fv();document.fonts&&document.fonts.ready.then(fv)}
 else{if(bootSpace())fit();document.fonts&&document.fonts.ready.then(()=>{if(bootSpace())fit()})}
@@ -2464,7 +2479,7 @@ function lstRender(){const bd=document.body;bd.classList.toggle('lst',LM);if(!LM
  if(!PS){const w=(p,d)=>{R.push({t:p.name||'untitled',m:(p.id==='*'?'all':p.k)+' · '+placed(p.id).length,ind:d,f:()=>openPlace(p)});PLC.filter(x=>x.in===p.id).forEach(x=>w(x,d+1))};PLC.filter(p=>!p.in).forEach(p=>w(p,0));R.push({t:'new place',add:1,f:()=>newPlace()})}
  else if(!V){C.forEach(c=>{const hs=c.subs&&c.subs.length,n=(hs?c.subs.flatMap(s=>s.trees):c.trees).filter(inScope).length;R.push({t:c.name||'untitled',m:hs?c.subs.length+' sub · '+n:n+' posts',f:()=>openCat(c)})});R.push({t:'new board',add:1,f:()=>newCat((C.length%4)*260,Math.floor(C.length/4)*230)})}
  else if(inSubsView()){V.subs.forEach(s=>R.push({t:s.name||'untitled',m:s.trees.filter(inScope).length+' posts',f:()=>openSub(s)}))}
- else{const hid=S_&&S_._hidden||new Set();(S_?S_.trees:F).filter(f=>inScope(f)&&!hid.has(f.id)).sort((a,b)=>a.y-b.y||a.x-b.x).forEach(f=>R.push({id:f.id,post:1,t:(f.name&&f.name.trim())||ft(f.tree)||'untitled',m:[!LS&&f.loc&&f.loc!=='*'?pl(f.loc):'',cnt(f.tree)+' ln',age(f.postedAt)].filter(Boolean).join(' · '),f:()=>openFocus(f)}));
+ else{const hid=S_?(S_._hidden||new Set()):HIDV;(S_?S_.trees:F).filter(f=>inScope(f)&&!hid.has(f.id)).sort((a,b)=>a.y-b.y||a.x-b.x).forEach(f=>R.push({id:f.id,post:1,t:(f.name&&f.name.trim())||ft(f.tree)||'untitled',m:[!LS&&f.loc&&f.loc!=='*'?pl(f.loc):'',cnt(f.tree)+' ln',age(f.postedAt)].filter(Boolean).join(' · '),f:()=>openFocus(f)}));
   R.push({t:'new post',add:1,f:()=>{const f=newFolder(FW/2,Math.max(0,...F.map(g=>g.y))+190);if(f)openFocus(f)}})}
  const q=qi.value.trim().toLowerCase();$('lqc').textContent=R.filter(r=>!r.add).length;
  $('lr').replaceChildren(...R.filter(r=>r.add||!q||r.t.toLowerCase().includes(q)).map(r=>{const b=h('button','lrw'+(r.add?' ad':''));b.type='button';if(r.id)b.dataset.id=r.id;b.style.paddingLeft=(4+(r.ind||0)*18)+'px';
@@ -2474,7 +2489,7 @@ $('lqi').addEventListener('input',lstRender);$('lqi').addEventListener('keydown'
 /* letter view */
 function lvOn(){return LV&&!LM&&!!V&&!inSubsView()}
 function lvSave(){try{localStorage.setItem('dab:view',JSON.stringify({v:LV?'letters':'canvas',i:LI}))}catch(_){}}
-function lvOrder(){return F.filter(inScope).sort((a,b)=>a.x-b.x||a.y-b.y)}
+function lvOrder(){return F.filter(f=>inScope(f)&&(S_||!HIDV.has(f.id))).sort((a,b)=>a.x-b.x||a.y-b.y)}
 function lvRender(){try{lvRender0()}catch(e){console.error(e);try{toast('letter view: '+e.message,{kind:'error'})}catch(_){}}}
 function lvRender0(){
   const on=lvOn();document.body.classList.toggle('lv',on);sfPaint();
