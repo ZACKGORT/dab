@@ -427,6 +427,7 @@ body:not(.in) #stw{display:none}
 #pfh>*{pointer-events:auto}#pfn{font:500 20px/1 var(--sans);letter-spacing:-.02em}#pfr{font:300 11px/1 var(--mono);color:var(--mute);margin-right:auto}
 #pfc{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}#pfw{position:absolute;left:0;top:0}
 #pfe{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:300 12px/1.5 var(--mono);color:var(--mute);text-align:center;max-width:34ch;pointer-events:none}
+#pfw .fold .fd{display:none}#pfw .fold .fd.pn{display:block;opacity:1}#pfw .fold .rz{display:none}#pfw .fold .fbody{pointer-events:none}#pfw .fold .fh{cursor:grab}.fd.pn.on{opacity:1;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -530,7 +531,7 @@ body:not(.in) #stw{display:none}
 <div id="lt" role="region" aria-label="Letters"><div id="ltk"></div><div class="lz l" id="lzl" aria-hidden="true"></div><div class="lz r" id="lzr" aria-hidden="true"></div></div>
 <div id="lh" role="group" aria-label="Letter navigation"><button class="b icon" id="lprev" aria-label="Previous letter">‹</button><span class="n" id="ln" role="status" aria-live="polite"></span><button class="b icon" id="lnext" aria-label="Next letter">›</button></div>
 <div id="fx" aria-hidden="true"><div class="fxh l" id="fxl" aria-hidden="true"></div><div class="fxh r" id="fxr" aria-hidden="true"></div><button id="fxb" type="button">back to canvas</button></div>
-<div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div></div>
+<div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfv">pins</button><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div></div>
 <script>
 const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
@@ -2743,7 +2744,7 @@ const sv=()=>{try{localStorage.setItem(AK,JSON.stringify(A))}catch(_){}};
 const me=()=>A.me&&A.users[A.me]||null,rnd=n=>Math.random().toString(36).slice(2,2+n);
 const ago=t=>{const m=(Date.now()-t)/6e4;return m<1?'now':m<60?(m|0)+'m':m<1440?(m/60|0)+'h':(m/1440|0)+'d'};
 const relay=mode=>mode==='phone'?'+1 267 555 01'+(10+Math.random()*89|0):'p-'+rnd(6)+'@relay.dab.cx';
-const OP=new Set();let pfOn=false,pan={x:40,y:90};
+const OP=new Set();let pfOn=false,pfView='folders',pan={x:40,y:90};
 const label=()=>{$('me').textContent=me()?'@'+me().handle:'sign in'};
 function dlg(build){const m=h('div','dxo'),b=h('div');m.append(b);const close=()=>{m.remove();document.removeEventListener('keydown',esc,true)};
   const esc=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};document.addEventListener('keydown',esc,true);
@@ -2757,7 +2758,7 @@ function authDlg(cb){dlg((b,close)=>{const u=me(),hs=Object.keys(A.users);
     A.users[hn]={handle:hn,fwd:fi.value.trim(),mode:md.value};A.me=hn;sv();label();close();pfOn&&pfRender();cb&&cb()};
   b.append(hi,fi,md,go);
   const rm=x=>{if(!confirm('Remove @'+x+' from this device? Its stowed folders, relays and threads are deleted too.'))return;
-    if(A.me===x){A.me=null;pfOn&&closePf()}delete A.users[x];delete A.stow[x];
+    if(A.me===x){A.me=null;pfOn&&closePf()}delete A.users[x];delete A.stow[x];if(A.pins)delete A.pins[x];
     Object.keys(A.own).forEach(k=>{if(A.own[k].by===x)delete A.own[k]});
     Object.keys(A.cm).forEach(k=>{A.cm[k]=A.cm[k].filter(t=>t.u!==x);if(!A.cm[k].length)delete A.cm[k]});
     sv();label();close();toast('Removed @'+x,{duration:1800});authDlg(cb)};
@@ -2783,7 +2784,20 @@ function paint(el,f){if(!el)return;let d=el.querySelector(':scope>.dx');
   if(!u){const b=h('button','','sign in to message');b.onclick=()=>authDlg(()=>paint(el,f));d.append(b)}
   else if(!mine&&!th.some(t=>t.u===u.handle))d.append(box('ask about this post\u2026',s=>{(A.cm[f.id]=A.cm[f.id]||[]).push({id:rnd(6),u:u.handle,m:[{u:u.handle,t:s,at:Date.now()}]});sv();paint(el,f)}));
   else if(mine&&!th.length)d.append(h('div','dxh','no messages yet. replies from others open a private thread with you.'))}
-const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);return el};
+const pinL=()=>{const u=me();if(!u)return[];A.pins=A.pins||{};return A.pins[u.handle]=A.pins[u.handle]||[]};
+const isPin=id=>pinL().some(p=>p.id===id);
+const setPn=(b,f)=>{const on=isPin(f.id);b.textContent=on?'unpin':'pin';b.classList.toggle('on',on)};
+function togglePin(f,b){if(!me()){authDlg(()=>togglePin(f,b));return}
+  const L=pinL(),i=L.findIndex(p=>p.id===f.id);
+  if(i>=0){L.splice(i,1);sv();toast('Unpinned',{duration:1400})}
+  else{if(!V){toast('Open a board first',{kind:'error'});return}const n=L.length;
+    L.push({id:f.id,b:V.id,p:LS||null,x:(n%3)*300,y:(n/3|0)*260});sv();
+    toast('Pinned to your canvas',{action:'view',onAction:()=>{pfView='pins';openPf()}})}
+  setPn(b,f);pfOn&&pfRender()}
+const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);
+  const fh=el.querySelector('.fh');if(fh){const b=h('button','fd pn');b.title='pin to my canvas';setPn(b,f);
+    b.onpointerdown=e=>e.stopPropagation();b.onclick=e=>{e.stopPropagation();togglePin(f,b)};fh.insertBefore(b,fh.querySelector('.fd'))}
+  return el};
 const nf0=newFolder;newFolder=function(x,y){if(!me()){authDlg(()=>newFolder(x,y));return}const f=nf0.apply(this,arguments);if(f){reg(f);paint(fel(f.id),f)}return f};
 const ln0=lvNew;lvNew=function(){if(!me()){authDlg(()=>lvNew());return}const n=F.length,r=ln0.apply(this,arguments);if(F.length>n)reg(F[F.length-1]);return r};
 /* profile canvas: stowed folders = (board x place) views, each sovereign: own name, position and trimmed post list.
@@ -2828,14 +2842,46 @@ function pfDrag(el,s){
     }
   };
 }
+function pfPinDrag(el,pin,f){
+  const hd=el.querySelector('.fh');if(!hd)return;
+  hd.onpointerdown=e=>{
+    if(e.target.closest('button'))return;
+    e.stopPropagation();
+    const x0=e.clientX,y0=e.clientY,sx=pin.x,sy=pin.y;let mv=0;
+    try{hd.setPointerCapture(e.pointerId)}catch(_){}
+    hd.onpointermove=ev=>{
+      const dx=ev.clientX-x0,dy=ev.clientY-y0;
+      if(!mv&&Math.hypot(dx,dy)<5)return;
+      mv=1;pin.x=sx+dx;pin.y=sy+dy;
+      el.style.left=pin.x+'px';el.style.top=pin.y+'px'
+    };
+    hd.onpointerup=()=>{
+      hd.onpointermove=hd.onpointerup=null;
+      if(mv)sv(); else jump(pin,f)
+    }
+  }
+}
 function pfRender(){
-  const u=me();
+  const u=me(),pins=pfView==='pins';
   $('pfn').textContent=u?'@'+u.handle:'';
   $('pfr').textContent=u?(u.mode==='phone'?'phone':'email')+' relay \u00b7 forwards privately':'';
-  const w=$('pfw'),L=stowL();
+  const w=$('pfw'),L=stowL(),PL=pinL();
   w.replaceChildren();
-  $('pfe').style.display=L.length?'none':'';
-  L.forEach(s=>{
+  $('pfv').textContent=pins?'folders':'pins'+(PL.length?' \u00b7 '+PL.length:'');
+  $('pfv').setAttribute('aria-pressed',String(pins));
+  const shown=pins?PL:L;
+  $('pfe').style.display=shown.length?'none':'';
+  $('pfe').innerHTML=pins?'no pinned posts yet.<br>hit pin on any post. each pin stays where you put it.':'your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.';
+  if(pins){
+    PL.forEach(pin=>{
+      const c=C.find(x=>x.id===pin.b),f=c&&poolOf(c).find(x=>x.id===pin.id);
+      if(!f)return;
+      const el=rFold(f);
+      el.classList.remove('cur');el.style.left=pin.x+'px';el.style.top=pin.y+'px';
+      pfPinDrag(el,pin,f);
+      w.append(el);
+    });
+  }else L.forEach(s=>{
     const el=h('div','cat');
     el.style.left=s.x+'px';el.style.top=s.y+'px';
     el.innerHTML='<span class="cb"></span><span class="cf"><span class="cl"></span><span class="cs"></span></span>';
@@ -2850,11 +2896,11 @@ function pfRender(){
 }
 function openPf(){if(!me()){authDlg(openPf);return}pfOn=true;$('pf').classList.add('on');$('pf').setAttribute('aria-hidden','false');pfRender()}
 function closePf(){pfOn=false;$('pf').classList.remove('on');$('pf').setAttribute('aria-hidden','true')}
-$('pfx').onclick=closePf;$('pfa').onclick=()=>authDlg();$('me').onclick=openPf;$('stw').onclick=stow;
-$('pfc').onpointerdown=e=>{if(e.target.closest('.cat'))return;const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y,c=$('pfc');try{c.setPointerCapture(e.pointerId)}catch(_){}
+$('pfx').onclick=closePf;$('pfv').onclick=()=>{pfView=pfView==='pins'?'folders':'pins';pfRender()};$('pfa').onclick=()=>authDlg();$('me').onclick=openPf;$('stw').onclick=stow;
+$('pfc').onpointerdown=e=>{if(e.target.closest('.cat,.fold'))return;const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y,c=$('pfc');try{c.setPointerCapture(e.pointerId)}catch(_){}
   c.onpointermove=ev=>{pan.x=px+ev.clientX-x0;pan.y=py+ev.clientY-y0;$('pfw').style.transform='translate('+pan.x+'px,'+pan.y+'px)'};c.onpointerup=()=>{c.onpointermove=c.onpointerup=null;pfRender()}};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&pfOn&&!document.querySelector('.dxo'))closePf()});
-const pa0=palActs;palActs=function(){const a=pa0();if(V&&!inSubsView())a.push(['Stow board to my canvas',stow]);a.push(['My profile canvas',openPf],[me()?'Account / switch':'Sign in',()=>authDlg()]);return a};
+const pa0=palActs;palActs=function(){const a=pa0();if(V&&!inSubsView())a.push(['Stow board to my canvas',stow]);a.push(['My profile canvas',()=>{pfView='folders';openPf()}],['My pinned posts',()=>{pfView='pins';openPf()}],[me()?'Account / switch':'Sign in',()=>authDlg()]);return a};
 label();
 })();
 </script>
