@@ -2781,7 +2781,7 @@ function paint(el,f){if(!el)return;let d=el.querySelector(':scope>.dx');
   d.replaceChildren();const o=A.own[f.id],u=me(),mine=!!(u&&o&&o.by===u.handle),th=A.cm[f.id]||[],vis=mine?th:th.filter(t=>u&&t.u===u.handle),poster=o?o.by:'poster';
   const top=h('div','dxt');top.append(h('span','dxb',(o?'@'+o.by+' · ':'')+(mine?'your relay ':o?'reply via ':'')+(o?o.relay:'')));
   if(o){const c=h('button','','copy');c.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(o.relay);toast('Relay copied',{duration:1400})};top.append(c)}
-  const tg=h('button','',(mine?th.length:vis.length)+(mine?(th.length===1?' thread':' threads'):' yours')+(OP.has(f.id)?' \u2212':' +'));tg.onclick=()=>{OP.has(f.id)?OP.delete(f.id):OP.add(f.id);paint(el,f)};top.append(tg);d.append(top);
+  const tg=h('button','',(mine?th.length+(th.length===1?' thread':' threads'):'your messages ('+vis.length+')')+(OP.has(f.id)?' \u2212':' +'));tg.onclick=()=>{OP.has(f.id)?OP.delete(f.id):OP.add(f.id);paint(el,f)};top.append(tg);d.append(top);
   if(!OP.has(f.id))return;
   vis.forEach(t=>{const w=h('div','dxth');w.append(h('div','dxh','@'+t.u+' \u2192 @'+poster));
     t.m.forEach((m,i)=>{const r=h('div','dxr'+(i?' re':''));r.append(h('b','',m.u===poster?'poster':'@'+m.u),h('span','',m.t),h('i','',ago(m.at)));w.append(r)});
