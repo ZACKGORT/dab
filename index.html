@@ -27,8 +27,6 @@
 :root[data-theme=material] .cat{--bg:#f2c230;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 55%,#f2c230);--mute:color-mix(in srgb,#1c1b19 62%,#f2c230);color:#1c1b19}
 :root[data-theme=material] :is(.b,#sf,#pfs,#zg,.cpi){--bg:#fff;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 22%,#fff);--mute:color-mix(in srgb,#1c1b19 55%,#fff);color:#1c1b19}
 :root[data-theme=material] .cpi{background:#fff}
-.fold[data-tone=butter]{--tn:#fff3c4}.fold[data-tone=peach]{--tn:#ffdcc8}.fold[data-tone=rose]{--tn:#fbd3dc}.fold[data-tone=lilac]{--tn:#e4d9fb}.fold[data-tone=sky]{--tn:#d2e8fb}.fold[data-tone=mint]{--tn:#cdf0dc}.fold[data-tone=sage]{--tn:#dfe9cb}.fold[data-tone=sand]{--tn:#efe4d3}:root[data-theme=material] .fold[data-tone]{--bg:var(--tn);--line:color-mix(in srgb,#1c1b19 16%,var(--tn));--mute:color-mix(in srgb,#1c1b19 56%,var(--tn))}
-.tpop{position:fixed;z-index:42;display:flex;gap:6px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--bg);box-shadow:0 10px 28px rgba(0,0,0,.18)}.tsw{all:unset;box-sizing:border-box;width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.2);cursor:pointer}.tsw.on{box-shadow:0 0 0 2px var(--ink)}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:var(--bg);color:var(--ink);font:400 14px/1.25 var(--sans);-webkit-tap-highlight-color:transparent;transition:background .25s,color .25s}
 button{font:inherit;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 #cv{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:grab;background-image:radial-gradient(color-mix(in srgb,var(--ink) 10%,transparent) 1px,transparent 1.3px)}
@@ -446,6 +444,69 @@ body:not(.in) #stw{display:none}
 .fim{margin:2px 0 10px 18px;pointer-events:none}.fim img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:var(--line)}.fim figcaption{font:300 9px/1.3 var(--mono);color:var(--mute);padding-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 @media(max-width:900px){#pfs{top:calc(env(safe-area-inset-top,0px) + 58px)}}
+
+/* ===== EFFECTS: BorderGlow + SpotlightCard on posts (.fold) and folder fronts (.cat>.cf) ===== */
+:is(.fold,.cat>.cf){
+  --edge-proximity:0;--cursor-angle:45deg;--edge-sensitivity:30;--color-sensitivity:calc(var(--edge-sensitivity) + 20);
+  --glow-padding:40px;--cone-spread:25;--fill-opacity:.5;--mouse-x:50%;--mouse-y:50%;
+  --gh:0deg;--gs:0%;--gl:100%;--spot:rgba(255,255,255,.7);--hov:color-mix(in srgb,var(--ink) 2.5%,var(--bg));
+  --c1:#fff;--c2:#f6f6f6;--c3:#fff;
+  --gradient-one:radial-gradient(at 80% 55%,var(--c1) 0px,transparent 50%);
+  --gradient-two:radial-gradient(at 69% 34%,var(--c2) 0px,transparent 50%);
+  --gradient-three:radial-gradient(at 8% 6%,var(--c3) 0px,transparent 50%);
+  --gradient-four:radial-gradient(at 41% 38%,var(--c1) 0px,transparent 50%);
+  --gradient-five:radial-gradient(at 86% 85%,var(--c2) 0px,transparent 50%);
+  --gradient-six:radial-gradient(at 82% 18%,var(--c3) 0px,transparent 50%);
+  --gradient-seven:radial-gradient(at 51% 4%,var(--c2) 0px,transparent 50%);
+  --gradient-base:linear-gradient(var(--c1) 0 100%);
+  --glow-color:hsl(var(--gh) var(--gs) var(--gl)/100%);--glow-color-60:hsl(var(--gh) var(--gs) var(--gl)/60%);
+  --glow-color-50:hsl(var(--gh) var(--gs) var(--gl)/50%);--glow-color-40:hsl(var(--gh) var(--gs) var(--gl)/40%);
+  --glow-color-30:hsl(var(--gh) var(--gs) var(--gl)/30%);--glow-color-20:hsl(var(--gh) var(--gs) var(--gl)/20%);
+  --glow-color-10:hsl(var(--gh) var(--gs) var(--gl)/10%);
+  isolation:isolate;
+}
+:root[data-theme=dark] :is(.fold,.cat>.cf){--gh:40deg;--gs:80%;--gl:80%;--fill-opacity:.5;--spot:rgba(255,255,255,.22);--c1:#c084fc;--c2:#f472b6;--c3:#38bdf8;--hov:var(--bg)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]):not([data-theme=material]) :is(.fold,.cat>.cf){--gh:40deg;--gs:80%;--gl:80%;--fill-opacity:.5;--spot:rgba(255,255,255,.22);--c1:#c084fc;--c2:#f472b6;--c3:#38bdf8;--hov:var(--bg)}}
+:is(.fold,.cat>.cf)::before,:is(.fold,.cat>.cf)::after,:is(.fold,.cat>.cf)>.edge-light{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;transition:opacity .25s ease-out;z-index:-1}
+.fold:not(:hover)::before,.fold:not(:hover)::after,.fold:not(:hover)>.edge-light,
+.cat:not(:hover)>.cf::before,.cat:not(:hover)>.cf::after,.cat:not(:hover)>.cf>.edge-light{opacity:0;transition:opacity .75s ease-in-out}
+/* colored (white on light) mesh-gradient border */
+:is(.fold,.cat>.cf)::before{border:1px solid transparent;
+  background:linear-gradient(var(--hov) 0 100%) padding-box,linear-gradient(rgb(255 255 255/0%) 0% 100%) border-box,
+  var(--gradient-one) border-box,var(--gradient-two) border-box,var(--gradient-three) border-box,var(--gradient-four) border-box,
+  var(--gradient-five) border-box,var(--gradient-six) border-box,var(--gradient-seven) border-box,var(--gradient-base) border-box;
+  opacity:calc((var(--edge-proximity) - var(--color-sensitivity))/(100 - var(--color-sensitivity)));
+  -webkit-mask-image:conic-gradient(from var(--cursor-angle) at center,black calc(var(--cone-spread)*1%),transparent calc((var(--cone-spread) + 15)*1%),transparent calc((100 - var(--cone-spread) - 15)*1%),black calc((100 - var(--cone-spread))*1%));
+  mask-image:conic-gradient(from var(--cursor-angle) at center,black calc(var(--cone-spread)*1%),transparent calc((var(--cone-spread) + 15)*1%),transparent calc((100 - var(--cone-spread) - 15)*1%),black calc((100 - var(--cone-spread))*1%))}
+/* mesh-gradient fill near edges */
+:is(.fold,.cat>.cf)::after{border:1px solid transparent;
+  background:var(--gradient-one) padding-box,var(--gradient-two) padding-box,var(--gradient-three) padding-box,var(--gradient-four) padding-box,var(--gradient-five) padding-box,var(--gradient-six) padding-box,var(--gradient-seven) padding-box,var(--gradient-base) padding-box;
+  mask-image:linear-gradient(to bottom,black,black),radial-gradient(ellipse at 50% 50%,black 40%,transparent 65%),radial-gradient(ellipse at 66% 66%,black 5%,transparent 40%),radial-gradient(ellipse at 33% 33%,black 5%,transparent 40%),radial-gradient(ellipse at 66% 33%,black 5%,transparent 40%),radial-gradient(ellipse at 33% 66%,black 5%,transparent 40%),conic-gradient(from var(--cursor-angle) at center,transparent 5%,black 15%,black 85%,transparent 95%);
+  mask-composite:subtract,add,add,add,add,add;
+  opacity:calc(var(--fill-opacity)*(var(--edge-proximity) - var(--color-sensitivity))/(100 - var(--color-sensitivity)))}
+/* outer glow */
+:is(.fold,.cat>.cf)>.edge-light{inset:calc(var(--glow-padding)*-1);z-index:1;
+  -webkit-mask-image:conic-gradient(from var(--cursor-angle) at center,black 2.5%,transparent 10%,transparent 90%,black 97.5%);
+  mask-image:conic-gradient(from var(--cursor-angle) at center,black 2.5%,transparent 10%,transparent 90%,black 97.5%);
+  opacity:calc((var(--edge-proximity) - var(--edge-sensitivity))/(100 - var(--edge-sensitivity)))}
+:is(.fold,.cat>.cf)>.edge-light::before{content:"";position:absolute;inset:var(--glow-padding);border-radius:inherit;
+  box-shadow:inset 0 0 0 1px var(--glow-color),inset 0 0 1px 0 var(--glow-color-60),inset 0 0 3px 0 var(--glow-color-50),inset 0 0 6px 0 var(--glow-color-40),inset 0 0 15px 0 var(--glow-color-30),inset 0 0 25px 2px var(--glow-color-20),inset 0 0 50px 2px var(--glow-color-10),
+  0 0 1px 0 var(--glow-color-60),0 0 3px 0 var(--glow-color-50),0 0 6px 0 var(--glow-color-40),0 0 15px 0 var(--glow-color-30),0 0 25px 2px var(--glow-color-20),0 0 50px 2px var(--glow-color-10)}
+/* blend: additive light everywhere; soft-light fill on dark */
+:is(.fold,.cat>.cf)::after{mix-blend-mode:normal}:is(.fold,.cat>.cf)>.edge-light{mix-blend-mode:plus-lighter}
+:root[data-theme=dark] :is(.fold,.cat>.cf)::after{mix-blend-mode:soft-light}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]):not([data-theme=material]) :is(.fold,.cat>.cf)::after{mix-blend-mode:soft-light}}
+/* hover: surface dims very slightly; the glow then brightens it back like white light */
+.fold:hover,.fold:focus-within,.cat:hover>.cf{background-color:var(--hov)}
+.fold{transition:border-color .25s,box-shadow .35s cubic-bezier(.22,1,.36,1),z-index 0s .35s,background-color .35s}
+.fold.cur,.fold:hover,.fold:focus-within{transition-delay:0s,0s,0s,0s}
+.cat>.cf{transition:transform .5s cubic-bezier(.23,1,.32,1),border-color .25s,background-color .35s}
+/* spotlight */
+:is(.fold,.cat>.cf)>.spot{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;opacity:0;transition:opacity .5s ease;
+  background:radial-gradient(circle at var(--mouse-x) var(--mouse-y),var(--spot),transparent 80%)}
+.fold:hover>.spot,.fold:focus-within>.spot,.cat:hover>.cf>.spot{opacity:.6}
+@media(hover:none){:is(.fold,.cat>.cf)>.spot{display:none}}
+@media(prefers-reduced-motion:reduce){:is(.fold,.cat>.cf)::before,:is(.fold,.cat>.cf)::after,:is(.fold,.cat>.cf)>.edge-light,:is(.fold,.cat>.cf)>.spot{transition:none!important}}
 </style>
 </head>
 <body>
@@ -1534,10 +1595,7 @@ function demoThreads(f){
     out.push({id:'d'+n+id,u:hnd,demo:1,m:tx.map((t,i)=>{at+=gp[i]*sk;return{u:i%2?'poster':hnd,t,at:Math.round(at)}})})}
   return out}
 const tagDemo=cats=>{(cats||[]).forEach(c=>{const nm=String(c.name||'').toLowerCase();if(!DEMO_KINDS.has(nm))return;
-  [...(c.trees||[]),...(c.subs||[]).flatMap(s=>s.trees||[])].forEach(f=>{if(f.postedAt&&Math.random()<.78)f.dk=nm;
-    if(f.postedAt){let x=2166136261;const k=String(f.name)+f.loc;for(let i=0;i<k.length;i++){x^=k.charCodeAt(i);x=Math.imul(x,16777619)}x>>>=0;
-      const pal=DEMO_TONES[nm]||DEMO_TONES.d;if(x%100<78)f.tone=pal[(x>>>7)%pal.length]}})});return cats};
-const DEMO_TONES={housing:['sky','mint'],jobs:['peach','butter'],services:['lilac','rose'],wanted:['rose','sand'],free:['sage','mint'],'for sale':['butter','sand','peach','sky'],events:['lilac','sky','butter'],community:['sand','mint'],'lost & found':['butter','rose'],rides:['sky','sage'],d:['butter','sand']};
+  [...(c.trees||[]),...(c.subs||[]).flatMap(s=>s.trees||[])].forEach(f=>{if(f.postedAt&&Math.random()<.78)f.dk=nm})});return cats};
 const thinSmall=cats=>{const SM=new Set(['wdk','slh','ith','ash','bld','dyl']),n={},keep=f=>!SM.has(f.loc)||(n[f.loc]=(n[f.loc]||0)+1)<=2;
   (cats||[]).forEach(c=>{if(c.trees)c.trees=c.trees.filter(keep);(c.subs||[]).forEach(b=>{if(b.trees)b.trees=b.trees.filter(keep)})});return cats};
 /* demo photos: Flickr CC via loremflickr, keyed by cleaned post name. A dab_images.js file, if present, wins. */
@@ -1616,7 +1674,6 @@ const nzTree = t => (Array.isArray(t)?t:[]).map(x=>({
   ...(isFinite(x.postedAt)?{postedAt:+x.postedAt}:{}),
   ...(x.loc?{loc:String(x.loc)}:{}),
   ...(x.dk?{dk:String(x.dk)}:{}),
-  ...(x.tone?{tone:String(x.tone)}:{}),
   tree:conv(x.tree)
 }));
 const nzCat = c => {
@@ -1945,7 +2002,19 @@ rz.addEventListener('pointerdown',e=>{
   const up=ev=>{mv(ev);el.classList.remove('rzg');rz.removeEventListener('pointermove',mv);rz.removeEventListener('pointerup',up);rz.removeEventListener('pointercancel',up);save()};
   rz.addEventListener('pointermove',mv);rz.addEventListener('pointerup',up);rz.addEventListener('pointercancel',up)
 });
-el.append(hd,body,rz);return el}
+el.append(h('span','edge-light'),h('span','spot'),hd,body,rz);return el}
+/* post hover effects: drives the --edge-proximity / --cursor-angle (BorderGlow) and --mouse-x/y (SpotlightCard) vars */
+(()=>{let ev=null,raf=0;
+const run=()=>{raf=0;const e=ev;if(!e)return;const t=e.target,hh=t&&t.closest&&t.closest('.fold,.cat');if(!hh)return;const el=hh.classList.contains('cat')?hh.querySelector(':scope>.cf'):hh;if(!el)return;
+const r=el.getBoundingClientRect();if(!r.width||!r.height)return;
+const x=e.clientX-r.left,y=e.clientY-r.top,cx=r.width/2,cy=r.height/2,dx=x-cx,dy=y-cy;
+const kx=dx?cx/Math.abs(dx):Infinity,ky=dy?cy/Math.abs(dy):Infinity;
+const edge=Math.min(Math.max(1/Math.min(kx,ky),0),1);
+let ang=(dx||dy)?Math.atan2(dy,dx)*180/Math.PI+90:0;if(ang<0)ang+=360;
+const sx=r.width/(el.offsetWidth||r.width),sy=r.height/(el.offsetHeight||r.height); /* undo canvas zoom for spotlight px */
+const st=el.style;st.setProperty('--edge-proximity',(edge*100).toFixed(2));st.setProperty('--cursor-angle',ang.toFixed(2)+'deg');
+st.setProperty('--mouse-x',(x/sx).toFixed(1)+'px');st.setProperty('--mouse-y',(y/sy).toFixed(1)+'px')};
+document.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;ev=e;if(!raf)raf=requestAnimationFrame(run)},{passive:true})})();
 function renderAll(){world.innerHTML='';
   if(!lvOn()){
     if(!V){
@@ -1992,7 +2061,7 @@ function rCat(c,isSub){
   const el=h('div','cat'+(c.id===cur?' cur':'')+(isSub?' subcat':''));
   el.dataset.id=c.id;el.style.left=c.x+'px';el.style.top=c.y+'px';
   const hs=!isSub&&c.subs&&c.subs.length,pool=(hs?c.subs.flatMap(s=>s.trees):c.trees).filter(inScope),n=pool.reduce((s,t)=>s+cnt(t.tree),0);
-  el.innerHTML='<span class="cb"></span><span class="cf"><span class="cl"></span><span class="cs"></span></span>';
+  el.innerHTML='<span class="cb"></span><span class="cf"><span class="edge-light"></span><span class="spot"></span><span class="cl"></span><span class="cs"></span></span>';
   el.querySelector('.cl').textContent=c.name||'untitled';
   el.querySelector('.cs').textContent=isSub?(n+(n===1?' job':' jobs')):hs?(c.subs.length+(c.subs.length===1?' sub-board':' sub-boards')):(n+(n===1?' item':' items'));
   rExtras(el,{trees:pool});
@@ -2001,7 +2070,7 @@ function rCat(c,isSub){
 function rPlace(p){
   const el=h('div','cat plc'+(p.id==='*'?' all':'')+(p.id===cur?' cur':'')),ps=placed(p.id);
   el.dataset.id=p.id;el.style.left=p.x+'px';el.style.top=p.y+'px';if(p.in)el.title=p.k+' in '+pnm(p.in);
-  el.innerHTML='<span class="cb"></span><span class="cf"><span class="cl"></span><span class="cs"></span></span>';
+  el.innerHTML='<span class="cb"></span><span class="cf"><span class="edge-light"></span><span class="spot"></span><span class="cl"></span><span class="cs"></span></span>';
   el.querySelector('.cl').textContent=p.name||'untitled';
   el.querySelector('.cs').textContent=(p.id==='*'?'all places':p.k)+' · '+ps.length+(ps.length===1?' post':' posts');
   rExtras(el,{trees:ps.slice(0,6)});return el;
@@ -2926,19 +2995,11 @@ function togglePin(f,b){if(!me()){authDlg(()=>togglePin(f,b));return}
     L.push({id:f.id,b:V.id,p:LS||null,x:(n%3)*300,y:(n/3|0)*260});sv();
     toast('Pinned to your canvas',{action:'view',onAction:()=>{pfView='pins';openPf()}})}
   setPn(b,f);pfOn&&pfRender()}
-const TONES={"butter": "#fff3c4", "peach": "#ffdcc8", "rose": "#fbd3dc", "lilac": "#e4d9fb", "sky": "#d2e8fb", "mint": "#cdf0dc", "sage": "#dfe9cb", "sand": "#efe4d3"};let tpop=null;const closeTone=()=>{tpop&&tpop.remove();tpop=null};
-addEventListener('keydown',e=>{if(e.key==='Escape'&&tpop)closeTone()});
-function toneMenu(f,el,anchor){closeTone();const r=anchor.getBoundingClientRect(),p=h('div','tpop');p.setAttribute('role','group');p.setAttribute('aria-label','Paper color (material theme)');
-  const mk=(k,c)=>{const b=h('button','tsw'+((f.tone||'')===k?' on':''));b.style.background=c;b.title=k||'plain paper';b.onclick=ev=>{ev.stopPropagation();f.tone=k||undefined;k?el.dataset.tone=k:delete el.dataset.tone;save();closeTone()};return b};
-  p.append(mk('','#fff'),...Object.keys(TONES).map(k=>mk(k,TONES[k])));document.body.append(p);
-  p.style.left=Math.max(8,Math.min(innerWidth-p.offsetWidth-8,r.left))+'px';p.style.top=(r.bottom+6)+'px';tpop=p;
-  setTimeout(()=>{const off=e=>{if(!p.contains(e.target)){closeTone();document.removeEventListener('pointerdown',off,true)}};document.addEventListener('pointerdown',off,true)},0)}
-const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);if(f.tone)el.dataset.tone=f.tone;
+const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);
   const im=demoImg(f);if(im){const fg=h('figure','fim'),i=document.createElement('img');i.src=im.src;i.loading='lazy';i.decoding='async';i.alt=im.nm;i.draggable=false;
     const c=h('figcaption','');c.textContent=(im.by||'photo')+' \u00b7 '+(im.lic||'CC');if(im.url)c.title=im.url;fg.append(i,c);el.insertBefore(fg,el.querySelector('.fbody'))}
   const fh=el.querySelector('.fu');if(fh){const b=h('button','fd pn');b.title='pin to my canvas';setPn(b,f);
-    b.onpointerdown=e=>e.stopPropagation();b.onclick=e=>{e.stopPropagation();togglePin(f,b)};fh.insertBefore(b,fh.firstChild);
-    const cb=h('button','fd','color');cb.title='paper color (shown in the material theme)';cb.onpointerdown=e=>e.stopPropagation();cb.onclick=e=>{e.stopPropagation();toneMenu(f,el,cb)};fh.insertBefore(cb,fh.lastElementChild)}
+    b.onpointerdown=e=>e.stopPropagation();b.onclick=e=>{e.stopPropagation();togglePin(f,b)};fh.insertBefore(b,fh.firstChild)}
   return el};
 const nf0=newFolder;newFolder=function(x,y){if(!me()){authDlg(()=>newFolder(x,y));return}const f=nf0.apply(this,arguments);if(f){reg(f);paint(fel(f.id),f)}return f};
 const ln0=lvNew;lvNew=function(){if(!me()){authDlg(()=>lvNew());return}const n=F.length,r=ln0.apply(this,arguments);if(F.length>n)reg(F[F.length-1]);return r};
@@ -3020,7 +3081,7 @@ function pfRender(){
   }else L.forEach(s=>{
     const el=h('div','cat');
     el.style.left=s.x+'px';el.style.top=s.y+'px';
-    el.innerHTML='<span class="cb"></span><span class="cf"><span class="cl"></span><span class="cs"></span></span>';
+    el.innerHTML='<span class="cb"></span><span class="cf"><span class="edge-light"></span><span class="spot"></span><span class="cl"></span><span class="cs"></span></span>';
     el.dataset.sid=s.id;el.querySelector('.cl').textContent=s.name;
     const n=pool(s).length;
     el.querySelector('.cs').textContent=n+(n===1?' post':' posts');
