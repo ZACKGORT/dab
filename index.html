@@ -27,6 +27,8 @@
 :root[data-theme=material] .cat{--bg:#f2c230;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 55%,#f2c230);--mute:color-mix(in srgb,#1c1b19 62%,#f2c230);color:#1c1b19}
 :root[data-theme=material] :is(.b,#sf,#pfs,#zg,.cpi){--bg:#fff;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 22%,#fff);--mute:color-mix(in srgb,#1c1b19 55%,#fff);color:#1c1b19}
 :root[data-theme=material] .cpi{background:#fff}
+.fold[data-tone=butter]{--tn:#fff3c4}.fold[data-tone=peach]{--tn:#ffdcc8}.fold[data-tone=rose]{--tn:#fbd3dc}.fold[data-tone=lilac]{--tn:#e4d9fb}.fold[data-tone=sky]{--tn:#d2e8fb}.fold[data-tone=mint]{--tn:#cdf0dc}.fold[data-tone=sage]{--tn:#dfe9cb}.fold[data-tone=sand]{--tn:#efe4d3}:root[data-theme=material] .fold[data-tone]{--bg:var(--tn);--line:color-mix(in srgb,#1c1b19 16%,var(--tn));--mute:color-mix(in srgb,#1c1b19 56%,var(--tn))}
+.tpop{position:fixed;z-index:42;display:flex;gap:6px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--bg);box-shadow:0 10px 28px rgba(0,0,0,.18)}.tsw{all:unset;box-sizing:border-box;width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.2);cursor:pointer}.tsw.on{box-shadow:0 0 0 2px var(--ink)}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:var(--bg);color:var(--ink);font:400 14px/1.25 var(--sans);-webkit-tap-highlight-color:transparent;transition:background .25s,color .25s}
 button{font:inherit;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 #cv{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:grab;background-image:radial-gradient(color-mix(in srgb,var(--ink) 10%,transparent) 1px,transparent 1.3px)}
@@ -1532,7 +1534,10 @@ function demoThreads(f){
     out.push({id:'d'+n+id,u:hnd,demo:1,m:tx.map((t,i)=>{at+=gp[i]*sk;return{u:i%2?'poster':hnd,t,at:Math.round(at)}})})}
   return out}
 const tagDemo=cats=>{(cats||[]).forEach(c=>{const nm=String(c.name||'').toLowerCase();if(!DEMO_KINDS.has(nm))return;
-  [...(c.trees||[]),...(c.subs||[]).flatMap(s=>s.trees||[])].forEach(f=>{if(f.postedAt&&Math.random()<.78)f.dk=nm})});return cats};
+  [...(c.trees||[]),...(c.subs||[]).flatMap(s=>s.trees||[])].forEach(f=>{if(f.postedAt&&Math.random()<.78)f.dk=nm;
+    if(f.postedAt){let x=2166136261;const k=String(f.name)+f.loc;for(let i=0;i<k.length;i++){x^=k.charCodeAt(i);x=Math.imul(x,16777619)}x>>>=0;
+      const pal=DEMO_TONES[nm]||DEMO_TONES.d;if(x%100<78)f.tone=pal[(x>>>7)%pal.length]}})});return cats};
+const DEMO_TONES={housing:['sky','mint'],jobs:['peach','butter'],services:['lilac','rose'],wanted:['rose','sand'],free:['sage','mint'],'for sale':['butter','sand','peach','sky'],events:['lilac','sky','butter'],community:['sand','mint'],'lost & found':['butter','rose'],rides:['sky','sage'],d:['butter','sand']};
 const thinSmall=cats=>{const SM=new Set(['wdk','slh','ith','ash','bld','dyl']),n={},keep=f=>!SM.has(f.loc)||(n[f.loc]=(n[f.loc]||0)+1)<=2;
   (cats||[]).forEach(c=>{if(c.trees)c.trees=c.trees.filter(keep);(c.subs||[]).forEach(b=>{if(b.trees)b.trees=b.trees.filter(keep)})});return cats};
 /* demo photos: Flickr CC via loremflickr, keyed by cleaned post name. A dab_images.js file, if present, wins. */
@@ -1611,6 +1616,7 @@ const nzTree = t => (Array.isArray(t)?t:[]).map(x=>({
   ...(isFinite(x.postedAt)?{postedAt:+x.postedAt}:{}),
   ...(x.loc?{loc:String(x.loc)}:{}),
   ...(x.dk?{dk:String(x.dk)}:{}),
+  ...(x.tone?{tone:String(x.tone)}:{}),
   tree:conv(x.tree)
 }));
 const nzCat = c => {
@@ -2920,11 +2926,19 @@ function togglePin(f,b){if(!me()){authDlg(()=>togglePin(f,b));return}
     L.push({id:f.id,b:V.id,p:LS||null,x:(n%3)*300,y:(n/3|0)*260});sv();
     toast('Pinned to your canvas',{action:'view',onAction:()=>{pfView='pins';openPf()}})}
   setPn(b,f);pfOn&&pfRender()}
-const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);
+const TONES={"butter": "#fff3c4", "peach": "#ffdcc8", "rose": "#fbd3dc", "lilac": "#e4d9fb", "sky": "#d2e8fb", "mint": "#cdf0dc", "sage": "#dfe9cb", "sand": "#efe4d3"};let tpop=null;const closeTone=()=>{tpop&&tpop.remove();tpop=null};
+addEventListener('keydown',e=>{if(e.key==='Escape'&&tpop)closeTone()});
+function toneMenu(f,el,anchor){closeTone();const r=anchor.getBoundingClientRect(),p=h('div','tpop');p.setAttribute('role','group');p.setAttribute('aria-label','Paper color (material theme)');
+  const mk=(k,c)=>{const b=h('button','tsw'+((f.tone||'')===k?' on':''));b.style.background=c;b.title=k||'plain paper';b.onclick=ev=>{ev.stopPropagation();f.tone=k||undefined;k?el.dataset.tone=k:delete el.dataset.tone;save();closeTone()};return b};
+  p.append(mk('','#fff'),...Object.keys(TONES).map(k=>mk(k,TONES[k])));document.body.append(p);
+  p.style.left=Math.max(8,Math.min(innerWidth-p.offsetWidth-8,r.left))+'px';p.style.top=(r.bottom+6)+'px';tpop=p;
+  setTimeout(()=>{const off=e=>{if(!p.contains(e.target)){closeTone();document.removeEventListener('pointerdown',off,true)}};document.addEventListener('pointerdown',off,true)},0)}
+const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);if(f.tone)el.dataset.tone=f.tone;
   const im=demoImg(f);if(im){const fg=h('figure','fim'),i=document.createElement('img');i.src=im.src;i.loading='lazy';i.decoding='async';i.alt=im.nm;i.draggable=false;
     const c=h('figcaption','');c.textContent=(im.by||'photo')+' \u00b7 '+(im.lic||'CC');if(im.url)c.title=im.url;fg.append(i,c);el.insertBefore(fg,el.querySelector('.fbody'))}
   const fh=el.querySelector('.fu');if(fh){const b=h('button','fd pn');b.title='pin to my canvas';setPn(b,f);
-    b.onpointerdown=e=>e.stopPropagation();b.onclick=e=>{e.stopPropagation();togglePin(f,b)};fh.insertBefore(b,fh.firstChild)}
+    b.onpointerdown=e=>e.stopPropagation();b.onclick=e=>{e.stopPropagation();togglePin(f,b)};fh.insertBefore(b,fh.firstChild);
+    const cb=h('button','fd','color');cb.title='paper color (shown in the material theme)';cb.onpointerdown=e=>e.stopPropagation();cb.onclick=e=>{e.stopPropagation();toneMenu(f,el,cb)};fh.insertBefore(cb,fh.lastElementChild)}
   return el};
 const nf0=newFolder;newFolder=function(x,y){if(!me()){authDlg(()=>newFolder(x,y));return}const f=nf0.apply(this,arguments);if(f){reg(f);paint(fel(f.id),f)}return f};
 const ln0=lvNew;lvNew=function(){if(!me()){authDlg(()=>lvNew());return}const n=F.length,r=ln0.apply(this,arguments);if(F.length>n)reg(F[F.length-1]);return r};
