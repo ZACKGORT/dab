@@ -436,6 +436,7 @@ body:not(.in) #stw{display:none}
 #pfs button{all:unset;box-sizing:border-box;min-height:36px;padding:0 13px;display:inline-flex;align-items:center;gap:6px;border-radius:11px;font:400 12px/1 var(--mono);color:var(--mute);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 #pfs button:hover{color:var(--ink)}#pfs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}#pfs button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 #pfs button i{font-style:normal;opacity:.6}
+.fim{margin:2px 0 10px 18px;pointer-events:none}.fim img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:var(--line)}.fim figcaption{font:300 9px/1.3 var(--mono);color:var(--mute);padding-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 @media(max-width:900px){#pfs{top:calc(env(safe-area-inset-top,0px) + 58px)}}
 </style>
@@ -542,6 +543,7 @@ body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 <div id="lh" role="group" aria-label="Letter navigation"><button class="b icon" id="lprev" aria-label="Previous letter">‹</button><span class="n" id="ln" role="status" aria-live="polite"></span><button class="b icon" id="lnext" aria-label="Next letter">›</button></div>
 <div id="fx" aria-hidden="true"><div class="fxh l" id="fxl" aria-hidden="true"></div><div class="fxh r" id="fxr" aria-hidden="true"></div><button id="fxb" type="button">back to canvas</button></div>
 <div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfs" role="group" aria-label="Canvas view"><button data-v="folders">stowed</button><button data-v="pins">pinned</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div></div>
+<script src="dab_images.js"></script>
 <script>
 const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
@@ -1526,7 +1528,45 @@ function demoThreads(f){
   return out}
 const tagDemo=cats=>{(cats||[]).forEach(c=>{const nm=String(c.name||'').toLowerCase();if(!DEMO_KINDS.has(nm))return;
   [...(c.trees||[]),...(c.subs||[]).flatMap(s=>s.trees||[])].forEach(f=>{if(f.postedAt&&Math.random()<.78)f.dk=nm})});return cats};
-const seed=()=>tagDemo(seedFromExport(SEEDGEN.buildSeed()));
+const thinSmall=cats=>{const SM=new Set(['wdk','slh','ith','ash','bld','dyl']),n={},keep=f=>!SM.has(f.loc)||(n[f.loc]=(n[f.loc]||0)+1)<=2;
+  (cats||[]).forEach(c=>{if(c.trees)c.trees=c.trees.filter(keep);(c.subs||[]).forEach(b=>{if(b.trees)b.trees=b.trees.filter(keep)})});return cats};
+/* demo photos: Flickr CC via loremflickr, keyed by cleaned post name. A dab_images.js file, if present, wins. */
+(function(){const M={},hs=t=>{let x=2166136261;for(let i=0;i<t.length;i++){x^=t.charCodeAt(i);x=Math.imul(x,16777619)}return x>>>0};
+  const put=(n,tags)=>{const b=hs(n);M[n]=tags.map((t,i)=>({src:'https://loremflickr.com/640/480/'+t+'?lock='+((b+i*211+7)%9999+1),by:'Flickr',lic:'Flickr (CC)',url:'https://www.flickr.com/search/?text='+encodeURIComponent(t.replace(/,/g,' '))+'&license=4%2C5%2C9%2C10'}))};
+  'sofa:couch|a used couch;lamp:floor lamp|desk lamp;table:dining table|coffee table|side table;bookshelf:bookshelf;dresser:dresser;armchair:armchair;mattress:mattress;bed:bed frame;desk:desk|standing desk|a used desk;chair:office chair;cabinet:filing cabinet;mirror:mirror;rug:rug;turntable:record player;stereo:receiver;speaker:speakers;headphones:headphones;laptop:laptop;monitor:monitor|a used monitor;keyboard:keyboard;synthesizer:synth;guitar:guitar|a used guitar|guitar lessons;bass,guitar:bass;guitar,pedal:pedal;camera:camera;camera,lens:lens;bicycle:road bike|commuter bike|bike trainer|bike|a used bike|a used bike trailer|bike repair|bike build|bike fitting|found: bike|bike stolen|bike to work;espresso:espresso machine;mixer:stand mixer;skillet:cast iron set;cooking:dutch oven;kitchen:food processor|kitchen stuff;vacuum:vacuum;sewing:sewing machine|a used sewing machine;drill:drill;workshop:table saw;airconditioner:air conditioner;heater:space heater;dehumidifier:dehumidifier;tent:tent;camping:sleeping bag;ski:skis|ski trip;snowboard:snowboard;kayak:kayak;stroller:stroller;crib:crib;lego:lego bulk;vinyl:records|record fair;books:books|book swap;houseplant:houseplants|houseplant rescue;boxes:moving boxes;firewood:firewood;piano:piano;television:crt tv;plants:plants|plant swap|plantsitting;refrigerator:fridge|a used fridge;garden:yard dirt|community garden plot;gravel:gravel;toys:toddler toys|found: kid\'s toy;apartment:a roommate|a roommate for spring;cat:lost cat|lost: cat|cat sitting;dog:dog walking|found: dog|dog park etiquette;coffee:best coffee in the neighborhood;;bread:bread;sourdough:sourdough lessons;cake:cake;;pizza:best pizza;keys:lost: keys;wallet:found: wallet;phone:found: phone;umbrella:lost: umbrella;glasses:lost: glasses;bag:found: bag;notebook:lost: notebook;jewelry:lost: earring;;;market:farmers market|farmers market?;;faucet:water pressure|someone to fix a leak;yardsale:yard sale;clothing:clothing swap;vegetables:someone to split a csa;hardware:good hardware store;laundromat:laundromat recommendation;parking:street parking tips;truck:anyone have a truck;knife:knife sharpening;shoes:shoe repair;cleanup:neighborhood cleanup;tree:tree planting;potluck:potluck;repair:repair cafe;car:carpool to the city|ride share to a show|carpool to a wedding|a used car;airport:airport run;van:moving day;roadtrip:weekend trip;house:house sitting;notebook,pen:copyediting;interior:interior design;cleaning,supplies:apartment cleaning;poster:graphic design;stamp:notary;paintbrush:painting;oldphoto:photo restoration;paper:resume review;calculator:tax help;woodworking:carpentry;mealprep:meal prep;ledger:bookkeeping;typography:logo;furniture:furniture assembly;laptop:web design;fermentation:fermentation;pet:pet portraits;books:language lessons;van:a moving company;bicycle,lock:a used bike lock;dog:anyone know a good vet'.split(';').forEach(g=>{const k=g.indexOf(':'),t=g.slice(0,k);g.slice(k+1).split('|').forEach(n=>n&&put(n,[t,t]))});
+  put('housing',['apartment','brownstone','livingroom','kitchen','bedroom','facade']);
+  window.DAB_IMAGES=Object.assign(M,window.DAB_IMAGES||{})})();
+const DEMO_FB=[
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/33691745/pexels-photo-33691745.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/33691745/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/1300402/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/33755006/pexels-photo-33755006.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/33755006/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/4348404/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/3371094/pexels-photo-3371094.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/3371094/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/462680/pexels-photo-462680.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/462680/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/1239291/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/278294/pexels-photo-278294.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/278294/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/2014422/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/33134150/pexels-photo-33134150.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/33134150/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/31391837/pexels-photo-31391837.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/31391837/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/19785905/pexels-photo-19785905.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/19785905/'},
+  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/33691744/pexels-photo-33691744.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/33691744/'},
+  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1704915049565-139ddea93ed6?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
+  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1520453803296-c39eabe2dab4?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
+  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1598547240827-812a186e0122?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
+  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1573143701037-ac0eec904d73?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
+  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1634482895955-712847090dfd?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
+  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1542920057-056153a22cd6?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
+  {src:'Flickr',by:'see Flickr page',lic:'https://live.staticflickr.com/7372/12502775644_acfd415fa7_w.jpg',url:'https://live.staticflickr.com/7372/12502775644_acfd415fa7_w.jpg'},
+  {src:'Flickr',by:'see Flickr page',lic:'https://live.staticflickr.com/3890/15310459932_3357f5bb8e_b.jpg',url:'https://live.staticflickr.com/3890/15310459932_3357f5bb8e_b.jpg'},
+  {src:'Flickr',by:'see Flickr page',lic:'https://live.staticflickr.com/65535/55280937556_846a81f794_w.jpg',url:'https://live.staticflickr.com/65535/55280937556_846a81f794_w.jpg'}
+];
+function demoImg(f){if(!f||!f.dk)return null;const D=window.DAB_IMAGES||{};
+  const nm=String(f.name||'').toLowerCase().replace(/\s+[\u2014-].*$/,'').replace(/^(free|wanted):\s*/,'').trim();
+  let q=0;for(const ch of String(f.id))q=(q*31+ch.charCodeAt(0))>>>0;
+  let L=D[nm]||(f.dk==='housing'?D.housing:null);
+  if((!L||!L.length)&&(f.dk==='for sale'||f.dk==='free')&&q%100<55)L=DEMO_FB;
+  if(!L||!L.length)return null;return Object.assign({nm},L[q%L.length])}
+const seed=()=>tagDemo(thinSmall(seedFromExport(SEEDGEN.buildSeed())));
 
 let C,V=null,S_=null,F=[],lastCat=null,cur,cam={x:0,y:0,s:1},rc={x:0,y:0,s:1},cams={},theme='light',needFit=true,H=[],hi=0;
 let PLC=null,LS=null,PS=false,LM=false;try{LM=localStorage.getItem('dab:list')==='1'}catch(_){}
@@ -2874,6 +2914,8 @@ function togglePin(f,b){if(!me()){authDlg(()=>togglePin(f,b));return}
     toast('Pinned to your canvas',{action:'view',onAction:()=>{pfView='pins';openPf()}})}
   setPn(b,f);pfOn&&pfRender()}
 const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);
+  const im=demoImg(f);if(im){const fg=h('figure','fim'),i=document.createElement('img');i.src=im.src;i.loading='lazy';i.decoding='async';i.alt=im.nm;i.draggable=false;
+    const c=h('figcaption','');c.textContent=(im.by||'photo')+' \u00b7 '+(im.lic||'CC');if(im.url)c.title=im.url;fg.append(i,c);el.insertBefore(fg,el.querySelector('.fbody'))}
   const fh=el.querySelector('.fu');if(fh){const b=h('button','fd pn');b.title='pin to my canvas';setPn(b,f);
     b.onpointerdown=e=>e.stopPropagation();b.onclick=e=>{e.stopPropagation();togglePin(f,b)};fh.insertBefore(b,fh.firstChild)}
   return el};
