@@ -1634,42 +1634,69 @@ const tagDemo=cats=>{(cats||[]).forEach(c=>{const nm=String(c.name||'').toLowerC
   [...(c.trees||[]),...(c.subs||[]).flatMap(s=>s.trees||[])].forEach(f=>{if(f.postedAt&&Math.random()<.78)f.dk=nm})});return cats};
 const thinSmall=cats=>{const SM=new Set(['wdk','slh','ith','ash','bld','dyl']),n={},keep=f=>!SM.has(f.loc)||(n[f.loc]=(n[f.loc]||0)+1)<=2;
   (cats||[]).forEach(c=>{if(c.trees)c.trees=c.trees.filter(keep);(c.subs||[]).forEach(b=>{if(b.trees)b.trees=b.trees.filter(keep)})});return cats};
-/* demo photos: Flickr CC via loremflickr, keyed by cleaned post name. A dab_images.js file, if present, wins. */
+/* demo photos: built-in subject-matched illustrations (inline SVG; always render, no network). A dab_images.js entry ({key:[{src,by,lic,url}]}, src = image URL) overrides them. */
+const ILL={
+lamp:(A,B)=>`<path d="M320 392V196M262 392h116"/><path d="M246 204l38-96h72l38 96z" fill="${A}"/>`,
+sofa:(A,B)=>`<rect x="136" y="214" width="368" height="112" rx="26" fill="${A}"/><rect x="104" y="262" width="76" height="112" rx="26" fill="${B}"/><rect x="460" y="262" width="76" height="112" rx="26" fill="${B}"/><path d="M168 374v18M472 374v18"/>`,
+chair:(A,B)=>`<rect x="232" y="104" width="150" height="150" rx="16" fill="${A}"/><rect x="212" y="254" width="190" height="36" rx="12" fill="${B}"/><path d="M236 290v104M378 290v104"/>`,
+table:(A,B)=>`<rect x="124" y="214" width="392" height="32" rx="10" fill="${A}"/><path d="M164 246v146M476 246v146"/><rect x="258" y="250" width="124" height="52" rx="8" fill="${B}"/>`,
+shelf:(A,B)=>`<rect x="186" y="86" width="268" height="306" rx="10" fill="${B}"/><path d="M186 188h268M186 290h268"/><rect x="214" y="124" width="26" height="64" fill="${A}"/><rect x="250" y="136" width="26" height="52" fill="${A}"/><rect x="360" y="228" width="30" height="62" fill="${A}"/><rect x="214" y="330" width="62" height="62" fill="${A}"/>`,
+bed:(A,B)=>`<rect x="104" y="196" width="60" height="196" rx="12" fill="${B}"/><rect x="104" y="262" width="432" height="70" rx="14" fill="${A}"/><rect x="170" y="226" width="110" height="40" rx="18" fill="#fff"/><path d="M536 332v60"/>`,
+bike:(A,B)=>`<circle cx="190" cy="320" r="76"/><circle cx="450" cy="320" r="76"/><path d="M190 320l96-110h118l46 110M286 210l46 110H190M404 210l-18-34h46M286 210l-14-30h-44" stroke="${A}"/>`,
+laptop:(A,B)=>`<rect x="190" y="130" width="260" height="176" rx="14" fill="${A}"/><path d="M130 334h380l-24 44H154z" fill="${B}"/>`,
+monitor:(A,B)=>`<rect x="140" y="110" width="360" height="226" rx="14" fill="${A}"/><path d="M320 336v44M250 380h140"/>`,
+guitar:(A,B)=>`<ellipse cx="244" cy="326" rx="92" ry="72" fill="${A}"/><circle cx="244" cy="326" r="24" fill="${B}"/><path d="M300 282L474 108" stroke-width="22"/><path d="M462 96l30 30"/>`,
+camera:(A,B)=>`<rect x="132" y="190" width="376" height="192" rx="26" fill="${A}"/><rect x="236" y="152" width="96" height="44" rx="10" fill="${B}"/><circle cx="320" cy="286" r="68" fill="#fff"/><circle cx="320" cy="286" r="32" fill="${B}"/>`,
+plant:(A,B)=>`<path d="M244 322h152l-20 72H264z" fill="${B}"/><path d="M320 322V196"/><ellipse cx="262" cy="214" rx="56" ry="26" transform="rotate(-30 262 214)" fill="${A}"/><ellipse cx="380" cy="190" rx="56" ry="26" transform="rotate(30 380 190)" fill="${A}"/><ellipse cx="320" cy="140" rx="26" ry="52" fill="${A}"/>`,
+mug:(A,B)=>`<rect x="188" y="186" width="212" height="196" rx="30" fill="${A}"/><path d="M400 236h34a44 44 0 010 88h-34"/><path d="M250 150c-16-20 16-30 0-52M320 150c-16-20 16-30 0-52"/>`,
+tool:(A,B)=>`<rect x="150" y="190" width="250" height="84" rx="22" fill="${A}"/><path d="M400 214h70v36h-70"/><path d="M226 274l-14 100h72l14-100" fill="${B}"/>`,
+speaker:(A,B)=>`<rect x="208" y="92" width="224" height="300" rx="24" fill="${A}"/><circle cx="320" cy="180" r="38" fill="${B}"/><circle cx="320" cy="304" r="62" fill="${B}"/>`,
+record:(A,B)=>`<circle cx="320" cy="250" r="136" fill="#2b2926"/><circle cx="320" cy="250" r="96" stroke="#6b665f" stroke-width="3"/><circle cx="320" cy="250" r="44" fill="${A}" stroke="none"/>`,
+tent:(A,B)=>`<path d="M96 392L320 108l224 284z" fill="${A}"/><path d="M320 108v284M250 392l70-120 70 120" fill="${B}"/>`,
+book:(A,B)=>`<rect x="150" y="318" width="340" height="62" rx="8" fill="${A}"/><rect x="176" y="256" width="300" height="62" rx="8" fill="${B}"/><rect x="204" y="194" width="260" height="62" rx="8" fill="#fff"/>`,
+cat:(A,B)=>`<circle cx="320" cy="276" r="104" fill="${A}"/><path d="M232 214l-10-96 74 50M408 214l10-96-74 50" fill="${A}"/><circle cx="284" cy="268" r="9" fill="#2b2926"/><circle cx="356" cy="268" r="9" fill="#2b2926"/><path d="M308 304q12 12 24 0"/>`,
+building:(A,B)=>`<rect x="190" y="84" width="260" height="308" rx="8" fill="${A}"/>`+[0,1,2].flatMap(r=>[0,1].map(c=>`<rect x="${226+c*100}" y="${120+r*66}" width="52" height="40" rx="4" fill="#fff"/>`)).join('')+`<rect x="294" y="330" width="52" height="62" fill="${B}"/>`,
+box:(A,B)=>`<path d="M176 190l144-62 144 62v152l-144 62-144-62z" fill="${A}"/><path d="M176 190l144 62 144-62M320 252v152"/>`};
+const illoKind=t=>{for(const[k,r]of[['building',/housing|apartment|roommate|brownstone|facade|sublet|studio/],['lamp',/lamp/],['sofa',/sofa|couch|armchair|loveseat|living ?room/],['chair',/chair|stool/],['table',/desk|table/],['shelf',/shelf|dresser|cabinet|drawer|bookcase/],['bed',/bed|mattress|crib/],['bike',/bike|bicycle/],['laptop',/laptop|computer|macbook/],['monitor',/monitor|\btv\b|television|screen/],['guitar',/guitar|bass|ukulele|violin|banjo/],['camera',/camera|lens/],['plant',/plant|garden|yard|soil|dirt|gravel/],['cat',/\bcat\b|kitten|\bdog\b/],['record',/record|vinyl|turntable/],['speaker',/speaker|stereo|receiver|headphone|piano|synth|radio|pedal/],['mug',/espresso|coffee|kettle|mixer|skillet|cast iron|cooking|kitchen|dutch|processor/],['tool',/drill|saw|workshop|tool|vacuum|sewing/],['tent',/tent|camp|sleeping|\bski|snowboard|kayak|canoe/],['book',/book/]])if(r.test(t))return k;return'box'};
+const illo=t=>{t=String(t).toLowerCase();let h=2166136261;for(const c of t){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}h>>>=0;const hue=h%360,A=`hsl(${hue} 52% 66%)`,B=`hsl(${hue} 50% 80%)`;
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"><rect width="640" height="480" fill="hsl(${hue} 55% 94%)"/><ellipse cx="320" cy="396" rx="180" ry="14" fill="rgba(0,0,0,.09)"/><g fill="none" stroke="#2b2926" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">${ILL[illoKind(t)](A,B)}</g></svg>`;
+  return'data:image/svg+xml,'+encodeURIComponent(svg)};
+const illoE=t=>({src:illo(t),by:'dab',lic:'demo illustration',url:''});
 (function(){const M={},hs=t=>{let x=2166136261;for(let i=0;i<t.length;i++){x^=t.charCodeAt(i);x=Math.imul(x,16777619)}return x>>>0};
-  const put=(n,tags)=>{const b=hs(n);M[n]=tags.map((t,i)=>({src:'https://loremflickr.com/640/480/'+t+'?lock='+((b+i*211+7)%9999+1),by:'Flickr',lic:'Flickr (CC)',url:'https://www.flickr.com/search/?text='+encodeURIComponent(t.replace(/,/g,' '))+'&license=4%2C5%2C9%2C10'}))};
+  const put=(n,tags)=>{const b=hs(n);M[n]=tags.map(t=>illoE(t+' '+n))};
   'sofa:couch|a used couch;lamp:floor lamp|desk lamp;table:dining table|coffee table|side table;bookshelf:bookshelf;dresser:dresser;armchair:armchair;mattress:mattress;bed:bed frame;desk:desk|standing desk|a used desk;chair:office chair;cabinet:filing cabinet;mirror:mirror;rug:rug;turntable:record player;stereo:receiver;speaker:speakers;headphones:headphones;laptop:laptop;monitor:monitor|a used monitor;keyboard:keyboard;synthesizer:synth;guitar:guitar|a used guitar|guitar lessons;bass,guitar:bass;guitar,pedal:pedal;camera:camera;camera,lens:lens;bicycle:road bike|commuter bike|bike trainer|bike|a used bike|a used bike trailer|bike repair|bike build|bike fitting|found: bike|bike stolen|bike to work;espresso:espresso machine;mixer:stand mixer;skillet:cast iron set;cooking:dutch oven;kitchen:food processor|kitchen stuff;vacuum:vacuum;sewing:sewing machine|a used sewing machine;drill:drill;workshop:table saw;airconditioner:air conditioner;heater:space heater;dehumidifier:dehumidifier;tent:tent;camping:sleeping bag;ski:skis|ski trip;snowboard:snowboard;kayak:kayak;stroller:stroller;crib:crib;lego:lego bulk;vinyl:records|record fair;books:books|book swap;houseplant:houseplants|houseplant rescue;boxes:moving boxes;firewood:firewood;piano:piano;television:crt tv;plants:plants|plant swap|plantsitting;refrigerator:fridge|a used fridge;garden:yard dirt|community garden plot;gravel:gravel;toys:toddler toys|found: kid\'s toy;apartment:a roommate|a roommate for spring;cat:lost cat|lost: cat|cat sitting;dog:dog walking|found: dog|dog park etiquette;coffee:best coffee in the neighborhood;;bread:bread;sourdough:sourdough lessons;cake:cake;;pizza:best pizza;keys:lost: keys;wallet:found: wallet;phone:found: phone;umbrella:lost: umbrella;glasses:lost: glasses;bag:found: bag;notebook:lost: notebook;jewelry:lost: earring;;;market:farmers market|farmers market?;;faucet:water pressure|someone to fix a leak;yardsale:yard sale;clothing:clothing swap;vegetables:someone to split a csa;hardware:good hardware store;laundromat:laundromat recommendation;parking:street parking tips;truck:anyone have a truck;knife:knife sharpening;shoes:shoe repair;cleanup:neighborhood cleanup;tree:tree planting;potluck:potluck;repair:repair cafe;car:carpool to the city|ride share to a show|carpool to a wedding|a used car;airport:airport run;van:moving day;roadtrip:weekend trip;house:house sitting;notebook,pen:copyediting;interior:interior design;cleaning,supplies:apartment cleaning;poster:graphic design;stamp:notary;paintbrush:painting;oldphoto:photo restoration;paper:resume review;calculator:tax help;woodworking:carpentry;mealprep:meal prep;ledger:bookkeeping;typography:logo;furniture:furniture assembly;laptop:web design;fermentation:fermentation;pet:pet portraits;books:language lessons;van:a moving company;bicycle,lock:a used bike lock;dog:anyone know a good vet'.split(';').forEach(g=>{const k=g.indexOf(':'),t=g.slice(0,k);g.slice(k+1).split('|').forEach(n=>n&&put(n,[t,t]))});
   put('housing',['apartment','brownstone','livingroom','kitchen','bedroom','facade']);
   window.DAB_IMAGES=Object.assign(M,window.DAB_IMAGES||{})})();
 const DEMO_FB=[
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/33691745/pexels-photo-33691745.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/33691745/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/1300402/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/33755006/pexels-photo-33755006.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/33755006/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/4348404/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/3371094/pexels-photo-3371094.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/3371094/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/462680/pexels-photo-462680.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/462680/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/1239291/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/278294/pexels-photo-278294.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/278294/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/2014422/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/33134150/pexels-photo-33134150.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/33134150/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/31391837/pexels-photo-31391837.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/31391837/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/19785905/pexels-photo-19785905.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/19785905/'},
-  {src:'Pexels',by:'Pexels License',lic:'https://images.pexels.com/photos/33691744/pexels-photo-33691744.jpeg?auto=compress&cs=tinysrgb&w=640',url:'https://www.pexels.com/photo/33691744/'},
-  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1704915049565-139ddea93ed6?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
-  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1520453803296-c39eabe2dab4?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
-  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1598547240827-812a186e0122?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
-  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1573143701037-ac0eec904d73?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
-  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1634482895955-712847090dfd?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
-  {src:'Unsplash',by:'Unsplash License',lic:'https://images.unsplash.com/photo-1542920057-056153a22cd6?w=640&q=70&fm=webp&fit=crop',url:'https://unsplash.com'},
-  {src:'Flickr',by:'see Flickr page',lic:'https://live.staticflickr.com/7372/12502775644_acfd415fa7_w.jpg',url:'https://live.staticflickr.com/7372/12502775644_acfd415fa7_w.jpg'},
-  {src:'Flickr',by:'see Flickr page',lic:'https://live.staticflickr.com/3890/15310459932_3357f5bb8e_b.jpg',url:'https://live.staticflickr.com/3890/15310459932_3357f5bb8e_b.jpg'},
-  {src:'Flickr',by:'see Flickr page',lic:'https://live.staticflickr.com/65535/55280937556_846a81f794_w.jpg',url:'https://live.staticflickr.com/65535/55280937556_846a81f794_w.jpg'}
+  {src:'https://images.pexels.com/photos/33691745/pexels-photo-33691745.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/33691745/'},
+  {src:'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/1300402/'},
+  {src:'https://images.pexels.com/photos/33755006/pexels-photo-33755006.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/33755006/'},
+  {src:'https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/4348404/'},
+  {src:'https://images.pexels.com/photos/3371094/pexels-photo-3371094.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/3371094/'},
+  {src:'https://images.pexels.com/photos/462680/pexels-photo-462680.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/462680/'},
+  {src:'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/1239291/'},
+  {src:'https://images.pexels.com/photos/278294/pexels-photo-278294.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/278294/'},
+  {src:'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/2014422/'},
+  {src:'https://images.pexels.com/photos/33134150/pexels-photo-33134150.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/33134150/'},
+  {src:'https://images.pexels.com/photos/31391837/pexels-photo-31391837.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/31391837/'},
+  {src:'https://images.pexels.com/photos/19785905/pexels-photo-19785905.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/19785905/'},
+  {src:'https://images.pexels.com/photos/33691744/pexels-photo-33691744.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/33691744/'},
+  {src:'https://images.unsplash.com/photo-1704915049565-139ddea93ed6?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
+  {src:'https://images.unsplash.com/photo-1520453803296-c39eabe2dab4?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
+  {src:'https://images.unsplash.com/photo-1598547240827-812a186e0122?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
+  {src:'https://images.unsplash.com/photo-1573143701037-ac0eec904d73?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
+  {src:'https://images.unsplash.com/photo-1634482895955-712847090dfd?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
+  {src:'https://images.unsplash.com/photo-1542920057-056153a22cd6?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
+  {src:'https://live.staticflickr.com/7372/12502775644_acfd415fa7_w.jpg',by:'Flickr',lic:'see Flickr page',url:'https://live.staticflickr.com/7372/12502775644_acfd415fa7_w.jpg'},
+  {src:'https://live.staticflickr.com/3890/15310459932_3357f5bb8e_b.jpg',by:'Flickr',lic:'see Flickr page',url:'https://live.staticflickr.com/3890/15310459932_3357f5bb8e_b.jpg'},
+  {src:'https://live.staticflickr.com/65535/55280937556_846a81f794_w.jpg',by:'Flickr',lic:'see Flickr page',url:'https://live.staticflickr.com/65535/55280937556_846a81f794_w.jpg'}
 ];
 function demoImg(f){if(!f||!f.dk)return null;const D=window.DAB_IMAGES||{};
   const nm=String(f.name||'').toLowerCase().replace(/\s+[\u2014-].*$/,'').replace(/^(free|wanted):\s*/,'').trim();
   let q=0;for(const ch of String(f.id))q=(q*31+ch.charCodeAt(0))>>>0;
   let L=D[nm]||(f.dk==='housing'?D.housing:null);
-  if((!L||!L.length)&&(f.dk==='for sale'||f.dk==='free')&&q%100<55)L=DEMO_FB;
-  if(!L||!L.length)return null;return Object.assign({nm},L[q%L.length])}
+  if((!L||!L.length)&&(f.dk==='for sale'||f.dk==='free')&&q%100<55)L=[illoE(nm)];
+  if(!L||!L.length)return null;return Object.assign({nm,fb:DEMO_FB[q%DEMO_FB.length].src},L[q%L.length])}
 const seed=()=>tagDemo(thinSmall(seedFromExport(SEEDGEN.buildSeed())));
 
 let C,V=null,S_=null,F=[],lastCat=null,cur,cam={x:0,y:0,s:1},rc={x:0,y:0,s:1},cams={},theme='light',needFit=true,H=[],hi=0;
@@ -1734,7 +1761,7 @@ try{
     cams={};if(d.cams&&typeof d.cams==='object')Object.keys(d.cams).forEach(k=>{if(camOk(d.cams[k]))cams[k]=d.cams[k]});
     const rOk=camOk(d.rc);if(rOk)rc=d.rc;
     lastCat=typeof d.last==='string'?d.last:null;needFit=!rOk;
-    if(d.open&&C.some(c=>c.id===d.open)){V=C.find(c=>c.id===d.open);F=V.trees;needFit=!cams[V.id];if(cams[V.id])Object.assign(cam,cams[V.id])}
+    if(d.open&&C.some(c=>c.id===d.open)){V=C.find(c=>c.id===d.open);F=V.trees||[];needFit=!cams[V.id];if(cams[V.id])Object.assign(cam,cams[V.id])}
     else if(rOk)Object.assign(cam,rc);
   }
 }catch(_){
@@ -1753,7 +1780,7 @@ C.forEach(c=>{
   }
   c.trees.forEach(t=>t.tree.length||t.tree.push(mk()));
 });
-if(V)F=V.trees;cur=V?F[0].id:lastCat;
+const hsb=V&&V.subs&&V.subs.length;if(V)F=hsb?[]:(V.trees||[]);cur=V?(hsb?(V.subs[0]?V.subs[0].id:null):(F[0]?F[0].id:null)):lastCat; /* empty/sub boards: don't assume a first post */
 H=[JSON.stringify(C)];
 
 /* persistence + history */
@@ -3035,7 +3062,7 @@ function togglePin(f,b){if(!me()){authDlg(()=>togglePin(f,b));return}
     toast('Pinned to your canvas',{action:'view',onAction:()=>{pfView='pins';openPf()}})}
   setPn(b,f);pfOn&&pfRender()}
 const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);
-  const im=demoImg(f);if(im){const fg=h('figure','fim'),i=document.createElement('img');i.src=im.src;i.loading='lazy';i.decoding='async';i.alt=im.nm;i.draggable=false;
+  const im=demoImg(f);if(im){const fg=h('figure','fim'),i=document.createElement('img');i.referrerPolicy='no-referrer';i.src=im.src;i.loading='lazy';i.decoding='async';i.alt=im.nm;i.draggable=false;i.onerror=()=>{if(!i._r&&im.fb&&im.fb!==im.src){i._r=1;i.src=im.fb}else fg.remove()};
     const c=h('figcaption','');c.textContent=(im.by||'photo')+' \u00b7 '+(im.lic||'CC');if(im.url)c.title=im.url;fg.append(i,c);el.insertBefore(fg,el.querySelector('.fbody'))}
   const fh=el.querySelector('.fu');if(fh){const b=h('button','fd pn');b.title='pin to my canvas';setPn(b,f);
     b.onpointerdown=e=>e.stopPropagation();b.onclick=e=>{e.stopPropagation();togglePin(f,b)};fh.insertBefore(b,fh.firstChild)}
