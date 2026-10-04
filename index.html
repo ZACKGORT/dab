@@ -23,10 +23,10 @@
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#000;--ink:#fff}}
 :root[data-theme=dark]{--bg:#000;--ink:#fff}
 :root[data-theme=material]{--bg:#2b2926;--ink:#f3efe6}
-:root[data-theme=material] :is(.fold,.cp){--bg:#fff;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 18%,#fff);--mute:color-mix(in srgb,#1c1b19 55%,#fff);color:#1c1b19}
-:root[data-theme=material] .cat{--bg:#f2c230;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 55%,#f2c230);--mute:color-mix(in srgb,#1c1b19 62%,#f2c230);color:#1c1b19}
-:root[data-theme=material] :is(.b,#sf,#pfs,#zg,.cpi){--bg:#fff;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 22%,#fff);--mute:color-mix(in srgb,#1c1b19 55%,#fff);color:#1c1b19}
-:root[data-theme=material] .cpi{background:#fff}
+:root[data-theme=material] :is(.fold,.cp){--bg:#fffdf8;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 14%,#fffdf8);--mute:color-mix(in srgb,#1c1b19 52%,#fffdf8);color:#1c1b19}
+:root[data-theme=material] .cat{--bg:#f2c230;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 38%,#f2c230);--mute:color-mix(in srgb,#1c1b19 62%,#f2c230);color:#1c1b19}
+:root[data-theme=material] :is(.b,#sf,#pfs,#zg,.cpi){--bg:#fffdf8;--ink:#1c1b19;--line:color-mix(in srgb,#1c1b19 20%,#fffdf8);--mute:color-mix(in srgb,#1c1b19 55%,#fffdf8);color:#1c1b19}
+:root[data-theme=material] .cpi{background:#fffdf8}
 html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:var(--bg);color:var(--ink);font:400 14px/1.25 var(--sans);-webkit-tap-highlight-color:transparent;transition:background .25s,color .25s}
 button{font:inherit;color:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 #cv{position:fixed;inset:0;overflow:hidden;touch-action:none;cursor:grab;background-image:radial-gradient(color-mix(in srgb,var(--ink) 10%,transparent) 1px,transparent 1.3px)}
@@ -507,6 +507,40 @@ body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 .fold:hover>.spot,.fold:focus-within>.spot,.cat:hover>.cf>.spot{opacity:.6}
 @media(hover:none){:is(.fold,.cat>.cf)>.spot{display:none}}
 @media(prefers-reduced-motion:reduce){:is(.fold,.cat>.cf)::before,:is(.fold,.cat>.cf)::after,:is(.fold,.cat>.cf)>.edge-light,:is(.fold,.cat>.cf)>.spot{transition:none!important}}
+
+/* ===== THEME SWATCHES (context menu) ===== */
+#cm .sw{flex:none;display:flex;align-items:center;gap:9px}
+#cm .sw i{position:relative;display:block;width:14px;height:14px;border-radius:50%;box-sizing:border-box;cursor:pointer;transition:transform .15s}
+#cm .sw i::after{content:"";position:absolute;inset:-5px}
+#cm .sw i:hover{transform:scale(1.18)}
+#cm .sw i.on{outline:1.5px solid var(--ink);outline-offset:2.5px}
+#cm .t-light{background:#fff;box-shadow:inset 0 0 0 1px rgba(128,128,128,.6)}
+#cm .t-dark{background:#000;box-shadow:inset 0 0 0 1.5px #fff,0 0 0 1px rgba(128,128,128,.45)}
+#cm .t-material{background:repeating-linear-gradient(135deg,var(--ink) 0 1px,transparent 1px 3.3px);box-shadow:inset 0 0 0 1.5px var(--ink)}
+
+/* ===== MATERIAL THEME REFINEMENTS (visual only) ===== */
+/* real elevation: dark, layered shadows (the default ones are tuned for white and vanish on charcoal) */
+:root[data-theme=material]{
+  --s1:0 1px 2px rgba(0,0,0,.38),0 3px 10px rgba(0,0,0,.2);
+  --s2:0 2px 4px rgba(0,0,0,.38),0 10px 26px rgba(0,0,0,.34);
+  --s3:0 6px 10px rgba(0,0,0,.4),0 24px 52px rgba(0,0,0,.52);
+  background:radial-gradient(120% 85% at 50% -8%,#3b3731 0%,#2b2926 46%,#201e1b 100%) fixed,#2b2926}
+:root[data-theme=material] body{background:transparent}
+:root[data-theme=material] #cv{background-image:radial-gradient(rgba(244,239,228,.1) 1px,transparent 1.3px)}
+/* posts: warm paper, amber light, accent ring on the current post */
+:root[data-theme=material] .fold{--gh:44deg;--gs:92%;--gl:58%;box-shadow:var(--s1)}
+:root[data-theme=material] .fold:hover{box-shadow:var(--s2)}
+:root[data-theme=material] .fold.cur{border-color:#e3ab1a;box-shadow:0 0 0 1.5px #f2c230,var(--s2)}
+:root[data-theme=material] body.grab .fold.cur{box-shadow:0 0 0 1.5px #f2c230,var(--s3)}
+/* folders: deeper manila back + tab, brighter front, lifted */
+:root[data-theme=material] .cat .cb,:root[data-theme=material] .cat .cb::before{background:#e3ab1a}
+:root[data-theme=material] .cat .cb{box-shadow:var(--s1)}
+:root[data-theme=material] .cat:hover .cb,:root[data-theme=material] .cat.cur .cb{box-shadow:var(--s2)}
+/* one accent used for actions */
+:root[data-theme=material] #fab{background:#f2c230;color:#1c1b19}
+:root[data-theme=material] .modal-actions .b.primary{background:#f2c230;border-color:#f2c230;color:#1c1b19}
+:root[data-theme=material] #fxb{background:#f2c230;color:#1c1b19}
+:root[data-theme=material] ::selection{background:#f2c230;color:#1c1b19}
 </style>
 </head>
 <body>
@@ -2400,11 +2434,13 @@ const cl=n=>({id:nid(),t:n.t,c:n.c||null,s:!!n.s,z:n.z,k:n.k.map(cl)}),setZ=(a,z
 const home=()=>{const t=(!V||inSubsView())&&!lvOn()?gridHomeCam():null;fly(t||{x:innerWidth/2,y:innerHeight/2,s:cam.s})},act=a=>{const b=document.querySelector(`#acts [data-a="${a}"]`);if(b)b.click()};
 const copy=s=>(navigator.clipboard?navigator.clipboard.writeText(s):Promise.reject()).then(()=>toast('Copied',{duration:1400}),()=>toast('Copy blocked by browser',{kind:'error'}));
 edgeEl.onclick=home;
+const setTheme=t=>{theme=t;paintTheme();save()},themeSw=()=>{const c=curTheme()==='contrast'?'material':curTheme();return['light','dark','material'].map(id=>({id,on:id===c,f:()=>setTheme(id)}))};
 function closeMenu(){if(cm.hidden)return;cm.hidden=true;cm.replaceChildren();mb=[];mh=-1}
 function hl(i){mb.forEach((b,j)=>b.classList.toggle('hl',j===i));mh=i}
 function openMenu(items,x,y){cm.replaceChildren();mb=[];mh=-1;
 items.filter(Boolean).forEach(it=>{if(it==='-'){cm.append(h('hr'));return}
-const b=h('button'),l=h('span','',it.l);b.append(l);if(it.k)b.append(h('span','k',it.k));b.disabled=!!it.off;b.tabIndex=-1;
+const b=h('button'),l=h('span','',it.l);b.append(l);if(it.k)b.append(h('span','k',it.k));
+if(it.sw){const g=h('span','sw');it.sw.forEach(o=>{const d=h('i','t-'+o.id+(o.on?' on':''));d.title=o.id;d.setAttribute('role','img');d.setAttribute('aria-label',o.id+' theme'+(o.on?' (current)':''));d.onclick=e=>{e.stopPropagation();closeMenu();o.f()};g.append(d)});b.append(g)}b.disabled=!!it.off;b.tabIndex=-1;
 b.onmousedown=e=>e.preventDefault();b.onmouseenter=()=>{if(!b.disabled)hl(mb.indexOf(b))};
 b.onclick=()=>{if(it.danger&&!b.dataset.s){b.dataset.s=1;b.classList.add('dg');l.textContent='click again to confirm';return}closeMenu();it.f()};
 if(!it.off)mb.push(b);cm.append(b)});
@@ -2482,7 +2518,7 @@ V?(inSubsView()?null:{l:'new post here',f:()=>newFolder(wx(x),wy(y))}):{l:'new b
 S_?{l:'back to sub-boards',k:'Esc',f:closeSub}:V?{l:'back to boards',k:'Esc',f:closeCat}:null,
 {l:'switch board',k:'hold ⇧',f:()=>ow('tap')},'-',
 {l:'help & shortcuts',k:'?',f:openHelp},'-',
-{l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd},{l:'reset HUD layout',f:hudReset},'-',{l:'reset demo',f:()=>{if(confirm('Reset demo? This replaces everything on the canvas.')){const b=document.querySelector('#acts [data-a=reset]');rs=1;b&&b.click()}}}].filter(Boolean);
+{l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',sw:themeSw(),f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd},{l:'reset HUD layout',f:hudReset},'-',{l:'reset demo',f:()=>{if(confirm('Reset demo? This replaces everything on the canvas.')){const b=document.querySelector('#acts [data-a=reset]');rs=1;b&&b.click()}}}].filter(Boolean);
 
 function showCtx(x,y,t){const li=t.closest('li[data-id]'),fe=t.closest('.fold'),ce=t.closest('.cat'),o=fe||ce;if(o)setCur(o.dataset.id);
 openMenu(li?lineMenu(li.dataset.id):fe?foldMenu(fobj(fe.dataset.id)):ce?(atPlaces()?placeMenu(fobj(ce.dataset.id)):catMenu(fobj(ce.dataset.id))):(atPlaces()?[{l:'new place',f:()=>newPlace(wx(x)-100,wy(y)-60)}]:canvasMenu(x,y)),x,y)}
@@ -2898,7 +2934,7 @@ function lvMenu(){const ord=lvOrder(),f=ord[lvI];return[
 {l:'search & commands',k:mod+'K',f:openPal},'-',
 {l:'new letter',f:lvNew},{l:'focus mode',k:mod==='⌘'?'⌘⇧F':'Ctrl+Shift+F',f:()=>f&&openFocus(f)},'-',
 {l:'previous letter',k:'←',f:()=>lvGo(lvI-1)},{l:'next letter',k:'→',f:()=>lvGo(lvI+1)},'-',{l:'canvas view',f:()=>sfSet('canvas')},{l:'back to boards',k:'Esc',f:closeCat},'-',
-{l:'undo',k:mod+'Z',f:undo},{l:'redo',k:mod+'⇧Z',f:redo},'-',{l:'help & shortcuts',k:'?',f:openHelp},'-',{l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd}]}
+{l:'undo',k:mod+'Z',f:undo},{l:'redo',k:mod+'⇧Z',f:redo},'-',{l:'help & shortcuts',k:'?',f:openHelp},'-',{l:'import…',f:()=>act('import')},{l:'export',f:()=>act('export')},{l:'toggle theme',sw:themeSw(),f:()=>act('theme')},{l:'sound: '+(SND?'on':'off'),f:toggleSnd}]}
 {const lt=$('lt');let t0=0,px=0,py=0;
 lt.addEventListener('pointerdown',e=>{clearTimeout(t0);t0=0;if(e.pointerType!=='touch'||e.target.closest('textarea,input,button,a,.lg'))return;px=e.clientX;py=e.clientY;const tg=e.target;t0=setTimeout(()=>{t0=0;showCtx(px,py,tg)},550)});
 lt.addEventListener('pointermove',e=>{if(t0&&Math.hypot(e.clientX-px,e.clientY-py)>10){clearTimeout(t0);t0=0}});
@@ -3146,6 +3182,7 @@ label();
 :root{--bg:#ffffff;--ink:#1b1b1b;--line:#c9c5bb;--mute:#6c685f;--sb:#9a968b;--sh:#111;--kb:0px;--danger:#c0442b;--sans:'Satoshi',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111112;--ink:#f2f0ea;--line:#3f3f46;--mute:#94919b;--sb:#7b7882;--sh:#fff;--danger:#e87c62}}
 :root[data-theme="dark"]{--bg:#111112;--ink:#f2f0ea;--line:#3f3f46;--mute:#94919b;--sb:#7b7882;--sh:#fff;--danger:#e87c62}
+:root[data-theme="material"]{--bg:#2b2926;--ink:#f4efe4;--line:#4a453d;--mute:#a39d90;--sb:#7d776b;--sh:#fff;--danger:#f08a6e}
 html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%;overscroll-behavior-y:none}
 body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans);transition:background .25s,color .25s;-webkit-tap-highlight-color:transparent}
 html,body{scrollbar-width:none;-ms-overflow-style:none}
