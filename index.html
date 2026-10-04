@@ -647,6 +647,8 @@ body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 <div id="pf" aria-hidden="true"><div id="pfh"><b id="pfn"></b><span id="pfr"></span><button class="b" id="pfa">account</button><button class="b" id="pfx">close</button></div><div id="pfs" role="group" aria-label="Canvas view"><button data-v="folders">stowed</button><button data-v="pins">pinned</button></div><div id="pfc"><div id="pfw"></div><div id="pfe">your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.</div></div></div>
 <script src="dab_images.js"></script>
 <script>
+addEventListener('error',e=>{if(/ResizeObserver loop/.test((e&&e.message)||'')){e.stopImmediatePropagation();e.preventDefault()}},true);
+
 const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
 const coarse=matchMedia('(hover:none),(pointer:coarse),(max-width:768px)'),RM=matchMedia('(prefers-reduced-motion:reduce)');
@@ -1948,7 +1950,8 @@ const PAREN_URL_RE = /^\((https?:\/\/[^\s)]+)\)$/;
 const PAREN_IMG_RE = /\s*\((https?:\/\/\S+\.(?:png|jpe?g|gif|webp|avif|svg|bmp)(?:[?#]\S*)?)\)\s*/gi;
 const FRW=[900,1440],FRA=.625;
 const fio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const f=e.target.querySelector('iframe');if(f&&f.dataset.src){f.src=f.dataset.src;delete f.dataset.src}fio.unobserve(e.target)}),{rootMargin:'400px'});
-const fro=new ResizeObserver(es=>es.forEach(e=>{const b=e.target,w=b.clientWidth,f=b.firstChild;if(!w||!f)return;const fw=Math.round(clamp(w*2.5,FRW[0],FRW[1]));f.style.width=fw+'px';f.style.height=Math.round(fw*FRA)+'px';b.style.setProperty('--fs',w/fw)}));
+const roq=fn=>{let q=[],t=0;return es=>{q.push(...es);if(!t)t=requestAnimationFrame(()=>{t=0;const a=q;q=[];fn(a)})}}; /* run observer work next frame: avoids 'ResizeObserver loop' errors */
+const fro=new ResizeObserver(roq(es=>es.forEach(e=>{const b=e.target,w=b.clientWidth,f=b.firstChild;if(!w||!f)return;const fw=Math.round(clamp(w*2.5,FRW[0],FRW[1]));f.style.width=fw+'px';f.style.height=Math.round(fw*FRA)+'px';b.style.setProperty('--fs',w/fw)})));
 document.addEventListener('pointerdown',e=>QR().querySelectorAll('.fbox.live').forEach(b=>{if(!b.contains(e.target))b.classList.remove('live')}),true);
 addEventListener('keydown',e=>{if(e.key==='Escape')QR().querySelectorAll('.fbox.live').forEach(b=>b.classList.remove('live'))});
 function site(t,n){const u=t.trim(),w=h('span','picwrap fw'),bx=h('span','fbox'),f=h('iframe','frame'),sh=h('span','fshield'),eb=h('button','spk top','edit'),ob=h('a','spk top2','open ↗');
@@ -2012,7 +2015,7 @@ if(n.k.length){row.append(h('span','badge',cnt(n.k)));const tw=h('button','tw');
 li.append(row);if(n.k.length)li.append(rList(n.k));return li}
 function rList(a){const ul=h('ul','kids');a.forEach(n=>ul.append(rNode(n)));return ul}
 const fnFit=n=>{if(!n.offsetWidth)return;n.style.height='0';n.style.height=n.scrollHeight+'px'};
-const FNRO=window.ResizeObserver?new ResizeObserver(es=>es.forEach(en=>{const n=en.target,w=Math.round(en.contentRect.width);if(w&&n._w!==w){n._w=w;fnFit(n)}})):null;
+const FNRO=window.ResizeObserver?new ResizeObserver(roq(es=>es.forEach(en=>{const n=en.target,w=Math.round(en.contentRect.width);if(w&&n._w!==w){n._w=w;fnFit(n)}}))):null;
 document.fonts&&document.fonts.ready&&document.fonts.ready.then(()=>document.querySelectorAll('.fn').forEach(fnFit));
 function rFold(f){
 const el=h('div','fold'+(f.id===cur?' cur':'')+(hm(f.tree)?' wide':''));el.dataset.id=f.id;el.style.left=f.x+'px';el.style.top=f.y+'px';
@@ -2610,7 +2613,7 @@ const hall=()=>HID.forEach(hplace);
 HID.forEach(id=>{const el=$(id);if(el)el.classList.add('hudw')});HGRIP.forEach(hgrip);
 fab.addEventListener('pointerdown',e=>hhold('fab',e));fab.addEventListener('contextmenu',e=>e.preventDefault());
 fab.title='hold & drag to move';zg.title='drag to zoom · double-click for 100% · hold to move';
-if(window.ResizeObserver){const ro=new ResizeObserver(es=>es.forEach(en=>hplace(en.target.id)));HID.forEach(id=>{const el=$(id);el&&ro.observe(el)})}
+if(window.ResizeObserver){const ro=new ResizeObserver(roq(es=>es.forEach(en=>hplace(en.target.id))));HID.forEach(id=>{const el=$(id);el&&ro.observe(el)})}
 addEventListener('focusin',()=>setTimeout(hall,0));addEventListener('resize',hall);if(vv){vv.addEventListener('resize',hall);vv.addEventListener('scroll',hall)}
 coarse.addEventListener&&coarse.addEventListener('change',hall);hall();
 
@@ -3716,6 +3719,8 @@ body.custom-cursor-active.write-native-cursor,body.custom-cursor-active.write-na
 <div class="write-cursor-ellipse" id="writeCursorEllipse" aria-hidden="true"></div>
 <div class="write-cursor-dot" id="writeCursorDot" aria-hidden="true"></div>
 <script>
+addEventListener('error',e=>{if(/ResizeObserver loop/.test((e&&e.message)||'')){e.stopImmediatePropagation();e.preventDefault()}},true);
+
 const $ = id => document.getElementById(id);
 const treeEl = $('tree');
 const catNameEl = $('catName');
@@ -3987,7 +3992,8 @@ const isVid = t => VID.test(t.trim());
 const isUrl = t => URL_RE.test(t.trim());
 const isFrame = t => isUrl(t) && !isImg(t) && !isVid(t);
 const frameIO = new IntersectionObserver(es => es.forEach(e => { if(!e.isIntersecting) return; const f = e.target.querySelector('iframe'); if(f && f.dataset.src){ f.src = f.dataset.src; delete f.dataset.src } frameIO.unobserve(e.target) }), {rootMargin:'400px'});
-const frameRO = new ResizeObserver(es => es.forEach(e => { const b = e.target, w = b.clientWidth, f = b.firstChild; if(!w || !f) return; const fw = Math.round(Math.min(1440, Math.max(900, w*2.5))); f.style.width = fw + 'px'; f.style.height = Math.round(fw*.625) + 'px'; b.style.setProperty('--fs', w/fw); scheduleTreeLines() }));
+const roq=fn=>{let q=[],t=0;return es=>{q.push(...es);if(!t)t=requestAnimationFrame(()=>{t=0;const a=q;q=[];fn(a)})}}; /* run observer work next frame: avoids 'ResizeObserver loop' errors */
+const frameRO = new ResizeObserver(roq(es => es.forEach(e => { const b = e.target, w = b.clientWidth, f = b.firstChild; if(!w || !f) return; const fw = Math.round(Math.min(1440, Math.max(900, w*2.5))); f.style.width = fw + 'px'; f.style.height = Math.round(fw*.625) + 'px'; b.style.setProperty('--fs', w/fw); scheduleTreeLines() })));
 document.addEventListener('pointerdown', e => document.querySelectorAll('.fbox.live').forEach(b => { if(!b.contains(e.target)) b.classList.remove('live') }), true);
 
 const EMAIL_RE = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
