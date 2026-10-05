@@ -1243,9 +1243,12 @@ function buildSeed(){
         {text:'No names. No contents. Just proof the post is alive.',color:null,children:[]}
       ]},
       {text:'Authors always see and answer incoming messages, free.',color:null,children:[]},
-      {text:'Rather talk elsewhere? Put an email or phone in your post.',color:null,children:[
-        {text:'Job posts work well this way: contact info in, conversation out.',color:null,children:[]},
-        {text:'Paid job seekers can also message the author directly, no cold email needed.',color:null,children:[]}
+      {text:'Most people keep it all here: every inquiry sorted by post, one thread each.',color:null,children:[
+        {text:'New messages forward to your real inbox. Reply there and it lands back in the thread.',color:null,children:[]},
+        {text:'One-tap replies for the usual: still available, yes that works, sorry it\'s gone.',color:null,children:[]}
+      ]},
+      {text:'Prefer your own inbox? Listing contact info in your post is always fine.',color:null,children:[
+        {text:'Paid job seekers can message an author directly, no cold email needed.',color:null,children:[]}
       ]},
       {text:'Your real email or phone is never shown. Each post gets a masked relay.',color:GRAY,children:[]}
     ]}
@@ -3091,9 +3094,22 @@ const sv=()=>{try{localStorage.setItem(AK,JSON.stringify(A))}catch(_){}};
   const bd=n=>{for(const c of C){if((c.name||'').toLowerCase()===n)return c;for(const x of c.subs||[])if((x.name||'').toLowerCase()===n)return x}return null};
   const hit=(b,re)=>b&&(b.trees||[]).find(t=>re.test(((t.name||'')+' '+((t.tree&&t.tree[0]&&t.tree[0].text)||'')).toLowerCase()));
   const pl=id=>id&&PLC.some(x=>x.id===id)?id:null;
-  const hn='zack';A.users[hn]={handle:hn,fwd:'you@example.com',mode:'email',plan:'paid',since:Date.now()};A.me=hn;
+  const hn='maya';A.users[hn]={handle:hn,fwd:'you@example.com',mode:'email',plan:'paid',since:Date.now()};A.me=hn;
   A.stow[hn]=[['for sale','bk'],['housing','phl'],['hospitality',null],['services','bk'],['start here',null]].map(([n,p],i)=>{const b=bd(n);return b&&{id:'s'+Math.random().toString(36).slice(2,8),name:(b.name||n)+' \u00b7 '+(pl(p)?pnm(pl(p)):'everywhere'),b:b.id,p:pl(p),x:(i%3)*240,y:(i/3|0)*200,hide:[]}}).filter(Boolean);
   A.pins=A.pins||{};A.pins[hn]=[['for sale',/moving sale/],['housing',/bakery/],['services',/dog walking/],['hospitality',/line cook/],['start here',/what it costs/]].map(([n,re],i)=>{const b=bd(n),t=hit(b,re);return t&&{id:t.id,b:b.id,p:t.loc&&t.loc!=='*'&&pl(t.loc)?t.loc:null,x:(i%3)*300,y:(i/3|0)*260,sg:i===1?0:null}}).filter(Boolean);
+  const now=Date.now(),M=(u,t,a)=>({u,t,at:now-a*6e4}),rid=()=>Math.random().toString(36).slice(2,8),
+    g=(n,re)=>hit(bd(n),re),own=f=>{A.own[f.id]={by:hn,relay:'p-'+rid()+'@relay.dab.cx'}},
+    tr=(f,u,m)=>(A.cm[f.id]=A.cm[f.id]||[]).push({id:'t'+rid(),u,m});
+  const ms=g('for sale',/moving sale/),dw=g('services',/dog walking/),ba=g('housing',/bakery/),lc=g('hospitality',/line cook/);
+  if(ms){own(ms);
+    tr(ms,'mina',[M('mina','is the green velvet couch still available? would $300 work?',190),M(hn,'$350 is firm-ish, but i will help carry it down. saturday 10?',150),M('mina','deal. i will bring a friend.',95)]);
+    tr(ms,'okafor',[M('okafor','can i grab the stand mixer and the mugs saturday at 9?',70)]);
+    tr(ms,'tessab',[M('tessab','any chance you would do the record player + records for $120?',40),M(hn,'$130 and they are yours.',25),M('tessab','done.',10)])}
+  if(dw){own(dw);
+    tr(dw,'jorge_k',[M('jorge_k','30 min walk for a beagle, tue/thu mornings?',300),M(hn,'yes, 8:30 works. what street?',280),M('jorge_k','4th & union. his name is gus.',250)]);
+    tr(dw,'june',[M('june','are you free to sit overnight thanksgiving week?',60)])}
+  if(ba)tr(ba,hn,[M(hn,'does the bike room fit two bikes? could i see the place thursday?',420),M('poster','yes, room for four. thursday 6pm works.',380),M(hn,'perfect, see you then.',360)]);
+  if(lc)tr(lc,hn,[M(hn,'three years on the line at a 60-seat place. knife test any day. last kitchen: Marlowe.',800),M('poster','that is plenty. trial shift saturday 2pm, paid. bring your knives.',700)]);
   sv()})();
 const hs=id=>{let q=5381;for(const c of String(id))q=((q<<5)+q+c.charCodeAt(0))|0;return Math.abs(q)};
 const ydThread=(t,hn)=>Object.assign({},t,{u:hn,demo:1,m:t.m.map(x=>Object.assign({},x,{u:x.u===t.u?hn:x.u}))});
@@ -3139,7 +3155,9 @@ function paint(el,f){if(!el)return;let d=el.querySelector(':scope>.dx');
   all.forEach(t=>{const w=h('div','dxth');w.append(h('div','dxh','@'+t.u+' \u2192 @'+poster));
     t.m.forEach((m,i)=>{const r=h('div','dxr'+(i?' re':''));r.append(h('b','',m.u===poster?'poster':'@'+m.u),h('span','',m.t),h('i','',ago(m.at)));w.append(r)});
     if(u&&!t.demo&&(mine||t.u===u.handle)){let x=null;if(mine&&o){x=h('button','','share relay');x.onclick=()=>{t.m.push({u:u.handle,t:'contact: '+o.relay,at:Date.now()});sv();paint(el,f)}}
+      if(mine&&t.m[t.m.length-1].u!==u.handle){const q=h('div','dxl');['still available','yes, that works','sorry, it\'s gone'].forEach(c=>{const b=h('button','',c);b.onclick=()=>{t.m.push({u:u.handle,t:c.charAt(0).toUpperCase()+c.slice(1)+'.',at:Date.now()});sv();paint(el,f)};q.append(b)});w.append(q)}
       w.append(box('reply\u2026',s=>{t.m.push({u:u.handle,t:s,at:Date.now()});sv();paint(el,f)},x))}d.append(w)});
+  if(mine&&o&&th.length)d.append(h('div','dxh','new messages forward to '+u.fwd+' via your relay. reply there and it lands back in this thread.'));
   if(!u){const b=h('button','','sign in to message');b.onclick=()=>authDlg(()=>paint(el,f));d.append(b)}
   else if(!mine&&!paid&&!all.some(t=>t.u===u.handle)){const lk=h('div','dxl');lk.append(h('span','','messaging other people\'s posts is $1/mo or $11/yr. posting stays free.'));const ub=h('button','','unlock \u00b7 $11/yr');ub.onclick=()=>{u.plan='paid';sv();toast('Messaging unlocked (demo, no charge)',{duration:2000});paint(el,f)};lk.append(ub);d.append(lk)}
   else if(!mine&&!all.some(t=>t.u===u.handle))d.append(box('ask about this post\u2026',s=>{(A.cm[f.id]=A.cm[f.id]||[]).push({id:rnd(6),u:u.handle,m:[{u:u.handle,t:s,at:Date.now()}]});sv();paint(el,f)}));
