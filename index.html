@@ -447,6 +447,16 @@ body:not(.in) #stw{display:none}
 #pfc{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab}#pfw{position:absolute;left:0;top:0}
 #pfe{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:300 12px/1.5 var(--mono);color:var(--mute);text-align:center;max-width:34ch;pointer-events:none}
 #pfw .fold .fd{display:none}#pfw .fold .fd.pn{display:block;opacity:1}#pfw .fold .rz{display:none}#pfw .fold .fbody{pointer-events:none}#pfw .fold .fh{cursor:grab}.fd.pn.on{opacity:1;color:var(--ink)}
+/* profile canvas: hide canvas-only chrome, raise the gauge above #pf, expose unstow on stowed folders */
+body.pfon #zero,body.pfon #edge,body.pfon #ring,body.pfon #fab,body.pfon #tb,body.pfon #sf,body.pfon #sorthud,body.pfon #lh{display:none!important}
+body.pfon #zg{z-index:38}
+body.pfon #ov{z-index:40}
+#pfw .cat{cursor:grab;touch-action:none}
+#pfw .cat .cb,#pfw .cat .cf{touch-action:none}
+.pfu{position:absolute;top:8px;right:8px;z-index:6;padding:5px 9px;border:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:var(--mute);font:400 10px/1 var(--mono);letter-spacing:.04em;border-radius:8px;cursor:pointer;opacity:0;transition:opacity .18s,color .15s,border-color .15s;-webkit-tap-highlight-color:transparent}
+#pfw .cat:hover .pfu,#pfw .cat:focus-within .pfu{opacity:1}
+.pfu:hover,.pfu:focus-visible{color:var(--ink);border-color:var(--ink);outline:none}
+@media(hover:none),(pointer:coarse){#pfw .cat .pfu{opacity:1}}
 #pfs{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 22px rgba(0,0,0,.08)}
 #pfs button{all:unset;box-sizing:border-box;min-height:36px;padding:0 13px;display:inline-flex;align-items:center;gap:6px;border-radius:11px;font:400 12px/1 var(--mono);color:var(--mute);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 #pfs button:hover{color:var(--ink)}#pfs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}#pfs button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
@@ -3087,8 +3097,9 @@ addEventListener('error',e=>{if(e&&/ResizeObserver|Script error/i.test(e.message
 
 /* ── accounts · threads · profile canvas (local demo; swap A for a backend) ── */
 (function(){
-const AK='dab:acct:v1';let A={me:null,users:{},own:{},cm:{},stow:{}};
+const AK='dab:acct:v1';let A={me:null,users:{},own:{},cm:{},stow:{},pins:{},pan:{}};
 try{const d=JSON.parse(localStorage.getItem(AK));if(d&&d.users)A=Object.assign(A,d)}catch(_){}
+A.pins=A.pins||{};A.pan=A.pan||{};
 const sv=()=>{try{localStorage.setItem(AK,JSON.stringify(A))}catch(_){}};
 (function seedPaid(){if(A.me||Object.keys(A.users).length)return;
   const bd=n=>{for(const c of C){if((c.name||'').toLowerCase()===n)return c;for(const x of c.subs||[])if((x.name||'').toLowerCase()===n)return x}return null};
@@ -3096,7 +3107,7 @@ const sv=()=>{try{localStorage.setItem(AK,JSON.stringify(A))}catch(_){}};
   const pl=id=>id&&PLC.some(x=>x.id===id)?id:null;
   const hn='maya';A.users[hn]={handle:hn,fwd:'you@example.com',mode:'email',plan:'paid',since:Date.now()};A.me=hn;
   A.stow[hn]=[['for sale','bk'],['housing','phl'],['hospitality',null],['services','bk'],['start here',null]].map(([n,p],i)=>{const b=bd(n);return b&&{id:'s'+Math.random().toString(36).slice(2,8),name:(b.name||n)+' \u00b7 '+(pl(p)?pnm(pl(p)):'everywhere'),b:b.id,p:pl(p),x:(i%3)*240,y:(i/3|0)*200,hide:[]}}).filter(Boolean);
-  A.pins=A.pins||{};A.pins[hn]=[['for sale',/moving sale/],['housing',/bakery/],['services',/dog walking/],['hospitality',/line cook/],['start here',/what it costs/]].map(([n,re],i)=>{const b=bd(n),t=hit(b,re);return t&&{id:t.id,b:b.id,p:t.loc&&t.loc!=='*'&&pl(t.loc)?t.loc:null,x:(i%3)*300,y:(i/3|0)*260,sg:i===1?0:null}}).filter(Boolean);
+  A.pins[hn]=[['for sale',/moving sale/],['housing',/bakery/],['services',/dog walking/],['hospitality',/line cook/],['start here',/what it costs/]].map(([n,re],i)=>{const b=bd(n),t=hit(b,re);return t&&{id:t.id,b:b.id,p:t.loc&&t.loc!=='*'&&pl(t.loc)?t.loc:null,x:(i%3)*300,y:(i/3|0)*260,sg:i===1?0:null}}).filter(Boolean);
   const now=Date.now(),M=(u,t,a)=>({u,t,at:now-a*6e4}),rid=()=>Math.random().toString(36).slice(2,8),
     g=(n,re)=>hit(bd(n),re),own=f=>{A.own[f.id]={by:hn,relay:'p-'+rid()+'@relay.dab.cx'}},
     tr=(f,u,m)=>(A.cm[f.id]=A.cm[f.id]||[]).push({id:'t'+rid(),u,m});
@@ -3118,8 +3129,9 @@ function planRow(b,u,close){const r=h('div','dxl');r.append(h('span','',u.plan==
 const me=()=>A.me&&A.users[A.me]||null,rnd=n=>Math.random().toString(36).slice(2,2+n);
 const ago=t=>{const m=(Date.now()-t)/6e4;return m<1?'now':m<60?(m|0)+'m':m<1440?(m/60|0)+'h':(m/1440|0)+'d'};
 const relay=mode=>mode==='phone'?'+1 267 555 01'+(10+Math.random()*89|0):'p-'+rnd(6)+'@relay.dab.cx';
-const OP=new Set();let pfOn=false,pfView='folders',pan={x:40,y:90};
-const label=()=>{$('me').textContent=me()?'@'+me().handle:'sign in';if(typeof syncPins==='function')syncPins()};
+const OP=new Set();let pfOn=false,pfView='folders',pan={x:40,y:90,s:1};
+let pfSaveT=0;
+const label=()=>{$('me').textContent=me()?'@'+me().handle:'sign in';if(typeof syncPins==='function')syncPins();if(typeof paintStowBtn==='function')paintStowBtn()};
 function dlg(build){const m=h('div','dxo'),b=h('div');m.append(b);const close=()=>{m.remove();document.removeEventListener('keydown',esc,true)};
   const esc=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};document.addEventListener('keydown',esc,true);
   m.onpointerdown=e=>{if(e.target===m)close()};build(b,close);document.body.append(m);const i=b.querySelector('input');i&&i.focus()}
@@ -3187,9 +3199,56 @@ const ln0=lvNew;lvNew=function(){if(!me()){authDlg(()=>lvNew());return}const n=F
    pan empty space, drag folders to reposition. No separate sidebar; the folder card IS the post. */
 const stowL=()=>{const u=me();return u?(A.stow[u.handle]=A.stow[u.handle]||[]):[]};
 const pool=s=>{const c=C.find(x=>x.id===s.b);return c?poolOf(c).filter(f=>inSc(f,s.p,c)&&!s.hide.includes(f.id)).sort((a,b)=>(b.postedAt||0)-(a.postedAt||0)):[]};
-function stow(){if(!me()){authDlg(stow);return}if(!V){toast('Open a board first',{kind:'error'});return}const L=stowL(),i=L.length;
-  if(L.some(x=>x.b===V.id&&(x.p||null)===(LS||null))){toast('Already stowed',{action:'view',onAction:openPf});return}
-  L.push({id:'s'+rnd(6),name:(V.name||'untitled')+' \u00b7 '+(LS?pnm(LS):'everywhere'),b:V.id,p:LS||null,x:(i%3)*240,y:(i/3|0)*200,hide:[]});sv();toast('Stowed as its own folder',{action:'view',onAction:openPf})}
+function stow(){
+  if(!me()){authDlg(stow);return}
+  if(!V){toast('Open a board first',{kind:'error'});return}
+  const L=stowL();
+  const idx=L.findIndex(x=>x.b===V.id&&(x.p||null)===(LS||null));
+  if(idx>=0){
+    const s=L[idx];L.splice(idx,1);sv();paintStowBtn();if(pfOn)pfRender();
+    toast('Unstowed "'+(s.name||'folder')+'"',{action:'undo',onAction:()=>{L.splice(Math.min(idx,L.length),0,s);sv();paintStowBtn();if(pfOn)pfRender()}});
+    return;
+  }
+  const i=L.length;
+  L.push({id:'s'+rnd(6),name:(V.name||'untitled')+' \u00b7 '+(LS?pnm(LS):'everywhere'),b:V.id,p:LS||null,x:(i%3)*240,y:(i/3|0)*200,hide:[]});
+  sv();paintStowBtn();
+  toast('Stowed as its own folder',{action:'view',onAction:openPf});
+}
+function paintStowBtn(){
+  const b=$('stw');if(!b)return;
+  if(!me()){b.textContent='stow';b.disabled=false;b.title='Sign in to keep a canvas';return}
+  if(!V){b.textContent='stow';b.disabled=true;b.title='Open a board first';return}
+  b.disabled=false;
+  const on=stowL().some(x=>x.b===V.id&&(x.p||null)===(LS||null));
+  b.textContent=on?'unstow':'stow';
+  b.title=on?'Remove this board from your canvas':'Save this board to your canvas';
+}
+const _chrome0=chrome;
+chrome=function(){_chrome0();paintStowBtn()};
+/* profile canvas camera helpers */
+function pfApply(){const w=$('pfw');if(w)w.style.transform=`translate(${pan.x}px,${pan.y}px) scale(${pan.s})`}
+function pfPanSave(){A.pan=A.pan||{};A.pan[pfView]={x:pan.x,y:pan.y,s:pan.s};sv()}
+function pfPanSaveSoon(){clearTimeout(pfSaveT);pfSaveT=setTimeout(pfPanSave,260)}
+function pfZsync(){const z=$('zg');if(!z)return;const t=Math.round(pan.s*100)+'%';
+  const vs=z.querySelectorAll('.zv');if(vs[0])vs[0].textContent=t;if(vs[1])vs[1].textContent=t;
+  z.setAttribute('aria-valuenow',Math.round(pan.s*100));z.setAttribute('aria-valuetext',t);
+  if(Z.held)return;const L=s2v(pan.s);if(Math.abs(L-Z.L)>.01){Z.L=L;zwake()}}
+function pfZoomAt(cx,cy,ns){ns=clamp(ns,ZMIN,ZMAX);const k=ns/pan.s;pan.x=cx-(cx-pan.x)*k;pan.y=cy-(cy-pan.y)*k;pan.s=ns;pfApply();pfZsync();pfPanSaveSoon()}
+function pfFit(){
+  const w=$('pfw');if(!w)return;const kids=[...w.children];
+  if(!kids.length){pan={x:40,y:90,s:1};pfApply();pfZsync();pfPanSave();return}
+  let a=1e9,b=1e9,c=-1e9,d=-1e9;
+  kids.forEach(k=>{const x=parseFloat(k.style.left)||0,y=parseFloat(k.style.top)||0;
+    a=Math.min(a,x);b=Math.min(b,y);c=Math.max(c,x+k.offsetWidth);d=Math.max(d,y+k.offsetHeight)});
+  if(!(a<=c&&b<=d))return;
+  const top=92,bot=48,left=44,right=44;
+  const availW=Math.max(120,innerWidth-left-right),availH=Math.max(120,innerHeight-top-bot);
+  const s=clamp(Math.min(availW/(c-a),availH/(d-b),1.15),ZMIN,ZMAX);
+  pan.s=s;
+  pan.x=innerWidth/2-(a+c)/2*s;
+  pan.y=(top+availH/2)-(b+d)/2*s;
+  pfApply();pfZsync();pfPanSave();
+}
 function jump(s,f){
   if(pfLP){pfLP=0;return}
   closePf();
@@ -3207,8 +3266,8 @@ function pfDrag(el,s){
     const x0=e.clientX,y0=e.clientY,sx=s.x,sy=s.y;let mv=0;
     try{el.setPointerCapture(e.pointerId)}catch(_){}
     el.onpointermove=ev=>{
-      const dx=ev.clientX-x0,dy=ev.clientY-y0;
-      if(!mv&&Math.hypot(dx,dy)<5)return;
+      const dx=(ev.clientX-x0)/pan.s,dy=(ev.clientY-y0)/pan.s;
+      if(!mv&&Math.hypot(dx*pan.s,dy*pan.s)<5)return;
       mv=1;s.x=sx+dx;s.y=sy+dy;
       el.style.left=s.x+'px';el.style.top=s.y+'px'
     };
@@ -3216,7 +3275,7 @@ function pfDrag(el,s){
       el.onpointermove=el.onpointerup=null;
       if(mv)sv(); else jump(s)
     }
-  };
+  }
 }
 function pfPinDrag(el,pin,f){
   const hd=el.querySelector('.fh');if(!hd)return;
@@ -3226,8 +3285,8 @@ function pfPinDrag(el,pin,f){
     const x0=e.clientX,y0=e.clientY,sx=pin.x,sy=pin.y;let mv=0;
     try{hd.setPointerCapture(e.pointerId)}catch(_){}
     hd.onpointermove=ev=>{
-      const dx=ev.clientX-x0,dy=ev.clientY-y0;
-      if(!mv&&Math.hypot(dx,dy)<5)return;
+      const dx=(ev.clientX-x0)/pan.s,dy=(ev.clientY-y0)/pan.s;
+      if(!mv&&Math.hypot(dx*pan.s,dy*pan.s)<5)return;
       mv=1;pin.x=sx+dx;pin.y=sy+dy;
       el.style.left=pin.x+'px';el.style.top=pin.y+'px'
     };
@@ -3247,7 +3306,7 @@ function pfRender(){
     b.setAttribute('aria-pressed',String(on));b.replaceChildren(b.dataset.v==='pins'?'pinned':'stowed');if(n)b.append(h('i','',String(n)))});
   const shown=pins?PL:L;
   $('pfe').style.display=shown.length?'none':'';
-  $('pfe').innerHTML=pins?'no pinned posts yet.<br>hit pin on any post. each pin stays where you put it.':'your canvas is empty.<br>open a board in any place and hit stow. each stowed folder stays its own.';
+  $('pfe').innerHTML=pins?'no pinned posts yet.<br>hit <b>pin</b> on any post. each pin keeps its own place and camera.':'your canvas is empty.<br>open a board in any place and hit <b>stow</b>. stowed folders pan, zoom and tidy like any other canvas.';
   if(pins){
     PL.forEach(pin=>{
       const c=C.find(x=>x.id===pin.b),f=c&&poolOf(c).find(x=>x.id===pin.id);
@@ -3258,23 +3317,28 @@ function pfRender(){
       w.append(el);
     });
   }else L.forEach(s=>{
-    const el=h('div','cat');
+    const el=h('div','cat pfu-host');
     el.style.left=s.x+'px';el.style.top=s.y+'px';
     el.innerHTML='<span class="cb"></span><span class="cf"><span class="edge-light"></span><span class="spot"></span><span class="cl"></span><span class="cs"></span></span>';
     el.dataset.sid=s.id;el.querySelector('.cl').textContent=s.name;
     const n=pool(s).length;
     el.querySelector('.cs').textContent=n+(n===1?' post':' posts');
     rExtras(el,{trees:pool(s).slice(0,6)});
+    const ub=h('button','pfu','unstow');ub.type='button';ub.title='Remove from your canvas';
+    ub.onpointerdown=e=>e.stopPropagation();
+    ub.onclick=e=>{e.stopPropagation();unstow(s)};
+    el.append(ub);
     pfDrag(el,s);
     w.append(el);
   });
-  w.style.transform='translate('+pan.x+'px,'+pan.y+'px)';
+  pfApply();
   hplace('pfs');
+  pfZsync();
 }
 let pfLP=0,pfLT=0,pfLX=0,pfLY=0;
 const syncPins=()=>document.querySelectorAll('.fold .fd.pn').forEach(b=>{const fo=b.closest('.fold'),on=!!fo&&isPin(fo.dataset.id);b.textContent=on?'unpin':'pin';b.classList.toggle('on',on)});
-function unstow(s){const L=stowL(),i=L.indexOf(s);if(i<0)return;L.splice(i,1);sv();pfRender();
-  toast('Unstowed "'+s.name+'"',{action:'undo',onAction:()=>{const M=stowL();M.splice(Math.min(i,M.length),0,s);sv();pfRender()}})}
+function unstow(s){const L=stowL(),i=L.indexOf(s);if(i<0)return;L.splice(i,1);sv();pfRender();paintStowBtn();
+  toast('Unstowed "'+s.name+'"',{action:'undo',onAction:()=>{const M=stowL();M.splice(Math.min(i,M.length),0,s);sv();pfRender();paintStowBtn()}})}
 function unpin(pin){const L=pinL(),i=L.indexOf(pin);if(i<0)return;L.splice(i,1);sv();pfRender();syncPins();
   toast('Unpinned',{action:'undo',onAction:()=>{const M=pinL();M.splice(Math.min(i,M.length),0,pin);sv();pfRender();syncPins()}})}
 function clearView(pins){const u=me();if(!u)return;if(pins){A.pins=A.pins||{};A.pins[u.handle]=[]}else A.stow[u.handle]=[];sv();pfRender();syncPins();toast(pins?'Unpinned all':'Unstowed all',{duration:1600})}
@@ -3282,7 +3346,7 @@ function tidy(){const pins=pfView==='pins';
   if(pins){const cols=[0,0,0];pinL().forEach(pn=>{const el=[...$('pfw').children].find(e=>e.dataset.id===pn.id);if(!el)return;
     const c=cols.indexOf(Math.min(...cols));pn.x=c*320;pn.y=cols[c];cols[c]+=el.offsetHeight+24})}
   else stowL().forEach((o,i)=>{o.x=(i%3)*240;o.y=(i/3|0)*200});
-  pan={x:40,y:90};sv();pfRender()}
+  pan={x:40,y:90,s:1};sv();pfRender();pfZsync();pfPanSave();requestAnimationFrame(pfFit)}
 function pfMenu(x,y,t){const u=me();if(!u)return;const pins=pfView==='pins',ce=t.closest('.cat'),fe=t.closest('.fold');let items;
   if(!pins&&ce&&ce.dataset.sid){const s=stowL().find(o=>o.id===ce.dataset.sid);if(!s)return;
     items=[{l:'open board',f:()=>jump(s)},
@@ -3291,8 +3355,9 @@ function pfMenu(x,y,t){const u=me();if(!u)return;const pins=pfView==='pins',ce=t
   else if(pins&&fe){const pin=pinL().find(o=>o.id===fe.dataset.id);if(!pin)return;const c=C.find(q=>q.id===pin.b),f=c&&poolOf(c).find(q=>q.id===pin.id);
     items=[{l:'open post',f:()=>jump(pin,f)},'-',{l:'unpin',f:()=>unpin(pin)}]}
   else{const n=(pins?pinL():stowL()).length;
-    items=[{l:pins?'show stowed folders':'show pinned posts',f:()=>{pfView=pins?'folders':'pins';pfRender()}},'-',
-      {l:'tidy up',f:tidy,off:!n},{l:'recenter',f:()=>{pan={x:40,y:90};pfRender()}},'-',
+    items=[{l:pins?'show stowed folders':'show pinned posts',f:()=>{pfPanSave();pfView=pins?'folders':'pins';const had=pfRestoreCam();pfRender();pfZsync();if(!had)requestAnimationFrame(pfFit)}},'-',
+      {l:'fit all',f:pfFit},{l:'zoom 100%',k:'0',f:()=>pfZoomAt(innerWidth/2,innerHeight/2,1)},'-',
+      {l:'tidy up',f:tidy,off:!n},{l:'recenter',f:()=>{pan={x:40,y:90,s:1};pfApply();pfZsync();pfPanSave()}},'-',
       {l:pins?'unpin all':'unstow all',danger:1,off:!n,f:()=>clearView(pins)},'-',
       {l:'account / switch',f:()=>authDlg()},{l:'close canvas',k:'Esc',f:closePf}]}
   openMenu(items,x,y)}
@@ -3301,15 +3366,74 @@ $('pf').addEventListener('pointerdown',e=>{pfLP=0;clearTimeout(pfLT);if(e.pointe
   const t=e.target;pfLX=e.clientX;pfLY=e.clientY;pfLT=setTimeout(()=>{pfLP=1;pfMenu(pfLX,pfLY,t)},550)},true);
 $('pf').addEventListener('pointermove',e=>{if(pfLT&&Math.hypot(e.clientX-pfLX,e.clientY-pfLY)>8){clearTimeout(pfLT);pfLT=0}},true);
 ['pointerup','pointercancel'].forEach(n=>$('pf').addEventListener(n,()=>{clearTimeout(pfLT);pfLT=0;setTimeout(()=>{pfLP=0},0)},true));
-function openPf(){if(!me()){authDlg(openPf);return}pfOn=true;document.body.classList.add('pfon');$('pf').classList.add('on');$('pf').setAttribute('aria-hidden','false');pfRender()}
-function closePf(){pfOn=false;document.body.classList.remove('pfon');closeMenu();$('pf').classList.remove('on');$('pf').setAttribute('aria-hidden','true')}
-$('pfx').onclick=closePf;document.querySelectorAll('#pfs button').forEach(b=>b.onclick=()=>{pfView=b.dataset.v;pfRender()});
-HID.push('pfs');HGRIP.push('pfs');HCEN.add('pfs');HNAME.pfs='stowed / pinned toggle';$('pfs').classList.add('hudw');hgrip('pfs');$('pfa').onclick=()=>authDlg();$('me').onclick=openPf;$('stw').onclick=stow;
-$('pfc').onpointerdown=e=>{if(e.target.closest('.cat,.fold'))return;const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y,c=$('pfc');try{c.setPointerCapture(e.pointerId)}catch(_){}
-  c.onpointermove=ev=>{pan.x=px+ev.clientX-x0;pan.y=py+ev.clientY-y0;$('pfw').style.transform='translate('+pan.x+'px,'+pan.y+'px)'};c.onpointerup=()=>{c.onpointermove=c.onpointerup=null;pfRender()}};
+function pfRestoreCam(){const sv2=(A.pan||{})[pfView];
+  if(sv2&&[sv2.x,sv2.y,sv2.s].every(v=>typeof v==='number'&&isFinite(v)))pan={x:sv2.x,y:sv2.y,s:sv2.s};
+  else pan={x:40,y:90,s:1};
+  return !!sv2}
+function openPf(){if(!me()){authDlg(openPf);return}
+  pfOn=true;document.body.classList.add('pfon');$('pf').classList.add('on');$('pf').setAttribute('aria-hidden','false');
+  const had=pfRestoreCam();
+  pfRender();pfZsync();
+  if(!had)requestAnimationFrame(pfFit);
+}
+function closePf(){if(!pfOn)return;pfOn=false;document.body.classList.remove('pfon');closeMenu();
+  $('pf').classList.remove('on');$('pf').setAttribute('aria-hidden','true');pfPanSave()}
+$('pfx').onclick=closePf;document.querySelectorAll('#pfs button').forEach(b=>b.onclick=()=>{
+  if(b.dataset.v===pfView)return;
+  pfPanSave();
+  pfView=b.dataset.v;
+  const had=pfRestoreCam();
+  pfRender();pfZsync();
+  if(!had)requestAnimationFrame(pfFit);
+});
+HID.push('pfs');HGRIP.push('pfs');HCEN.add('pfs');HNAME.pfs='stowed / pinned toggle';$('pfs').classList.add('hudw');hgrip('pfs');$('pfa').onclick=()=>authDlg();
+$('me').onclick=openPf;$('stw').onclick=stow;
+(function(){
+  const c=$('pfc');let lastTap=0;
+  c.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.cat,.fold,.pfu,.fold button'))return;
+    if(e.button>0)return;
+    const x0=e.clientX,y0=e.clientY,px=pan.x,py=pan.y;let moved=false;
+    try{c.setPointerCapture(e.pointerId)}catch(_){}
+    const mv=ev=>{const dx=ev.clientX-x0,dy=ev.clientY-y0;
+      if(!moved&&Math.hypot(dx,dy)<5)return;moved=true;
+      pan.x=px+dx;pan.y=py+dy;pfApply()};
+    const up=()=>{c.removeEventListener('pointermove',mv);c.removeEventListener('pointerup',up);c.removeEventListener('pointercancel',up);
+      if(moved){pfPanSave();return}
+      const now=Date.now();if(now-lastTap<350){lastTap=0;pfFit()}else lastTap=now};
+    c.addEventListener('pointermove',mv);c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);
+  });
+  c.addEventListener('wheel',e=>{e.preventDefault();const m=e.deltaMode?16:1;
+    if(e.ctrlKey||e.metaKey)pfZoomAt(e.clientX,e.clientY,pan.s*Math.exp(-clamp(e.deltaY*m,-40,40)*.0075));
+    else{pan.x-=e.deltaX*m;pan.y-=e.deltaY*m;pfApply();pfPanSaveSoon()}},{passive:false});
+})();
 addEventListener('keydown',e=>{if(e.key==='Escape'&&pfOn&&!document.querySelector('.dxo'))closePf()});
-const pa0=palActs;palActs=function(){const a=pa0();if(V&&!inSubsView())a.push(['Stow board to my canvas',stow]);a.push(['My profile canvas',()=>{pfView='folders';openPf()}],['My pinned posts',()=>{pfView='pins';openPf()}],[me()?'Account / switch':'Sign in',()=>authDlg()]);return a};
+const pa0=palActs;palActs=function(){const a=pa0();
+  if(V&&!inSubsView())a.push([stowL().some(x=>x.b===V.id&&(x.p||null)===(LS||null))?'Unstow this board':'Stow board to my canvas',stow]);
+  a.push(['My profile canvas',()=>{pfView='folders';openPf()}],['My pinned posts',()=>{pfView='pins';openPf()}],[me()?'Account / switch':'Sign in',()=>authDlg()]);
+  return a};
+/* route the shared camera + zoom gauge + fit to the profile canvas while it is open */
+(function(){
+  const _apply=apply,_zoomAt=zoomAt,_zsync=zsync,_fly=fly,_zoomTo=zoomTo,_fit=fit,_spaceFolders=spaceFolders;
+  apply=function(){if(pfOn)return pfApply();return _apply()};
+  zoomAt=function(cx,cy,ns){if(pfOn)return pfZoomAt(cx,cy,ns);return _zoomAt(cx,cy,ns)};
+  zsync=function(){if(pfOn)return pfZsync();return _zsync()};
+  fly=function(t,d){if(pfOn){Object.assign(pan,t);pfApply();pfZsync();pfPanSave();return}return _fly(t,d)};
+  zoomTo=function(s){if(pfOn)return pfZoomAt(innerWidth/2,innerHeight/2,s);return _zoomTo(s)};
+  fit=function(a){if(pfOn)return pfFit();return _fit(a)};
+  spaceFolders=function(a){if(pfOn){tidy();return true}return _spaceFolders(a)};
+})();
+addEventListener('keydown',e=>{
+  if(!pfOn)return;
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
+  if(e.key==='0'){e.preventDefault();e.stopImmediatePropagation();pfZoomAt(innerWidth/2,innerHeight/2,1)}
+  else if(e.key==='='||e.key==='+'){e.preventDefault();e.stopImmediatePropagation();pfZoomAt(innerWidth/2,innerHeight/2,pan.s*1.15)}
+  else if(e.key==='-'){e.preventDefault();e.stopImmediatePropagation();pfZoomAt(innerWidth/2,innerHeight/2,pan.s/1.15)}
+  else if(e.key==='f'){e.preventDefault();e.stopImmediatePropagation();pfFit()}
+},true);
 label();
+paintStowBtn();
 })();
 </script>
 <script type="text/plain" id="ns-src"><!DOCTYPE html>
@@ -4162,7 +4286,7 @@ function renderRich(st, text){
   return inlineImgs;
 }
 const vio = new IntersectionObserver(es => es.forEach(e => { const v = e.target; if(e.isIntersecting){ treeEl.querySelectorAll('video').forEach(o => { if(o !== v && !o.paused) o.pause() }); const p = v.play(); if(p) p.catch(() => {}) } else if(!v.paused) v.pause() }), { threshold: .2 });
-const fit = t => { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px' };
+const fit = t => { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; };
 
 const HI   = '<b>click</b> a line to edit &nbsp;·&nbsp; <b>right-click</b> for color &nbsp;·&nbsp; click below to add';
 const HE   = '<b>enter</b> next &nbsp;·&nbsp; <b>shift+enter</b> branch &nbsp;·&nbsp; <b>tab</b> indent &nbsp;·&nbsp; <b>⌥</b>+scroll to move &nbsp;·&nbsp; <b>esc</b> done';
