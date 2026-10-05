@@ -432,7 +432,7 @@ body:not(.in) #stw{display:none}
 .dx button,.dxo button{font:400 10px/1 var(--mono);padding:6px 9px;border:1px solid var(--line);background:none;border-radius:8px;color:var(--ink);cursor:pointer}
 .dx button:active,.dxo button:active{background:var(--ink);color:var(--bg)}
 .dxth{border-left:1.5px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:5px}
-.dxh{font:300 10px/1 var(--mono);color:var(--mute)}
+.dxh{font:300 10px/1 var(--mono);color:var(--mute)}.dxc{color:var(--ink)}.dxl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .dxr{display:flex;gap:6px;align-items:baseline;color:var(--ink);font:400 12px/1.3 var(--sans)}.dxr.re{margin-left:14px}
 .dxr b{font:400 10px/1 var(--mono);color:var(--mute);flex:none}.dxr i{margin-left:auto;font:300 10px/1 var(--mono);color:var(--mute);font-style:normal;flex:none}
 .dxbx{display:flex;gap:6px}.dx input,.dxo input,.dxo select,#pfs input{flex:1;min-width:0;font:400 12px/1 var(--sans);color:var(--ink);background:none;border:1px solid var(--line);border-radius:8px;padding:8px 9px;outline:0}
@@ -668,7 +668,7 @@ const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createEleme
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
 const coarse=matchMedia('(hover:none),(pointer:coarse),(max-width:768px)'),RM=matchMedia('(prefers-reduced-motion:reduce)');
 /* escape hatch: visit /?reset to wipe a broken saved state (a copy is kept in dab:recovered:v1) */
-try{if(/[?&]reset(=|&|$)/.test(location.search)){const r0=localStorage.getItem(K);if(r0)localStorage.setItem('dab:recovered:v1',r0);[K,'dab:view','dab:hud:v2'].forEach(k=>localStorage.removeItem(k));history.replaceState(null,'',location.pathname+location.hash)}}catch(_){}
+try{if(/[?&]reset(=|&|$)/.test(location.search)){const r0=localStorage.getItem(K);if(r0)localStorage.setItem('dab:recovered:v1',r0);[K,'dab:view','dab:hud:v2','dab:acct:v1'].forEach(k=>localStorage.removeItem(k));history.replaceState(null,'',location.pathname+location.hash)}}catch(_){}
 const ltk=$('ltk');let LI={},LV=coarse.matches,lvI=0,lvCat=null;
 try{const s=JSON.parse(localStorage.getItem('dab:view'));if(s){LI=s.i||{};LV=s.v==='letters'}}catch(_){}
 const QR=()=>lvOn()?ltk:world;
@@ -1200,8 +1200,9 @@ function buildSeed(){
   cats.push({name:'start here',x:0,y:0,statements:[
     {text:'dab.',x:0,y:0,w:300,loc:'*',postedAt:_NOW0-11*_DAY,children:[
       {text:'A board for boards. Post what you mean, reply if you\'re interested. That\'s the whole thing.',color:GRAD,shiny:true,children:[]},
-      {text:'No accounts. No algorithm. No app.',color:null,children:[
-        {text:'Everything lives in your browser. Export a backup if you want to keep it.',color:null,children:[]}
+      {text:'No algorithm. No ads. No app.',color:null,children:[
+        {text:'Browsing and posting are free. Always.',color:null,children:[]},
+        {text:'In this demo everything lives in your browser. Export a backup if you want to keep it.',color:null,children:[]}
       ]}
     ]},
     {text:'Rules (all of them)',x:330,y:0,w:340,loc:'*',postedAt:_NOW0-10*_DAY,children:[
@@ -1226,6 +1227,27 @@ function buildSeed(){
       {text:'Anything you\'d say in an email, but shorter.',color:null,children:[]},
       {text:'A price. A question. A yes.',color:null,children:[]},
       {text:'You don\'t need to introduce yourself.',color:GRAY,children:[]}
+    ]},
+    {text:'What it costs',x:1380,y:0,w:320,loc:'*',postedAt:_NOW0-7*_DAY,children:[
+      {text:'Posting is free. Reading is free.',color:null,children:[]},
+      {text:'Answering messages on your own posts is free too.',color:null,children:[]},
+      {text:'Messaging someone else\'s post: $1/mo or $11/yr.',color:BLUE,children:[
+        {text:'That\'s the only thing dab charges for.',color:null,children:[]},
+        {text:'Cheap on purpose: serious enough to mean it, small enough to forget about.',color:null,children:[]}
+      ]},
+      {text:'No countdowns. No nags. The prompt only appears when you reach for a conversation.',color:GRAY,children:[]}
+    ]},
+    {text:'Messages stay private',x:1730,y:0,w:340,loc:'*',postedAt:_NOW0-6*_DAY,children:[
+      {text:'A thread belongs to two people: the post\'s author and whoever wrote.',color:null,children:[]},
+      {text:'Everyone else sees one thing: a count, like "3 conversations".',color:null,children:[
+        {text:'No names. No contents. Just proof the post is alive.',color:null,children:[]}
+      ]},
+      {text:'Authors always see and answer incoming messages, free.',color:null,children:[]},
+      {text:'Rather talk elsewhere? Put an email or phone in your post.',color:null,children:[
+        {text:'Job posts work well this way: contact info in, conversation out.',color:null,children:[]},
+        {text:'Paid job seekers can also message the author directly, no cold email needed.',color:null,children:[]}
+      ]},
+      {text:'Your real email or phone is never shown. Each post gets a masked relay.',color:GRAY,children:[]}
     ]}
   ]});
 
@@ -2456,7 +2478,7 @@ const TOUR=[
   {t:'Open a board',b:'Click any card and the camera flies in. Click <b>dab</b> or press <kbd>Esc</kbd> to fly back out.'},
   {t:'Some boards nest',b:'<b>jobs</b> has sub-boards. Click <b>jobs</b>, pick a sub-board, then the <b>sort</b> bar appears — newest · today · this week · a–z.'},
   {t:'Post something',b:'<kbd>↵</kbd> for a new line. <kbd>⇧ ↵</kbd> for a nested reply. <kbd>⇥</kbd> to indent. Drag the ▦ grip to reorder.'},
-  {t:'That\'s the whole thing',b:'No accounts, no servers. Your posts live in this browser. Hit <kbd>export</kbd> from the menu to keep a copy.'}
+  {t:'That\'s the whole thing',b:'Posting is free. Messaging other people\'s posts is $1/mo or $11/yr; authors always reply free. Demo data lives in this browser: <kbd>export</kbd> keeps a copy.'}
 ];
 let tourStep=0,tourSeen=false;
 function buildTourDots(){const d=$('tourdots');d.innerHTML='';TOUR.forEach((_,i)=>{const e=h('span','dot'+(i===tourStep?' on':''));d.append(e)})}
@@ -3065,6 +3087,18 @@ addEventListener('error',e=>{if(e&&/ResizeObserver|Script error/i.test(e.message
 const AK='dab:acct:v1';let A={me:null,users:{},own:{},cm:{},stow:{}};
 try{const d=JSON.parse(localStorage.getItem(AK));if(d&&d.users)A=Object.assign(A,d)}catch(_){}
 const sv=()=>{try{localStorage.setItem(AK,JSON.stringify(A))}catch(_){}};
+(function seedPaid(){if(A.me||Object.keys(A.users).length)return;
+  const bd=n=>{for(const c of C){if((c.name||'').toLowerCase()===n)return c;for(const x of c.subs||[])if((x.name||'').toLowerCase()===n)return x}return null};
+  const hit=(b,re)=>b&&(b.trees||[]).find(t=>re.test(((t.name||'')+' '+((t.tree&&t.tree[0]&&t.tree[0].text)||'')).toLowerCase()));
+  const pl=id=>id&&PLC.some(x=>x.id===id)?id:null;
+  const hn='zack';A.users[hn]={handle:hn,fwd:'you@example.com',mode:'email',plan:'paid',since:Date.now()};A.me=hn;
+  A.stow[hn]=[['for sale','bk'],['housing','phl'],['hospitality',null],['services','bk'],['start here',null]].map(([n,p],i)=>{const b=bd(n);return b&&{id:'s'+Math.random().toString(36).slice(2,8),name:(b.name||n)+' \u00b7 '+(pl(p)?pnm(pl(p)):'everywhere'),b:b.id,p:pl(p),x:(i%3)*240,y:(i/3|0)*200,hide:[]}}).filter(Boolean);
+  A.pins=A.pins||{};A.pins[hn]=[['for sale',/moving sale/],['housing',/bakery/],['services',/dog walking/],['hospitality',/line cook/],['start here',/what it costs/]].map(([n,re],i)=>{const b=bd(n),t=hit(b,re);return t&&{id:t.id,b:b.id,p:t.loc&&t.loc!=='*'&&pl(t.loc)?t.loc:null,x:(i%3)*300,y:(i/3|0)*260,sg:i===1?0:null}}).filter(Boolean);
+  sv()})();
+const hs=id=>{let q=5381;for(const c of String(id))q=((q<<5)+q+c.charCodeAt(0))|0;return Math.abs(q)};
+const ydThread=(t,hn)=>Object.assign({},t,{u:hn,demo:1,m:t.m.map(x=>Object.assign({},x,{u:x.u===t.u?hn:x.u}))});
+function planRow(b,u,close){const r=h('div','dxl');r.append(h('span','',u.plan==='paid'?'plan: messaging unlocked \u00b7 $1/mo or $11/yr':'plan: free \u00b7 posting is free, messaging others is $1/mo or $11/yr'));
+  const x=h('button','b',u.plan==='paid'?'preview free':'unlock (demo)');x.onclick=()=>{u.plan=u.plan==='paid'?'free':'paid';sv();close();toast(u.plan==='paid'?'Messaging unlocked (demo, no charge)':'Previewing the free plan',{duration:2000});try{renderAll()}catch(_){}};r.append(x);b.append(r)}
 const me=()=>A.me&&A.users[A.me]||null,rnd=n=>Math.random().toString(36).slice(2,2+n);
 const ago=t=>{const m=(Date.now()-t)/6e4;return m<1?'now':m<60?(m|0)+'m':m<1440?(m/60|0)+'h':(m/1440|0)+'d'};
 const relay=mode=>mode==='phone'?'+1 267 555 01'+(10+Math.random()*89|0):'p-'+rnd(6)+'@relay.dab.cx';
@@ -3074,12 +3108,12 @@ function dlg(build){const m=h('div','dxo'),b=h('div');m.append(b);const close=()
   const esc=e=>{if(e.key==='Escape'){e.stopPropagation();close()}};document.addEventListener('keydown',esc,true);
   m.onpointerdown=e=>{if(e.target===m)close()};build(b,close);document.body.append(m);const i=b.querySelector('input');i&&i.focus()}
 function authDlg(cb){dlg((b,close)=>{const u=me(),hs=Object.keys(A.users);
-  b.append(h('h3','','Account'),h('p','','Post, reply and stow folders. Your real email or phone is never shown: each post gets its own masked relay that forwards to you.'));
+  b.append(h('h3','','Account'),h('p','','Posting is free. Messaging other people\'s posts is $1/mo or $11/yr. Your real email or phone is never shown: each post gets its own masked relay that forwards to you.'));
   const hi=h('input'),fi=h('input'),md=h('select');hi.placeholder='handle';fi.placeholder='forward replies to (email or phone)';md.innerHTML='<option value=email>masked email relay</option><option value=phone>masked phone relay</option>';
   const go=h('button','b','create account');
   go.onclick=()=>{const hn=hi.value.trim().toLowerCase();if(!/^[a-z0-9_]{2,20}$/.test(hn)){toast('Handle: 2-20 letters, numbers, _',{kind:'error'});return}
     if(A.users[hn]){toast('Handle taken',{kind:'error'});return}if(!fi.value.trim()){toast('Add somewhere to forward replies',{kind:'error'});return}
-    A.users[hn]={handle:hn,fwd:fi.value.trim(),mode:md.value};A.me=hn;sv();label();close();pfOn&&pfRender();cb&&cb()};
+    A.users[hn]={handle:hn,fwd:fi.value.trim(),mode:md.value,plan:'free'};A.me=hn;sv();label();close();pfOn&&pfRender();cb&&cb()};
   b.append(hi,fi,md,go);
   const rm=x=>{if(!confirm('Remove @'+x+' from this device? Its stowed folders, relays and threads are deleted too.'))return;
     if(A.me===x){A.me=null;pfOn&&closePf()}delete A.users[x];delete A.stow[x];if(A.pins)delete A.pins[x];
@@ -3090,23 +3124,25 @@ function authDlg(cb){dlg((b,close)=>{const u=me(),hs=Object.keys(A.users);
     if(x!==A.me){const s=h('button','b','@'+x);s.onclick=()=>{A.me=x;sv();label();close();pfOn&&pfRender();cb&&cb()};row.append(s)}
     else row.append(h('span','','@'+x+' (signed in)'));
     const r=h('button','b','remove');r.title='Remove @'+x+' from this device';r.onclick=()=>rm(x);row.append(r);b.append(row)})}
-  if(u){const o=h('button','b','sign out');o.onclick=()=>{A.me=null;sv();label();close();pfOn&&closePf()};b.append(o)}})}
+  if(u){planRow(b,u,close);const o=h('button','b','sign out');o.onclick=()=>{A.me=null;sv();label();close();pfOn&&closePf()};b.append(o)}})}
 const reg=f=>{const u=me();if(u&&f&&!A.own[f.id]){A.own[f.id]={by:u.handle,relay:relay(u.mode)};sv()}};
 function box(ph,fn,extra){const w=h('div','dxbx'),i=h('input'),s=h('button','','send');i.placeholder=ph;
   const go=()=>{const t=i.value.trim();if(t)fn(t)};s.onclick=go;i.onkeydown=e=>{if(e.key==='Enter')go()};w.append(i,s);if(extra)w.append(extra);return w}
 function paint(el,f){if(!el)return;let d=el.querySelector(':scope>.dx');
   if(!d){d=h('div','dx');el.insertBefore(d,el.querySelector('.rz'));['pointerdown','dblclick','keydown','contextmenu'].forEach(t=>d.addEventListener(t,e=>e.stopPropagation()))}
-  d.replaceChildren();const o=A.own[f.id],u=me(),mine=!!(u&&o&&o.by===u.handle),th=A.cm[f.id]||[],vis=mine?th:th.filter(t=>u&&t.u===u.handle),dm=o?[]:demoThreads(f),all=dm.concat(vis),poster=o?o.by:'poster';
+  d.replaceChildren();const o=A.own[f.id],u=me(),mine=!!(u&&o&&o.by===u.handle),th=A.cm[f.id]||[],vis=mine?th:th.filter(t=>u&&t.u===u.handle),dm=o?[]:demoThreads(f),pub=th.length+dm.length,paid=!!(u&&u.plan==='paid'),yd=(!mine&&paid&&dm.length&&hs(f.id)%3!==2)?[ydThread(dm[0],u.handle)]:[],all=mine?th:vis.concat(yd),poster=o?o.by:'poster';
   const top=h('div','dxt');top.append(h('span','dxb',(o?'@'+o.by+' · ':'')+(mine?'your relay ':o?'reply via ':'')+(o?o.relay:'')));
   if(o){const c=h('button','','copy');c.onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(o.relay);toast('Relay copied',{duration:1400})};top.append(c)}
-  const tg=h('button','',(mine?th.length+(th.length===1?' thread':' threads'):dm.length?all.length+(all.length===1?' conversation':' conversations'):'your messages ('+vis.length+')')+(OP.has(f.id)?' \u2212':' +'));tg.onclick=()=>{OP.has(f.id)?OP.delete(f.id):OP.add(f.id);paint(el,f)};top.append(tg);d.append(top);
+  if(!mine&&pub)top.append(h('span','dxc',pub+(pub===1?' conversation':' conversations')));
+  const tg=h('button','',(mine?th.length+(th.length===1?' thread':' threads'):'your messages ('+all.length+')')+(OP.has(f.id)?' \u2212':' +'));tg.onclick=()=>{OP.has(f.id)?OP.delete(f.id):OP.add(f.id);paint(el,f)};top.append(tg);d.append(top);
   if(!OP.has(f.id))return;
   all.forEach(t=>{const w=h('div','dxth');w.append(h('div','dxh','@'+t.u+' \u2192 @'+poster));
     t.m.forEach((m,i)=>{const r=h('div','dxr'+(i?' re':''));r.append(h('b','',m.u===poster?'poster':'@'+m.u),h('span','',m.t),h('i','',ago(m.at)));w.append(r)});
     if(u&&!t.demo&&(mine||t.u===u.handle)){let x=null;if(mine&&o){x=h('button','','share relay');x.onclick=()=>{t.m.push({u:u.handle,t:'contact: '+o.relay,at:Date.now()});sv();paint(el,f)}}
       w.append(box('reply\u2026',s=>{t.m.push({u:u.handle,t:s,at:Date.now()});sv();paint(el,f)},x))}d.append(w)});
   if(!u){const b=h('button','','sign in to message');b.onclick=()=>authDlg(()=>paint(el,f));d.append(b)}
-  else if(!mine&&!th.some(t=>t.u===u.handle))d.append(box('ask about this post\u2026',s=>{(A.cm[f.id]=A.cm[f.id]||[]).push({id:rnd(6),u:u.handle,m:[{u:u.handle,t:s,at:Date.now()}]});sv();paint(el,f)}));
+  else if(!mine&&!paid&&!all.some(t=>t.u===u.handle)){const lk=h('div','dxl');lk.append(h('span','','messaging other people\'s posts is $1/mo or $11/yr. posting stays free.'));const ub=h('button','','unlock \u00b7 $11/yr');ub.onclick=()=>{u.plan='paid';sv();toast('Messaging unlocked (demo, no charge)',{duration:2000});paint(el,f)};lk.append(ub);d.append(lk)}
+  else if(!mine&&!all.some(t=>t.u===u.handle))d.append(box('ask about this post\u2026',s=>{(A.cm[f.id]=A.cm[f.id]||[]).push({id:rnd(6),u:u.handle,m:[{u:u.handle,t:s,at:Date.now()}]});sv();paint(el,f)}));
   else if(mine&&!th.length)d.append(h('div','dxh','no messages yet. replies from others open a private thread with you.'))}
 const sigOf=f=>{const q=JSON.stringify(f.tree)+'|'+((A.cm[f.id]||[]).reduce((n,t)=>n+t.m.length,0));let x=5381;for(let i=0;i<q.length;i++)x=((x<<5)+x+q.charCodeAt(i))|0;return x};
 const ndot=(el,f)=>{const pn=pinL().find(p=>p.id===f.id);if(!pn)return;const g=sigOf(f);if(pn.sg==null){pn.sg=g;sv();return}if(pn.sg===g)return;const d=h('i','ndot');d.title='new activity';el.append(d);el.addEventListener('pointerdown',()=>{pn.sg=sigOf(f);sv();d.remove()},{once:true})};
