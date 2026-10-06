@@ -432,6 +432,8 @@ body:not(.in) #stw{display:none}
 .dx button,.dxo button{font:400 10px/1 var(--mono);padding:6px 9px;border:1px solid var(--line);background:none;border-radius:8px;color:var(--ink);cursor:pointer}
 .dx button:active,.dxo button:active{background:var(--ink);color:var(--bg)}
 .dxth{border-left:1.5px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:5px}
+#fxm{display:none;position:absolute;bottom:max(14px,env(safe-area-inset-bottom));right:calc(max(14px,env(safe-area-inset-right)) + 134px);z-index:3;border:0;background:var(--ink);color:var(--bg);font:400 11px/1 var(--mono);padding:9px 14px;border-radius:99px;cursor:pointer;opacity:.9;transition:opacity .2s,transform .2s}#fxm:hover,#fxm:focus-visible{opacity:1;transform:scale(1.04)}#fx.on #fxm{display:block}
+#fxp{display:none;position:absolute;right:max(14px,env(safe-area-inset-right));bottom:calc(max(14px,env(safe-area-inset-bottom)) + 44px);width:min(400px,calc(100% - 28px));max-height:min(70%,560px);overflow:auto;z-index:3;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.18)}#fxp.on{display:block}#fxp .dx{margin:0;border-top:0;padding:12px 16px 14px}.fxph{display:flex;gap:8px;align-items:center;padding:12px 16px 0;font:400 11px/1.3 var(--mono)}.fxph span{margin-right:auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fxph button{font:300 10px/1 var(--mono);background:none;border:1px solid var(--line);border-radius:99px;padding:4px 9px;color:var(--mute);cursor:pointer}
 .dxs{display:none;gap:5px;flex-wrap:wrap;margin-top:6px}.dxs.on{display:flex}.dxs button{font:300 10px/1 var(--mono);color:var(--mute);background:none;border:1px solid var(--line);border-radius:99px;padding:4px 9px;cursor:pointer}.dxs button:hover{color:var(--ink)}.b.on{background:var(--ink);color:var(--bg)}#pfw{transform-origin:0 0}.pfu{position:absolute;top:8px;right:8px;z-index:3;font:300 10px/1 var(--mono);color:var(--mute);background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 9px;cursor:pointer;opacity:0;transition:opacity .15s}.cat:hover .pfu,.cat:focus-within .pfu{opacity:1}.pfu:hover{color:var(--danger)}@media(hover:none){.pfu{opacity:.8}}
 .dxh{font:300 10px/1 var(--mono);color:var(--mute)}.dxc{color:var(--ink)}.dxl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .dxr{display:flex;gap:6px;align-items:baseline;color:var(--ink);font:400 12px/1.3 var(--sans)}.dxr.re{margin-left:14px}
@@ -2842,7 +2844,7 @@ try{const o=newFolder;newFolder=function(){snd('flick');return o.apply(this,argu
 try{const o=undo;undo=function(){snd('slide');return o.apply(this,arguments)}}catch(_){}
 try{const o=redo;redo=function(){snd('slide');return o.apply(this,arguments)}}catch(_){}
 
-addEventListener('keydown',e=>{if(FX&&e.key==='Escape'){e.preventDefault();e.stopPropagation();closeFocus()}},true);
+addEventListener('keydown',e=>{if(FX&&e.key==='Escape'){e.preventDefault();e.stopPropagation();const pm=$('fxp');if(pm&&pm.classList.contains('on')){pm.classList.remove('on');const b=$('fxm');b&&b.focus()}else closeFocus()}},true);
 /* Cmd/Ctrl+R resets the demo (Cmd+Shift+R still does a normal hard reload) */
 addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&!e.altKey&&e.key.toLowerCase()==='r'){e.preventDefault();e.stopPropagation();if(e.repeat)return;const a=document.activeElement;if(a&&a!==document.body&&a.blur)a.blur();resetDemo()}},true);
 addEventListener('message',e=>{if(FX&&e.source===FX.ifr.contentWindow&&e.data&&e.data.fx==='reset')resetDemo()});
@@ -3329,6 +3331,16 @@ addEventListener('keydown',e=>{if(!pfOn||e.metaKey||e.ctrlKey||e.altKey||/^(INPU
 const rr0=rr;rr=function(f,id,pos){const w=$('pfw'),el=pfOn&&w&&[...w.children].find(e=>e.dataset.id===f.id);if(!el)return rr0(f,id,pos);const pin=pinL().find(o=>o.id===f.id),n=rFold(f);n.classList.remove('cur');n.style.left=el.style.left;n.style.top=el.style.top;el.replaceWith(n);if(pin)pfPinDrag(n,pin,f);try{if(id)fo(id,pos)}catch(_){}save()};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&pfOn&&!document.querySelector('.dxo'))closePf()});
 const pa0=palActs;palActs=function(){const a=pa0();if(V&&!inSubsView())a.push(['Stow board to my canvas',stow]);a.push(['My profile canvas',()=>{pfView='folders';openPf()}],['My pinned posts',()=>{pfView='pins';openPf()}],[me()?'Account / switch':'Sign in',()=>authDlg()]);return a};
+/* messaging inside focus mode: lives in the parent shell (not the writing iframe), follows whichever post is in focus */
+(function(){const bt=h('button','','messages');bt.id='fxm';bt.type='button';const pn=h('div');pn.id='fxp';pn.setAttribute('role','dialog');pn.setAttribute('aria-label','Messages');fxEl.append(bt,pn);
+  const cnt=f=>{const o=A.own[f.id],n=(A.cm[f.id]||[]).length+(o?0:demoThreads(f).length);return n};
+  function sync(){if(!FX)return;const n=cnt(FX.f),o=A.own[FX.f.id];bt.textContent=n?n+(n===1?' conversation':' conversations'):'messages'}
+  function draw(){if(!FX)return;const f=FX.f,hd=h('div','fxph'),t=h('span','',(f.name||'').trim()||'this post'),x=h('button','','close');x.onclick=()=>pn.classList.remove('on');hd.append(t,x);
+    const c=h('div');c.append(h('div','rz'));OP.add(f.id);pn.replaceChildren(hd,c);paint(c,f);sync()}
+  bt.onclick=()=>{if(pn.classList.toggle('on'))draw()};
+  pn.addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();pn.classList.remove('on');bt.focus()}},true);
+  new MutationObserver(()=>{if(fxEl.classList.contains('on'))sync();else pn.classList.remove('on')}).observe(fxEl,{attributes:true,attributeFilter:['class']});
+  addEventListener('message',e=>{if(FX&&e.source===FX.ifr.contentWindow&&e.data&&e.data.fx==='save'){sync();if(pn.classList.contains('on'))draw()}})})();
 label();
 })();
 </script>
