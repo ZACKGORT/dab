@@ -98,7 +98,6 @@ body.grab .fold.cur,.fold.rzg{box-shadow:var(--s3)}body.grab .cat.cur .cb{box-sh
 @media(hover:hover){.cat:hover .cp{opacity:1;transform:translateY(calc(var(--k)*-9px));transition-delay:calc(var(--k)*40ms)}
 .cat:hover .cpi{opacity:1;transform:translate(calc(-50% + var(--x)),var(--y)) rotate(var(--r));transition:transform .52s cubic-bezier(.34,1.57,.64,1) calc(var(--i)*45ms),opacity .16s ease calc(var(--i)*45ms)}}
 .fold.rzg{transition:box-shadow .35s,border-color .25s}
-/* board/place stacking: hovered always above current (even mid-grab); a card you just left decays instead of lingering over the new one */
 .cat{z-index:0;transition:z-index .3s linear}
 .cat.cur{z-index:4}
 body.grab .cat.cur{z-index:6}
@@ -119,7 +118,6 @@ body.grab .cat.cur{z-index:6}
 .fd{border:0;background:none;padding:8px 0 8px 8px;font:300 10px/1 var(--mono);color:var(--mute);cursor:pointer;opacity:0;transition:opacity .2s,color .2s}
 .fold:hover .fd,.fold:focus-within .fd{opacity:1}.fd:hover{color:var(--ink)}
 
-/* TREE CONNECTORS */
 .kids{list-style:none;margin:0;padding:0;position:relative}
 .kids>li{position:relative;padding-left:22px}
 .kids>li>.row{position:relative}
@@ -348,7 +346,6 @@ body.lv #lh{display:flex}body.lv.ed #lh{display:none}
 #sf button[hidden]{display:none}
 @media(pointer:coarse){#sf button{min-height:44px}}
 
-/* ══ SORT HUD ══ */
 #sorthud{position:fixed;top:calc(env(safe-area-inset-top,0px) + 58px);left:50%;transform:translateX(-50%);z-index:6;display:none;gap:2px;padding:3px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 8px 22px rgba(0,0,0,.08)}
 body.srt #sorthud{display:flex}
 #sorthud button{all:unset;box-sizing:border-box;min-height:32px;padding:0 11px;display:inline-flex;align-items:center;border-radius:11px;font:400 11px/1 var(--mono);color:var(--mute);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;white-space:nowrap}
@@ -359,13 +356,11 @@ body.srt #sorthud{display:flex}
 @media(pointer:coarse){#sorthud button{min-height:40px}}
 @media(max-width:900px){#sorthud{top:calc(env(safe-area-inset-top,0px) + 108px)}}
 
-/* ══ MOVABLE HUD ══ */
 .hudf:not(#zg):not(#fab){width:max-content}
 .hudd{transition:none!important;cursor:grabbing;box-shadow:0 16px 40px rgba(0,0,0,.32)!important;outline:1px dashed var(--ink);outline-offset:3px;-webkit-user-select:none;user-select:none}
 #fab.hudd{transform:scale(1.1)}
 #fab{touch-action:none;-webkit-touch-callout:none}#zg{-webkit-touch-callout:none}
 @media(pointer:coarse){.hudw>.hg{width:22px}}
-/* mobile defaults: thumb-zone stack on the right (zoom gauge sits right above +), sort bar scrolls, letter nav sits clear of +, hint stays clear of + */
 @media(hover:none),(pointer:coarse),(max-width:768px){
 :root{--fb:calc(env(safe-area-inset-bottom,0px) + 18px)}
 #zg{width:40px;height:116px;right:calc(env(safe-area-inset-right,0px) + 24px);bottom:calc(var(--fb) + 66px)}
@@ -426,7 +421,6 @@ body.lst #cv,body.lst #zg,body.lst #zero,body.lst #edge,body.lst #ring,body.lst 
 @media(pointer:fine){.lrw{min-height:36px}}
 @media(max-width:900px){#lst{padding-top:calc(env(safe-area-inset-top,0px) + 112px)}body.lst.sub #lst{padding-top:calc(env(safe-area-inset-top,0px) + 160px)}body.ps #bc{display:none}}
 
-/* accounts · threads · profile canvas */
 body:not(.in) #stw{display:none}
 .dx{margin:10px -16px -14px;padding:8px 16px 12px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:7px;font:300 11px/1.35 var(--mono);color:var(--mute);cursor:default}
 .dxt{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.dxb{margin-right:auto;overflow:hidden;text-overflow:ellipsis}
@@ -459,7 +453,6 @@ body:not(.in) #stw{display:none}
 body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 @media(max-width:900px){#pfs{top:calc(env(safe-area-inset-top,0px) + 58px)}}
 
-/* ===== EFFECTS: BorderGlow + SpotlightCard on posts (.fold) and folder fronts (.cat>.cf) ===== */
 :is(.fold,.cat>.cf){
   --edge-proximity:0;--cursor-angle:45deg;--edge-sensitivity:30;--color-sensitivity:calc(var(--edge-sensitivity) + 20);
   --glow-padding:40px;--cone-spread:25;--fill-opacity:.5;--mouse-x:50%;--mouse-y:50%;
@@ -484,7 +477,6 @@ body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 :is(.fold,.cat>.cf)::before,:is(.fold,.cat>.cf)::after,:is(.fold,.cat>.cf)>.edge-light{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;transition:opacity .25s ease-out;z-index:-1}
 .fold:not(:hover)::before,.fold:not(:hover)::after,.fold:not(:hover)>.edge-light,
 .cat:not(:hover)>.cf::before,.cat:not(:hover)>.cf::after,.cat:not(:hover)>.cf>.edge-light{opacity:0;transition:opacity .75s ease-in-out}
-/* colored (white on light) mesh-gradient border */
 :is(.fold,.cat>.cf)::before{border:1px solid transparent;
   background:linear-gradient(var(--hov) 0 100%) padding-box,linear-gradient(rgb(255 255 255/0%) 0% 100%) border-box,
   var(--gradient-one) border-box,var(--gradient-two) border-box,var(--gradient-three) border-box,var(--gradient-four) border-box,
@@ -492,13 +484,11 @@ body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
   opacity:calc((var(--edge-proximity) - var(--color-sensitivity))/(100 - var(--color-sensitivity)));
   -webkit-mask-image:conic-gradient(from var(--cursor-angle) at center,black calc(var(--cone-spread)*1%),transparent calc((var(--cone-spread) + 15)*1%),transparent calc((100 - var(--cone-spread) - 15)*1%),black calc((100 - var(--cone-spread))*1%));
   mask-image:conic-gradient(from var(--cursor-angle) at center,black calc(var(--cone-spread)*1%),transparent calc((var(--cone-spread) + 15)*1%),transparent calc((100 - var(--cone-spread) - 15)*1%),black calc((100 - var(--cone-spread))*1%))}
-/* mesh-gradient fill near edges */
 :is(.fold,.cat>.cf)::after{border:1px solid transparent;
   background:var(--gradient-one) padding-box,var(--gradient-two) padding-box,var(--gradient-three) padding-box,var(--gradient-four) padding-box,var(--gradient-five) padding-box,var(--gradient-six) padding-box,var(--gradient-seven) padding-box,var(--gradient-base) padding-box;
   mask-image:linear-gradient(to bottom,black,black),radial-gradient(ellipse at 50% 50%,black 40%,transparent 65%),radial-gradient(ellipse at 66% 66%,black 5%,transparent 40%),radial-gradient(ellipse at 33% 33%,black 5%,transparent 40%),radial-gradient(ellipse at 66% 33%,black 5%,transparent 40%),radial-gradient(ellipse at 33% 66%,black 5%,transparent 40%),conic-gradient(from var(--cursor-angle) at center,transparent 5%,black 15%,black 85%,transparent 95%);
   mask-composite:subtract,add,add,add,add,add;
   opacity:calc(var(--fill-opacity)*(var(--edge-proximity) - var(--color-sensitivity))/(100 - var(--color-sensitivity)))}
-/* outer glow */
 :is(.fold,.cat>.cf)>.edge-light{inset:calc(var(--glow-padding)*-1);z-index:1;
   -webkit-mask-image:conic-gradient(from var(--cursor-angle) at center,black 2.5%,transparent 10%,transparent 90%,black 97.5%);
   mask-image:conic-gradient(from var(--cursor-angle) at center,black 2.5%,transparent 10%,transparent 90%,black 97.5%);
@@ -506,23 +496,19 @@ body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 :is(.fold,.cat>.cf)>.edge-light::before{content:"";position:absolute;inset:var(--glow-padding);border-radius:inherit;
   box-shadow:inset 0 0 0 1px var(--glow-color),inset 0 0 1px 0 var(--glow-color-60),inset 0 0 3px 0 var(--glow-color-50),inset 0 0 6px 0 var(--glow-color-40),inset 0 0 15px 0 var(--glow-color-30),inset 0 0 25px 2px var(--glow-color-20),inset 0 0 50px 2px var(--glow-color-10),
   0 0 1px 0 var(--glow-color-60),0 0 3px 0 var(--glow-color-50),0 0 6px 0 var(--glow-color-40),0 0 15px 0 var(--glow-color-30),0 0 25px 2px var(--glow-color-20),0 0 50px 2px var(--glow-color-10)}
-/* blend: additive light everywhere; soft-light fill on dark */
 :is(.fold,.cat>.cf)::after{mix-blend-mode:normal}:is(.fold,.cat>.cf)>.edge-light{mix-blend-mode:plus-lighter}
 :root[data-theme=dark] :is(.fold,.cat>.cf)::after{mix-blend-mode:soft-light}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]):not([data-theme=material]) :is(.fold,.cat>.cf)::after{mix-blend-mode:soft-light}}
-/* hover: surface dims very slightly; the glow then brightens it back like white light */
 .fold:hover,.fold:focus-within,.cat:hover>.cf{background-color:var(--hov)}
 .fold{transition:border-color .25s,box-shadow .35s cubic-bezier(.22,1,.36,1),z-index 0s .35s,background-color .35s}
 .fold.cur,.fold:hover,.fold:focus-within{transition-delay:0s,0s,0s,0s}
 .cat>.cf{transition:transform .5s cubic-bezier(.23,1,.32,1),border-color .25s,background-color .35s}
-/* spotlight */
 :is(.fold,.cat>.cf)>.spot{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:-1;opacity:0;transition:opacity .5s ease;
   background:radial-gradient(circle at var(--mouse-x) var(--mouse-y),var(--spot),transparent 80%)}
 .fold:hover>.spot,.fold:focus-within>.spot,.cat:hover>.cf>.spot{opacity:.6}
 @media(hover:none){:is(.fold,.cat>.cf)>.spot{display:none}}
 @media(prefers-reduced-motion:reduce){:is(.fold,.cat>.cf)::before,:is(.fold,.cat>.cf)::after,:is(.fold,.cat>.cf)>.edge-light,:is(.fold,.cat>.cf)>.spot{transition:none!important}}
 
-/* ===== THEME SWATCHES (context menu) ===== */
 #cm .sw{flex:none;display:flex;align-items:center;gap:9px}
 #cm .sw i{position:relative;display:block;width:14px;height:14px;border-radius:50%;box-sizing:border-box;cursor:pointer;transition:transform .15s}
 #cm .sw i::after{content:"";position:absolute;inset:-5px}
@@ -532,24 +518,19 @@ body.pfon #cm{z-index:40}body.pfon #toasts{z-index:41}
 #cm .t-dark{background:#1c1c1e;box-shadow:inset 0 0 0 1.5px #fff,0 0 0 1px rgba(128,128,128,.45)}
 #cm .t-material{background:repeating-linear-gradient(135deg,var(--ink) 0 1px,transparent 1px 3.3px);box-shadow:inset 0 0 0 1.5px var(--ink)}
 
-/* ===== MATERIAL THEME REFINEMENTS (visual only) ===== */
-/* real elevation: dark, layered shadows (the default ones are tuned for white and vanish on charcoal) */
 :root[data-theme=material]{
   --s1:0 1px 2px rgba(0,0,0,.38),0 3px 10px rgba(0,0,0,.2);
   --s2:0 2px 4px rgba(0,0,0,.38),0 10px 26px rgba(0,0,0,.34);
   --s3:0 6px 10px rgba(0,0,0,.4),0 24px 52px rgba(0,0,0,.52);
   background:radial-gradient(120% 85% at 50% -8%,#3b3731 0%,#2b2926 46%,#201e1b 100%) fixed,#2b2926}
 :root[data-theme=material] body{background:transparent}
-/* posts: warm paper, amber light, accent ring on the current post */
 :root[data-theme=material] .fold{--gh:44deg;--gs:92%;--gl:58%;box-shadow:var(--s1)}
 :root[data-theme=material] .fold:hover{box-shadow:var(--s2)}
 :root[data-theme=material] .fold.cur{border-color:#e3ab1a;box-shadow:0 0 0 1.5px #f2c230,var(--s2)}
 :root[data-theme=material] body.grab .fold.cur{box-shadow:0 0 0 1.5px #f2c230,var(--s3)}
-/* folders: deeper manila back + tab, brighter front, lifted */
 :root[data-theme=material] .cat .cb,:root[data-theme=material] .cat .cb::before{background:#e3ab1a}
 :root[data-theme=material] .cat .cb{box-shadow:var(--s1)}
 :root[data-theme=material] .cat:hover .cb,:root[data-theme=material] .cat.cur .cb{box-shadow:var(--s2)}
-/* one accent used for actions */
 :root[data-theme=material] #fab{background:#f2c230;color:#1c1b19}
 :root[data-theme=material] .modal-actions .b.primary{background:#f2c230;border-color:#f2c230;color:#1c1b19}
 :root[data-theme=material] #fxb{background:#f2c230;color:#1c1b19}
@@ -670,7 +651,6 @@ addEventListener('error',e=>{if(/ResizeObserver loop/.test((e&&e.message)||'')){
 const $=id=>document.getElementById(id),h=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
 const K='dab:canvas:v1',TOUR_K='dab:tour:v1',FW=264,vv=visualViewport,root=document.documentElement,cv=$('cv'),world=$('w'),ov=$('ov'),wh=$('wh'),hint=$('hint'),zeroEl=$('zero'),edgeEl=$('edge');
 const coarse=matchMedia('(hover:none),(pointer:coarse),(max-width:768px)'),RM=matchMedia('(prefers-reduced-motion:reduce)');
-/* escape hatch: visit /?reset to wipe a broken saved state (a copy is kept in dab:recovered:v1) */
 try{if(/[?&]reset(=|&|$)/.test(location.search)){Object.keys(localStorage).filter(k=>k.indexOf('dab:')===0).forEach(k=>localStorage.removeItem(k));try{Object.keys(sessionStorage).filter(k=>k.indexOf('dab:')===0).forEach(k=>sessionStorage.removeItem(k))}catch(_){}history.replaceState(null,'',location.pathname+location.hash)}}catch(_){}
 const ltk=$('ltk');let LI={},LV=coarse.matches,lvI=0,lvCat=null;
 try{const s=JSON.parse(localStorage.getItem('dab:view'));if(s){LI=s.i||{};LV=s.v==='letters'}}catch(_){}
@@ -684,17 +664,10 @@ const T=(name,x,y,...tree)=>({id:nid(),name,x,y,tree});
 const CT=(name,x,y,...trees)=>({id:nid(),name,x,y,trees});
 
 const SEEDGEN=(()=>{
-/* ══════════════════════════════════════════════════════════════
-   SEED — a live-feeling board, generated deterministically.
-   Same content every load. No network, no accounts, no servers.
-   Output folds into the standard dab.json export shape, so
-   import / export / focus mode all keep working unchanged.
-══════════════════════════════════════════════════════════════ */
 const _HOUR=3600*1000,_DAY=24*_HOUR,_NOW0=Date.now();
 const posted=h=>({postedAt:_NOW0-h*_HOUR});
 function _rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 
-/* ── places ─────────────────────────────────────────────────── */
 const PLACE_TABLE=[
   ['*','everywhere','all'],
   ['nyc','New York City','city'],
@@ -807,7 +780,6 @@ const TRANSIT={
 const MAIL=['hi@dab.cx','hi@dab.cx','hi@dab.cx','hi@dab.cx','reply@dab.cx','post@dab.cx'];
 const GRAY='#8e8e93', BLUE='#0091ff', GRAD='linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)';
 
-/* ── shared helpers ─────────────────────────────────────────── */
 function _pick(R,a){return a[(R()*a.length)|0]}
 function _shuf(R,a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=(R()*(i+1))|0;const t=a[i];a[i]=a[j];a[j]=t}return a}
 function _hood(R,p){const h=HOOD[p]||['downtown'];return _pick(R,h)}
@@ -821,7 +793,6 @@ const L=(t,o)=>Object.assign({text:t,color:null,shiny:false,collapsed:false,chil
 const G_=(t)=>({text:t,color:GRAY,shiny:false,collapsed:false,children:[]});
 const B_=(t)=>({text:t,color:BLUE,shiny:false,collapsed:false,children:[]});
 
-/* ── for sale ───────────────────────────────────────────────── */
 const FS_ITEMS=[
 ['floor lamp',[30,70],['adjustable arm, brass finish. real brass, or at least it looks like it.','missing the top screw on the shade. it holds fine.','both bulbs are new.'],['slight dent on the base, hidden by the couch.','the switch is a little crunchy but it works.']],
 ['desk lamp',[15,45],['articulating arm, weighted base.','clamp mount included if you want it.','led bulb, warm white.'],['paint is chipped on the base.','the arm is stiff, but that\'s by design.']],
@@ -881,7 +852,6 @@ const FS_ITEMS=[
 ['houseplants',[15,60],['a pothos, a monstera, and a snake plant.','all healthy.'],['the monstera needs a repot.','the pothos is basically unkillable.']]
 ];
 
-/* ── free ───────────────────────────────────────────────────── */
 const FREE_ITEMS=[
 ['moving boxes',['about 30 boxes, various sizes.','all flattened and stacked.'],['no tape, sorry.','gone by sunday.']],
 ['firewood',['a half cord, seasoned.','you haul, i help load.'],['no splitting, it\'s already split.','someone claimed half of it last week, the rest is here.']],
@@ -901,7 +871,6 @@ const FREE_ITEMS=[
 ['toddler toys',['a bin of duplos and wooden blocks.','clean.'],['some pieces are missing from the sets.','the bin itself is included.']]
 ];
 
-/* ── housing ────────────────────────────────────────────────── */
 const HOUSING=[
 [['studio in ','',''],'studio',[1400,2400],
  ['one room plus a kitchen. you know what a studio is.','the kitchen is a real kitchen, not a hot plate.','the bathroom is off the main room.'],
@@ -945,7 +914,6 @@ const HOUSING=[
  ['12-month lease. one month deposit.','']]
 ];
 
-/* ── jobs (by sub-board) ────────────────────────────────────── */
 const JOBS={
  'hospitality':[
  ['line cook',[18,26],['small seasonal restaurant. about 40 seats.','evenings, wednesday through sunday.','closed mondays and tuesdays.'],['2+ years on a line.','knife skills non-negotiable, we\'ll test them.','you read the ticket, you call the ticket.']],
@@ -1026,7 +994,6 @@ const JOBS={
 ]
 };
 
-/* ── services ───────────────────────────────────────────────── */
 const SERVICES=[
 ['sourdough lessons',[40,80],['i\'ve been baking weekly for 11 years. i\'ve made every mistake.','two hours, your kitchen or mine.','you leave with a jar of starter and a loaf.'],['$60 for two. $40 if it\'s just you.','weekends work best. weeknights possible with notice.']],
 ['houseplant rescue',[40,100],['i take in sad plants. i bring them back, or i tell you what\'s wrong.','you drop the plant off, or i come to you.','sliding scale if money is tight. ask. i mean it.'],['what i\'m good at: ficuses, monsteras, pothos.','what i\'m not: orchids. they win.']],
@@ -1069,7 +1036,6 @@ const SERVICES=[
 ['logo',[200,800],['one mark, one lockup, one color.','three rounds of revisions.'],['flat rate.','no spec work.']]
 ];
 
-/* ── wanted ─────────────────────────────────────────────────── */
 const WANTED=[
 ['a good dentist',['mine retired. i need a new one.'],['takes insurance (aetna).','isn\'t a lecture.','doesn\'t try to sell me a $4k treatment i don\'t need.']],
 ['a used monitor',[['24 or 27 inch. 1080p is fine. 4k is nicer.'],['budget: $80–120.'],['i can pick up anywhere on the subway.']]],
@@ -1093,7 +1059,6 @@ const WANTED=[
 ['a good tailor',[['i need some things taken in.','nothing fancy. just someone who does it well.'],['anywhere in the city.']]]
 ];
 
-/* ── events ─────────────────────────────────────────────────── */
 const EVENTS=[
 ['yard sale',[['saturday, 9am–2pm.','rain or shine, mostly rain.'],['furniture, books, kitchen stuff.','no early birds. seriously.']]],
 ['book swap',[['bring a book, take a book.','sunday, 2–5pm, at the park.'],['all genres. no textbooks.']]],
@@ -1112,7 +1077,6 @@ const EVENTS=[
 ['potluck',[['sunday, 6pm.','bring a dish, bring a chair.'],['the park, near the big tree.']]]
 ];
 
-/* ── community ──────────────────────────────────────────────── */
 const COMMUNITY=[
 ['anyone else hear that noise',[['every night around 11.','sounds like a fan or a compressor.'],['trying to figure out if it\'s a neighbor or the building.']]],
 ['best coffee in the neighborhood',[['i\'ve tried three places. all fine.','looking for the one that\'s actually good.'],['drip, not espresso.']]],
@@ -1136,7 +1100,6 @@ const COMMUNITY=[
 ['someone to split a CSA',[['i want the vegetables but not that many.'],['half share, half price.']]]
 ];
 
-/* ── lost & found ───────────────────────────────────────────── */
 const LOSTFOUND=[
 ['lost: keys',[['a small ring, three keys, a blue tag.'],['probably near the park or the coffee place.'],['reward, small but real.']]],
 ['found: wallet',[['on the sidewalk near the corner.'],['has an id. i\'m not posting the name.'],['describe it and it\'s yours.']]],
@@ -1152,7 +1115,6 @@ const LOSTFOUND=[
 ['found: kid\'s toy',[['a stuffed rabbit, at the playground.'],['i put it on the fence post.']],['']]
 ];
 
-/* ── rides ──────────────────────────────────────────────────── */
 const RIDES=[
 ['carpool to the city',[['leaving monday, 7am.','back friday evening.'],['one seat. split gas.']]],
 ['airport run',[['thursday morning, 5am.','one passenger, one bag.'],['i don\'t need gas money, i just don\'t want to drive alone.']]],
@@ -1164,7 +1126,6 @@ const RIDES=[
 ['carpool to a wedding',[['saturday, out and back.'],['one seat, no luggage.']]]
 ];
 
-/* ── dabbling (meta) ────────────────────────────────────────── */
 const DABBLING=[
 ['dab.',GRAD,['it\'s a board. that\'s the whole pitch.']],
 ['how it works',null,['post.','digress.','rinse & repeat.']],
@@ -1173,7 +1134,6 @@ const DABBLING=[
 ['that\'s it.',GRAD,['for direct q&a: hi@dab.cx','say something new or say something else.']]
 ];
 
-/* ── layout helpers ─────────────────────────────────────────── */
 function _lines(a){let n=0;for(const x of a){n++;n+=_lines(x.children||[])}return n}
 const _h=p=>52+_lines(p.children||[])*23+26;
 function _pack(posts){
@@ -1193,13 +1153,11 @@ const _post=(title,children,loc,ts,w)=>({
   x:0,y:0, children
 });
 
-/* ── buildSeed ──────────────────────────────────────────────── */
 function buildSeed(){
   const R=_rng(0x7dab2026);
   const mail=()=>_pick(R,MAIL);
   const cats=[];
 
-  /* ── start here (loc '*') ── */
   cats.push({name:'start here',x:0,y:0,statements:[
     {text:'dab.',x:0,y:0,w:300,loc:'*',postedAt:_NOW0-11*_DAY,children:[
       {text:'A board for boards. Post what you mean, reply if you\'re interested. That\'s the whole thing.',color:GRAD,shiny:true,children:[]},
@@ -1257,7 +1215,6 @@ function buildSeed(){
     ]}
   ]});
 
-  /* ── for sale ── */
   {
     const out=[];
     FS_ITEMS.forEach(it=>{
@@ -1287,7 +1244,6 @@ function buildSeed(){
     cats.push({name:'for sale',x:300,y:0,statements:out});
   }
 
-  /* ── free ── */
   {
     const out=[];
     FREE_ITEMS.forEach(it=>{
@@ -1307,7 +1263,6 @@ function buildSeed(){
     cats.push({name:'free',x:0,y:400,statements:out});
   }
 
-  /* ── housing ── */
   {
     const out=[];
     HOUSING.forEach(([,[,],[lo,hi],core,extra,terms])=>{
@@ -1327,7 +1282,6 @@ function buildSeed(){
         kids.push(L(terms[0]));
         if(terms[1])kids.push(L(terms[1],{color:BLUE}));
         kids.push(L(`${mail()}`));
-        // headline composed from the archetype name + hood
         const head=`${hood} — $${rent.toLocaleString()}`;
         out.push(_post(head,kids,p,_ago(R),_w(R)));
       });
@@ -1336,7 +1290,6 @@ function buildSeed(){
     cats.push({name:'housing',x:600,y:0,statements:out});
   }
 
-  /* ── jobs (sub-boards) ── */
   {
     const subs=[];
     Object.keys(JOBS).forEach(sname=>{
@@ -1364,16 +1317,13 @@ function buildSeed(){
           out.push(_post(`${title} — ${pay}`,kids,p,_ago(R),_w(R)));
         });
       });
-      // pack each sub-board on its own grid
       _pack(out);
       subs.push({name:sname,x:0,y:0,statements:out});
     });
-    // lay the sub-board cards out in a grid
     subs.forEach((s,i)=>{s.x=(i%4)*380;s.y=Math.floor(i/4)*420});
     cats.push({name:'jobs',x:900,y:0,statements:[],subs});
   }
 
-  /* ── services ── */
   {
     const out=[];
     SERVICES.forEach(it=>{
@@ -1395,7 +1345,6 @@ function buildSeed(){
     cats.push({name:'services',x:0,y:300,statements:out});
   }
 
-  /* ── wanted ── */
   {
     const out=[];
     WANTED.forEach(it=>{
@@ -1417,7 +1366,6 @@ function buildSeed(){
     cats.push({name:'wanted',x:300,y:300,statements:out});
   }
 
-  /* ── events ── */
   {
     const out=[];
     EVENTS.forEach(it=>{
@@ -1435,7 +1383,6 @@ function buildSeed(){
     cats.push({name:'events',x:600,y:300,statements:out});
   }
 
-  /* ── community ── */
   {
     const out=[];
     COMMUNITY.forEach(it=>{
@@ -1452,7 +1399,6 @@ function buildSeed(){
     cats.push({name:'community',x:900,y:300,statements:out});
   }
 
-  /* ── lost & found ── */
   {
     const out=[];
     LOSTFOUND.forEach(it=>{
@@ -1469,7 +1415,6 @@ function buildSeed(){
     cats.push({name:'lost & found',x:0,y:900,statements:out});
   }
 
-  /* ── rides ── */
   {
     const out=[];
     RIDES.forEach(it=>{
@@ -1487,7 +1432,6 @@ function buildSeed(){
     cats.push({name:'rides',x:300,y:900,statements:out});
   }
 
-  /* ── dabbling ── */
   cats.push({name:'dabbling',x:600,y:900,statements:DABBLING.map(([title,color,lines],i)=>({
     text:title, x:i*292, y:0, w:i===2?342:264, loc:'*', postedAt:_NOW0-(4+i)*_DAY,
     children: lines.map(l=>L(l,{color:color||null,shiny:!!color}))
@@ -1497,7 +1441,6 @@ function buildSeed(){
 }
 return {buildSeed,PLACE_TABLE};
 })();
-
 
 const seedDemo=()=>[
   CT('start here',0,0,
@@ -1564,7 +1507,6 @@ function seedFromExport(d){
     return result;
   });
 }
-/* ══ BULK DEMO CONTENT — seeded RNG, so every reset gives the same "busy" marketplace ══ */
 const BULK_PLACES=[];
 const bulkFill=cats=>{
  let a=20261001;const R=()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
@@ -1613,7 +1555,6 @@ const bulkFill=cats=>{
   else if(specs[nm]){const[n,fn]=specs[nm];if(nm==='dabbling'){const ps=gen(n,dabbling);pack(ps,Y0);c.trees.push(...ps)}else fill(c.trees,n,fn)}});
 
 };
-/* ══ DEMO CONVERSATIONS — derived at render time from the post id (nothing stored but a kind tag) ══ */
 const DEMO_KINDS=new Set(['for sale','free','housing','jobs','services','wanted','events','community','lost & found','rides']);
 const DHND=['mina','jorge_k','tessab','okafor','dlee','nico_p','sam_r','priya','wren','ahmad','lucia_m','b_hollis','june','teo','marguerite','ravi','cole_n','ines','dmitri','hana'];
 const dItem=n=>String(n||'').replace(/\s+[\u2014-].*$/,'').replace(/^(wanted|lost|found|free):\s*/i,'').trim()||'this';
@@ -1677,63 +1618,76 @@ const tagDemo=cats=>{(cats||[]).forEach(c=>{const nm=String(c.name||'').toLowerC
   [...(c.trees||[]),...(c.subs||[]).flatMap(s=>s.trees||[])].forEach(f=>{if(f.postedAt&&Math.random()<.78)f.dk=nm})});return cats};
 const thinSmall=cats=>{const SM=new Set(['wdk','slh','ith','ash','bld','dyl']),n={},keep=f=>!SM.has(f.loc)||(n[f.loc]=(n[f.loc]||0)+1)<=2;
   (cats||[]).forEach(c=>{if(c.trees)c.trees=c.trees.filter(keep);(c.subs||[]).forEach(b=>{if(b.trees)b.trees=b.trees.filter(keep)})});return cats};
-/* demo photos: built-in subject-matched illustrations (inline SVG; always render, no network). A dab_images.js entry ({key:[{src,by,lic,url}]}, src = image URL) overrides them. */
-const ILL={
-lamp:(A,B)=>`<path d="M320 392V196M262 392h116"/><path d="M246 204l38-96h72l38 96z" fill="${A}"/>`,
-sofa:(A,B)=>`<rect x="136" y="214" width="368" height="112" rx="26" fill="${A}"/><rect x="104" y="262" width="76" height="112" rx="26" fill="${B}"/><rect x="460" y="262" width="76" height="112" rx="26" fill="${B}"/><path d="M168 374v18M472 374v18"/>`,
-chair:(A,B)=>`<rect x="232" y="104" width="150" height="150" rx="16" fill="${A}"/><rect x="212" y="254" width="190" height="36" rx="12" fill="${B}"/><path d="M236 290v104M378 290v104"/>`,
-table:(A,B)=>`<rect x="124" y="214" width="392" height="32" rx="10" fill="${A}"/><path d="M164 246v146M476 246v146"/><rect x="258" y="250" width="124" height="52" rx="8" fill="${B}"/>`,
-shelf:(A,B)=>`<rect x="186" y="86" width="268" height="306" rx="10" fill="${B}"/><path d="M186 188h268M186 290h268"/><rect x="214" y="124" width="26" height="64" fill="${A}"/><rect x="250" y="136" width="26" height="52" fill="${A}"/><rect x="360" y="228" width="30" height="62" fill="${A}"/><rect x="214" y="330" width="62" height="62" fill="${A}"/>`,
-bed:(A,B)=>`<rect x="104" y="196" width="60" height="196" rx="12" fill="${B}"/><rect x="104" y="262" width="432" height="70" rx="14" fill="${A}"/><rect x="170" y="226" width="110" height="40" rx="18" fill="#fff"/><path d="M536 332v60"/>`,
-bike:(A,B)=>`<circle cx="190" cy="320" r="76"/><circle cx="450" cy="320" r="76"/><path d="M190 320l96-110h118l46 110M286 210l46 110H190M404 210l-18-34h46M286 210l-14-30h-44" stroke="${A}"/>`,
-laptop:(A,B)=>`<rect x="190" y="130" width="260" height="176" rx="14" fill="${A}"/><path d="M130 334h380l-24 44H154z" fill="${B}"/>`,
-monitor:(A,B)=>`<rect x="140" y="110" width="360" height="226" rx="14" fill="${A}"/><path d="M320 336v44M250 380h140"/>`,
-guitar:(A,B)=>`<ellipse cx="244" cy="326" rx="92" ry="72" fill="${A}"/><circle cx="244" cy="326" r="24" fill="${B}"/><path d="M300 282L474 108" stroke-width="22"/><path d="M462 96l30 30"/>`,
-camera:(A,B)=>`<rect x="132" y="190" width="376" height="192" rx="26" fill="${A}"/><rect x="236" y="152" width="96" height="44" rx="10" fill="${B}"/><circle cx="320" cy="286" r="68" fill="#fff"/><circle cx="320" cy="286" r="32" fill="${B}"/>`,
-plant:(A,B)=>`<path d="M244 322h152l-20 72H264z" fill="${B}"/><path d="M320 322V196"/><ellipse cx="262" cy="214" rx="56" ry="26" transform="rotate(-30 262 214)" fill="${A}"/><ellipse cx="380" cy="190" rx="56" ry="26" transform="rotate(30 380 190)" fill="${A}"/><ellipse cx="320" cy="140" rx="26" ry="52" fill="${A}"/>`,
-mug:(A,B)=>`<rect x="188" y="186" width="212" height="196" rx="30" fill="${A}"/><path d="M400 236h34a44 44 0 010 88h-34"/><path d="M250 150c-16-20 16-30 0-52M320 150c-16-20 16-30 0-52"/>`,
-tool:(A,B)=>`<rect x="150" y="190" width="250" height="84" rx="22" fill="${A}"/><path d="M400 214h70v36h-70"/><path d="M226 274l-14 100h72l14-100" fill="${B}"/>`,
-speaker:(A,B)=>`<rect x="208" y="92" width="224" height="300" rx="24" fill="${A}"/><circle cx="320" cy="180" r="38" fill="${B}"/><circle cx="320" cy="304" r="62" fill="${B}"/>`,
-record:(A,B)=>`<circle cx="320" cy="250" r="136" fill="#2b2926"/><circle cx="320" cy="250" r="96" stroke="#6b665f" stroke-width="3"/><circle cx="320" cy="250" r="44" fill="${A}" stroke="none"/>`,
-tent:(A,B)=>`<path d="M96 392L320 108l224 284z" fill="${A}"/><path d="M320 108v284M250 392l70-120 70 120" fill="${B}"/>`,
-book:(A,B)=>`<rect x="150" y="318" width="340" height="62" rx="8" fill="${A}"/><rect x="176" y="256" width="300" height="62" rx="8" fill="${B}"/><rect x="204" y="194" width="260" height="62" rx="8" fill="#fff"/>`,
-cat:(A,B)=>`<circle cx="320" cy="276" r="104" fill="${A}"/><path d="M232 214l-10-96 74 50M408 214l10-96-74 50" fill="${A}"/><circle cx="284" cy="268" r="9" fill="#2b2926"/><circle cx="356" cy="268" r="9" fill="#2b2926"/><path d="M308 304q12 12 24 0"/>`,
-building:(A,B)=>`<rect x="190" y="84" width="260" height="308" rx="8" fill="${A}"/>`+[0,1,2].flatMap(r=>[0,1].map(c=>`<rect x="${226+c*100}" y="${120+r*66}" width="52" height="40" rx="4" fill="#fff"/>`)).join('')+`<rect x="294" y="330" width="52" height="62" fill="${B}"/>`,
-box:(A,B)=>`<path d="M176 190l144-62 144 62v152l-144 62-144-62z" fill="${A}"/><path d="M176 190l144 62 144-62M320 252v152"/>`};
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DEMO PHOTOS — every demo image is a real Unsplash photograph.
+   Deterministic: the same post text always resolves to the same photo.
+   A dab_images.js entry ({key:[{src,by,lic,url}]}, src = image URL)
+   still overrides these, per name.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* the pool — 100 Unsplash photo IDs, reused across every demo surface */
+const US_POOL=[
+  'photo-1439246854758-f686a415d9da','photo-1440773310993-8660d1577dcd','photo-1540968221243-29f5d70540bf',
+  'photo-1596135187959-562c650d98bc','photo-1628944682084-831f35256163','photo-1590013330451-3946e83e0392',
+  'photo-1590421959604-741d0eec0a2e','photo-1572613000712-eadc57acbecd','photo-1570097192570-4b49a6736f9f',
+  'photo-1620789550663-2b10e0080354','photo-1617775623669-20bff4ffaa5c','photo-1548600916-dc8492f8e845',
+  'photo-1573824969595-a76d4365a2e6','photo-1633936929709-59991b5fdd72','photo-1583499871880-de841d1ace2a',
+  'photo-1571406761758-9a3eed5338ef','photo-1619664208054-41eefeab29e9','photo-1662841238473-f4b137e123cb',
+  'photo-1589648751789-c8ecb7a88bd5','photo-1662187554571-f54ea9657d88','photo-1659540181281-1d89d6112832',
+  'photo-1526095179574-86e545346ae6','photo-1620059705618-4fd799249c35','photo-1698013339517-85b01d4dc817',
+  'photo-1704584591433-2bc116c88a7e','photo-1592993497265-f3889e73319e','photo-1679991100469-89de7374a5cb',
+  'photo-1695033328827-0713c71475dc','photo-1676928858933-10c1cf1f847f','photo-1428684145318-d077db6ccec5',
+  'photo-1434600705575-4285a88363a8','photo-1437590552276-2e17e82b7b48','photo-1438261566062-c82c7f56ab74',
+  'photo-1440429801299-1edd4345fe51','photo-1444276233377-6a54153f8d5c','photo-1445384153502-5b921b006ee2',
+  'photo-1446491429004-809880bd132e','photo-1452571575984-d8c666847737','photo-1457347876270-97799484c564',
+  'photo-1460400213328-a214131cb764','photo-1465823290694-4cd9b2248419','photo-1465308452258-70fc6a9b67a8',
+  'photo-1474263158724-fa181a112606','photo-1475112839078-1a83e244ff58','photo-1472738805989-ede1a5b9a821',
+  'photo-1588398473237-d4acf4b33efe','photo-1546609665-aeb88ffa6f27','photo-1557692609-0e79d5e19a58',
+  'photo-1737439987404-a3ee9fb95351','photo-1691036631975-8aeaded791f8','photo-1559825481-12a05cc00344',
+  'photo-1737559217439-a5703e9b65cb','photo-1515349933451-b95498259b01','photo-1516117172878-fd2c41f4a759',
+  'photo-1532009324734-20a7a5813719','photo-1433030384060-b53fe066a835','photo-1424136164161-9c851c61012f',
+  'photo-1462774171315-5a61bb8b50c5','photo-1586528116311-ad8dd3c8310d','photo-1497366216548-37526070297c',
+  'photo-1563207153-f403bf289096','photo-1532187863486-abf9dbad1b69','photo-1542744173-8e7e53415bb0',
+  'photo-1550751827-4bd374c3f58b','photo-1494412574643-ff11b0a5c1c3','photo-1451187580459-43490279c0fa',
+  'photo-1618005182384-a83a8bd57fbe','photo-1522071820081-009f0129c71c','photo-1516321318423-f06f85e504b3',
+  'photo-1558494949-ef010cbdcc31','photo-1611974789855-9c2a0a7236a3','photo-1518770660439-4636190af475',
+  'photo-1455390582262-044cdead277a','photo-1576091160399-112ba8d25d1d','photo-1519494026892-80bbd2d6fd0d',
+  'photo-1551288049-bebda4e38f71','photo-1587293852726-70cdb56c2866','photo-1522542550221-31fd19575a2d',
+  'photo-1520975954732-35dd22299614','photo-1519389950473-47ba0277781c','photo-1579758629938-03607ccdbaba',
+  'photo-1565043666747-69f6646db940','photo-1523050854058-8df90110c9f1','photo-1559757148-5c350d0d3c56',
+  'photo-1503387762-592deb58ef4e','photo-1492144534655-ae79c964c9d7','photo-1497366811353-6870744d04b2',
+  'photo-1486406146926-c627a92ad1ab','photo-1558655146-d09347e92766','photo-1531973576160-7125cd663d86',
+  'photo-1460925895917-afdab827c52f','photo-1454165804606-c3d57bc86b40','photo-1551434678-e076c223a692',
+  'photo-1552519507-da3b142c6e3d','photo-1554224155-6726b3ff858f','photo-1541339907198-e08756dedf3f',
+  'photo-1511671782779-c97d3d27a1d4','photo-1459749411175-04bf5292ceea','photo-1506784983877-45594efa4cbe'
+];
+
+/* subject kind → its Unsplash slot in the pool */
+const US_KIND={ lamp:0, sofa:1, chair:2, table:3, shelf:4, bed:5, bike:6, laptop:7, monitor:8,
+  guitar:9, camera:10, plant:11, mug:12, tool:13, speaker:14, record:15, tent:16, book:17,
+  cat:18, building:19, box:20 };
+
+const usUrl=(id,w,h)=>'https://images.unsplash.com/'+id+'?fm=avif&w='+(w||640)+'&h='+(h||480)+'&fit=crop&q=70';
+
+function _usHash(t){let h=2166136261;t=String(t).toLowerCase();for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+
 const illoKind=t=>{for(const[k,r]of[['building',/housing|apartment|roommate|brownstone|facade|sublet|studio/],['lamp',/lamp/],['sofa',/sofa|couch|armchair|loveseat|living ?room/],['chair',/chair|stool/],['table',/desk|table/],['shelf',/shelf|dresser|cabinet|drawer|bookcase/],['bed',/bed|mattress|crib/],['bike',/bike|bicycle/],['laptop',/laptop|computer|macbook/],['monitor',/monitor|\btv\b|television|screen/],['guitar',/guitar|bass|ukulele|violin|banjo/],['camera',/camera|lens/],['plant',/plant|garden|yard|soil|dirt|gravel/],['cat',/\bcat\b|kitten|\bdog\b/],['record',/record|vinyl|turntable/],['speaker',/speaker|stereo|receiver|headphone|piano|synth|radio|pedal/],['mug',/espresso|coffee|kettle|mixer|skillet|cast iron|cooking|kitchen|dutch|processor/],['tool',/drill|saw|workshop|tool|vacuum|sewing/],['tent',/tent|camp|sleeping|\bski|snowboard|kayak|canoe/],['book',/book/]])if(r.test(t))return k;return'box'};
-const illo=t=>{t=String(t).toLowerCase();let h=2166136261;for(const c of t){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}h>>>=0;const hue=h%360,A=`hsl(${hue} 52% 66%)`,B=`hsl(${hue} 50% 80%)`;
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"><rect width="640" height="480" fill="hsl(${hue} 55% 94%)"/><ellipse cx="320" cy="396" rx="180" ry="14" fill="rgba(0,0,0,.09)"/><g fill="none" stroke="#2b2926" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">${ILL[illoKind(t)](A,B)}</g></svg>`;
-  return'data:image/svg+xml,'+encodeURIComponent(svg)};
-const illoE=t=>({src:illo(t),by:'dab',lic:'demo illustration',url:''});
+
+function _usPick(t){const kind=illoKind(t),kid=US_KIND[kind];if(kind==='box')return US_POOL[_usHash(t)%US_POOL.length];return US_POOL[kid%US_POOL.length]}
+
+const illo=t=>usUrl(_usPick(t));
+const illoE=t=>{const id=_usPick(t);return{src:usUrl(id),by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com/photos/'+id}};
+
 (function(){const M={},hs=t=>{let x=2166136261;for(let i=0;i<t.length;i++){x^=t.charCodeAt(i);x=Math.imul(x,16777619)}return x>>>0};
-  const put=(n,tags)=>{const b=hs(n);M[n]=tags.map(t=>illoE(t+' '+n))};
+  const put=(n,tags)=>{M[n]=tags.map(t=>illoE(t+' '+n))};
   'sofa:couch|a used couch;lamp:floor lamp|desk lamp;table:dining table|coffee table|side table;bookshelf:bookshelf;dresser:dresser;armchair:armchair;mattress:mattress;bed:bed frame;desk:desk|standing desk|a used desk;chair:office chair;cabinet:filing cabinet;mirror:mirror;rug:rug;turntable:record player;stereo:receiver;speaker:speakers;headphones:headphones;laptop:laptop;monitor:monitor|a used monitor;keyboard:keyboard;synthesizer:synth;guitar:guitar|a used guitar|guitar lessons;bass,guitar:bass;guitar,pedal:pedal;camera:camera;camera,lens:lens;bicycle:road bike|commuter bike|bike trainer|bike|a used bike|a used bike trailer|bike repair|bike build|bike fitting|found: bike|bike stolen|bike to work;espresso:espresso machine;mixer:stand mixer;skillet:cast iron set;cooking:dutch oven;kitchen:food processor|kitchen stuff;vacuum:vacuum;sewing:sewing machine|a used sewing machine;drill:drill;workshop:table saw;airconditioner:air conditioner;heater:space heater;dehumidifier:dehumidifier;tent:tent;camping:sleeping bag;ski:skis|ski trip;snowboard:snowboard;kayak:kayak;stroller:stroller;crib:crib;lego:lego bulk;vinyl:records|record fair;books:books|book swap;houseplant:houseplants|houseplant rescue;boxes:moving boxes;firewood:firewood;piano:piano;television:crt tv;plants:plants|plant swap|plantsitting;refrigerator:fridge|a used fridge;garden:yard dirt|community garden plot;gravel:gravel;toys:toddler toys|found: kid\'s toy;apartment:a roommate|a roommate for spring;cat:lost cat|lost: cat|cat sitting;dog:dog walking|found: dog|dog park etiquette;coffee:best coffee in the neighborhood;;bread:bread;sourdough:sourdough lessons;cake:cake;;pizza:best pizza;keys:lost: keys;wallet:found: wallet;phone:found: phone;umbrella:lost: umbrella;glasses:lost: glasses;bag:found: bag;notebook:lost: notebook;jewelry:lost: earring;;;market:farmers market|farmers market?;;faucet:water pressure|someone to fix a leak;yardsale:yard sale;clothing:clothing swap;vegetables:someone to split a csa;hardware:good hardware store;laundromat:laundromat recommendation;parking:street parking tips;truck:anyone have a truck;knife:knife sharpening;shoes:shoe repair;cleanup:neighborhood cleanup;tree:tree planting;potluck:potluck;repair:repair cafe;car:carpool to the city|ride share to a show|carpool to a wedding|a used car;airport:airport run;van:moving day;roadtrip:weekend trip;house:house sitting;notebook,pen:copyediting;interior:interior design;cleaning,supplies:apartment cleaning;poster:graphic design;stamp:notary;paintbrush:painting;oldphoto:photo restoration;paper:resume review;calculator:tax help;woodworking:carpentry;mealprep:meal prep;ledger:bookkeeping;typography:logo;furniture:furniture assembly;laptop:web design;fermentation:fermentation;pet:pet portraits;books:language lessons;van:a moving company;bicycle,lock:a used bike lock;dog:anyone know a good vet'.split(';').forEach(g=>{const k=g.indexOf(':'),t=g.slice(0,k);g.slice(k+1).split('|').forEach(n=>n&&put(n,[t,t]))});
   put('housing',['apartment','brownstone','livingroom','kitchen','bedroom','facade']);
   window.DAB_IMAGES=Object.assign(M,window.DAB_IMAGES||{})})();
-const DEMO_FB=[
-  {src:'https://images.pexels.com/photos/33691745/pexels-photo-33691745.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/33691745/'},
-  {src:'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/1300402/'},
-  {src:'https://images.pexels.com/photos/33755006/pexels-photo-33755006.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/33755006/'},
-  {src:'https://images.pexels.com/photos/4348404/pexels-photo-4348404.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/4348404/'},
-  {src:'https://images.pexels.com/photos/3371094/pexels-photo-3371094.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/3371094/'},
-  {src:'https://images.pexels.com/photos/462680/pexels-photo-462680.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/462680/'},
-  {src:'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/1239291/'},
-  {src:'https://images.pexels.com/photos/278294/pexels-photo-278294.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/278294/'},
-  {src:'https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/2014422/'},
-  {src:'https://images.pexels.com/photos/33134150/pexels-photo-33134150.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/33134150/'},
-  {src:'https://images.pexels.com/photos/31391837/pexels-photo-31391837.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/31391837/'},
-  {src:'https://images.pexels.com/photos/19785905/pexels-photo-19785905.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/19785905/'},
-  {src:'https://images.pexels.com/photos/33691744/pexels-photo-33691744.jpeg?auto=compress&cs=tinysrgb&w=640',by:'Pexels',lic:'Pexels License',url:'https://www.pexels.com/photo/33691744/'},
-  {src:'https://images.unsplash.com/photo-1704915049565-139ddea93ed6?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
-  {src:'https://images.unsplash.com/photo-1520453803296-c39eabe2dab4?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
-  {src:'https://images.unsplash.com/photo-1598547240827-812a186e0122?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
-  {src:'https://images.unsplash.com/photo-1573143701037-ac0eec904d73?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
-  {src:'https://images.unsplash.com/photo-1634482895955-712847090dfd?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
-  {src:'https://images.unsplash.com/photo-1542920057-056153a22cd6?w=640&q=70&fm=webp&fit=crop',by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com'},
-  {src:'https://live.staticflickr.com/7372/12502775644_acfd415fa7_w.jpg',by:'Flickr',lic:'see Flickr page',url:'https://live.staticflickr.com/7372/12502775644_acfd415fa7_w.jpg'},
-  {src:'https://live.staticflickr.com/3890/15310459932_3357f5bb8e_b.jpg',by:'Flickr',lic:'see Flickr page',url:'https://live.staticflickr.com/3890/15310459932_3357f5bb8e_b.jpg'},
-  {src:'https://live.staticflickr.com/65535/55280937556_846a81f794_w.jpg',by:'Flickr',lic:'see Flickr page',url:'https://live.staticflickr.com/65535/55280937556_846a81f794_w.jpg'}
-];
+
+/* fallbacks — same pool, no external hosts */
+const DEMO_FB=US_POOL.slice(0,24).map(id=>({src:usUrl(id),by:'Unsplash',lic:'Unsplash License',url:'https://unsplash.com/photos/'+id}));
+
 function demoImg(f){if(!f||!f.dk)return null;const D=window.DAB_IMAGES||{};
   const nm=String(f.name||'').toLowerCase().replace(/\s+[\u2014-].*$/,'').replace(/^(free|wanted):\s*/,'').trim();
   let q=0;for(const ch of String(f.id))q=(q*31+ch.charCodeAt(0))>>>0;
@@ -1784,11 +1738,8 @@ const atPlaces=()=>!V&&!PS;
 function migrate(){const G=['start here','dabbling'];
  C.forEach(c=>poolOf(c).forEach(t=>{if(t.loc!==undefined)return;const g=((t.name||'')+JSON.stringify(t.tree)).toLowerCase(),a=/manhattan/.test(g)?'mn':/brooklyn|park slope|bed-stuy|williamsburg/.test(g)?'bk':null;t.loc=G.includes((c.name||'').toLowerCase())||!a?'*':(/remote/.test(g)?'remote:':'')+a}));
  const add=(b,name,loc,...ls)=>{const c=C.find(x=>(x.name||'').toLowerCase()===b);if(!c||(c.subs&&c.subs.length))return;c.trees.push({id:nid(),name,x:c.trees.length?Math.max(...c.trees.map(t=>t.x+(t.w||FW)))+56:0,y:0,loc,tree:ls.map(l=>mk(l))})};
-
 }
 
-
-/* ── sub-board helpers ── */
 const subsOf = () => (V && Array.isArray(V.subs) && V.subs.length) ? V.subs : null;
 const inSubsView = () => !!subsOf() && !S_;
 const currentPool = () => !V ? (PS?C:PLC) : (inSubsView() ? V.subs : F.filter(inScope));
@@ -1808,7 +1759,7 @@ const nzTree = t => (Array.isArray(t)?t:[]).map(x=>({
 }));
 const nzCat = c => {
   const r = {id:c.id||nid(),name:c.name||'',x:fin(c.x),y:fin(c.y),trees:nzTree(c.trees)};
-  if(typeof c.rem==='boolean')r.rem=c.rem;/* hand-placed opt-out is session-only: a stale saved auto:false is what left boards scattered on load */
+  if(typeof c.rem==='boolean')r.rem=c.rem;
   if(Array.isArray(c.subs)&&c.subs.length){
     r.subs = c.subs.map(s => ({
       id:s.id||nid(),name:s.name||'',x:fin(s.x),y:fin(s.y),trees:nzTree(s.trees)
@@ -1847,16 +1798,14 @@ C.forEach(c=>{
   }
   c.trees.forEach(t=>t.tree.length||t.tree.push(mk()));
 });
-const hsb=V&&V.subs&&V.subs.length;if(V)F=hsb?[]:(V.trees||[]);cur=V?(hsb?(V.subs[0]?V.subs[0].id:null):(F[0]?F[0].id:null)):lastCat; /* empty/sub boards: don't assume a first post */
+const hsb=V&&V.subs&&V.subs.length;if(V)F=hsb?[]:(V.trees||[]);cur=V?(hsb?(V.subs[0]?V.subs[0].id:null):(F[0]?F[0].id:null)):lastCat;
 H=[JSON.stringify(C)];
 
-/* persistence + history */
 let st;const save=()=>{clearTimeout(st);st=setTimeout(flush,300)};
 function flush(){if(V){if(!lvOn())cams[viewKey()]={...cam}}else if(PS)rc={...cam};else cams['@p']={...cam};const s=JSON.stringify(C);if(s!==H[hi]){H=H.slice(0,hi+1);H.push(s);if(H.length>80)H.shift();hi=H.length-1}try{localStorage.setItem(K,JSON.stringify({C,PLC,ls:LS,ps:PS,open:V&&V.id,last:lastCat,rc,cams,theme}));storeOk()}catch(e){storeFail(e);return}flashSaved()}
 const restore=()=>{C=JSON.parse(H[hi]);if(V){V=C.find(c=>c.id===V.id)||null;F=V?V.trees:[];if(S_ && V && V.subs){S_=V.subs.find(s=>s.id===S_.id)||null;F=S_?S_.trees:F}if(!V){Object.assign(cam,rc);S_=null;chrome()}}renderAll();save()};
 const undo=()=>{flush();if(hi>0){hi--;restore()}},redo=()=>{flush();if(hi<H.length-1){hi++;restore()}};
 
-/* toast + confirm + saved indicator */
 const toastsEl=$('toasts');
 function toast(msg,opts={}){
   if(typeof opts!=='object'||opts===null)opts={};
@@ -1897,13 +1846,11 @@ function confirmModal(msg,opts={}){
 }
 const say=(m,opts)=>{if(opts&&(opts.kind||opts.action))return toast(m,opts);hint.textContent=m;hint.style.opacity=1;clearTimeout(say.t);say.t=setTimeout(()=>hint.style.opacity=0,2600)};
 
-/* theme */
 const dark=()=>(root.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))==='dark';
 const curTheme=()=>root.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
 const nextTheme=()=>({light:'dark',dark:'material',material:'light',contrast:'light'})[curTheme()]||'dark';
 function paintTheme(){theme?root.dataset.theme=theme:delete root.dataset.theme;const b=document.querySelector('[data-a=theme]');if(b)b.textContent=nextTheme()+' theme'}
 
-/* camera */
 function apply(){world.style.transform=`translate(${cam.x}px,${cam.y}px) scale(${cam.s})`;cv.style.backgroundSize=`${24*cam.s}px ${24*cam.s}px`;cv.style.backgroundPosition=`${cam.x}px ${cam.y}px`;updateZero();zsync();save()}
 const rB=$('rb'),rS=$('rs');let rg={};
 function ringGeom(w,h){if(rg.w===w&&rg.h===h)return rg;
@@ -1932,7 +1879,6 @@ function zoomAt(cx,cy,ns){ns=clamp(ns,ZMIN,ZMAX);const k=ns/cam.s;cam.x=cx-(cx-c
 const wx=x=>(x-cam.x)/cam.s,wy=y=>(y-cam.y)/cam.s;
 let fl=0;function fly(t,d=460){cancelAnimationFrame(fl);if(RM.matches){Object.assign(cam,t);apply();return}const a={...cam},t0=performance.now();const step=n=>{const p=Math.min(1,(n-t0)/d),e=1-Math.pow(1-p,3);for(const k of['x','y','s'])cam[k]=a[k]+(t[k]-a[k])*e;apply();if(p<1)fl=requestAnimationFrame(step)};fl=requestAnimationFrame(step)}
 function view(f){const hh=fel(f.id).offsetHeight,s=clamp(Math.min((innerWidth-32)/FW,(innerHeight-150)/hh,1.15),.35,1.15);return{s,x:innerWidth/2-(f.x+FW/2)*s,y:innerHeight/2-(f.y+hh/2)*s}}
-/* space out posts — non-overlapping masonry sized to the viewport aspect. Default for every board until a post is dragged by hand. */
 function spacePosts(auto){
  const B=S_||V;if(!B)return false;
  const L=F.filter(inScope).filter(f=>fel(f.id));if(L.length<2){if(!auto)toast('Nothing to space out');return false}
@@ -1959,7 +1905,6 @@ function spacePosts(auto){
  if(!auto){fit(true);toast('Spaced out '+it.length+' posts')}
  return moved;
 }
-/* space out folders — same masonry idea for the boards grid, the places grid and the jobs sub-board picker. Cards are uniform, so this lands as a tidy grid sized to the viewport. */
 function spaceFolders(auto){
  if(lvOn()||(V&&!inSubsView()))return false;
  const L=currentPool().filter(f=>fel(f.id));if(L.length<2){if(!auto)toast('Nothing to space out');return false}
@@ -1984,7 +1929,6 @@ function spaceFolders(auto){
  save();fit(true);toast('Spaced out '+it.length+' '+(!V&&!PS?'places':'boards'));
  return true;
 }
-/* auto space-out: global toggle (context menu). Posts opt out per board when dragged by hand; folder grids (places, boards, sub-boards) opt out per level the same way. */
 let AS=(()=>{try{return localStorage.getItem('dab:autospace')!=='off'}catch(_){return true}})();
 let FM=(()=>{try{return JSON.parse(localStorage.getItem('dab:fman'))||{}}catch(_){return {}}})();
 const fmSave=()=>{try{localStorage.setItem('dab:fman',JSON.stringify(FM))}catch(_){}};
@@ -2003,7 +1947,6 @@ function vis(){const t=document.activeElement;if(!t||t.tagName!=='TEXTAREA')retu
 if(vv){const f=()=>{const k=Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop));root.style.setProperty('--kb',(k>60?k:0)+'px');vis()};vv.addEventListener('resize',f);vv.addEventListener('scroll',f)}
 cv.onscroll=()=>{cv.scrollTop=cv.scrollLeft=0};
 
-/* model helpers */
 const fel=id=>QR().querySelector(`.fold[data-id="${id}"],.cat[data-id="${id}"]`);
 const fobj=id=>{
   if(!V) return PS?C.find(f=>f.id===id):PLC.find(f=>f.id===id);
@@ -2047,7 +1990,7 @@ const PAREN_URL_RE = /^\((https?:\/\/[^\s)]+)\)$/;
 const PAREN_IMG_RE = /\s*\((https?:\/\/\S+\.(?:png|jpe?g|gif|webp|avif|svg|bmp)(?:[?#]\S*)?)\)\s*/gi;
 const FRW=[900,1440],FRA=.625;
 const fio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const f=e.target.querySelector('iframe');if(f&&f.dataset.src){f.src=f.dataset.src;delete f.dataset.src}fio.unobserve(e.target)}),{rootMargin:'400px'});
-const roq=fn=>{let q=[],t=0;return es=>{q.push(...es);if(!t)t=requestAnimationFrame(()=>{t=0;const a=q;q=[];fn(a)})}}; /* run observer work next frame: avoids 'ResizeObserver loop' errors */
+const roq=fn=>{let q=[],t=0;return es=>{q.push(...es);if(!t)t=requestAnimationFrame(()=>{t=0;const a=q;q=[];fn(a)})}};
 const fro=new ResizeObserver(roq(es=>es.forEach(e=>{const b=e.target,w=b.clientWidth,f=b.firstChild;if(!w||!f)return;const fw=Math.round(clamp(w*2.5,FRW[0],FRW[1]));f.style.width=fw+'px';f.style.height=Math.round(fw*FRA)+'px';b.style.setProperty('--fs',w/fw)})));
 document.addEventListener('pointerdown',e=>QR().querySelectorAll('.fbox.live').forEach(b=>{if(!b.contains(e.target))b.classList.remove('live')}),true);
 addEventListener('keydown',e=>{if(e.key==='Escape')QR().querySelectorAll('.fbox.live').forEach(b=>b.classList.remove('live'))});
@@ -2088,7 +2031,6 @@ function readImageAsDataURL(file){return new Promise(res=>{
   const MAX=1.4*1024*1024;if(file.size>MAX){res(null);return}
   const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>res(null);r.readAsDataURL(file)})}
 
-/* render */
 function rNode(n){
 const li=h('li',n.z&&n.k.length?'z':'');li.dataset.id=n.id;
 const row=h('div','row'),rg=h('button','rgrip');rg.type='button';rg.tabIndex=-1;rg.setAttribute('aria-label','Drag to reorder');rg.title='Drag to reorder';
@@ -2137,7 +2079,6 @@ rz.addEventListener('pointerdown',e=>{
   rz.addEventListener('pointermove',mv);rz.addEventListener('pointerup',up);rz.addEventListener('pointercancel',up)
 });
 el.append(h('span','edge-light'),h('span','spot'),hd,body,rz);return el}
-/* post hover effects: drives the --edge-proximity / --cursor-angle (BorderGlow) and --mouse-x/y (SpotlightCard) vars */
 (()=>{let ev=null,raf=0;
 const run=()=>{raf=0;const e=ev;if(!e)return;const t=e.target,hh=t&&t.closest&&t.closest('.fold,.cat');if(!hh)return;const el=hh.classList.contains('cat')?hh.querySelector(':scope>.cf'):hh;if(!el)return;
 const r=el.getBoundingClientRect();if(!r.width||!r.height)return;
@@ -2145,7 +2086,7 @@ const x=e.clientX-r.left,y=e.clientY-r.top,cx=r.width/2,cy=r.height/2,dx=x-cx,dy
 const kx=dx?cx/Math.abs(dx):Infinity,ky=dy?cy/Math.abs(dy):Infinity;
 const edge=Math.min(Math.max(1/Math.min(kx,ky),0),1);
 let ang=(dx||dy)?Math.atan2(dy,dx)*180/Math.PI+90:0;if(ang<0)ang+=360;
-const sx=r.width/(el.offsetWidth||r.width),sy=r.height/(el.offsetHeight||r.height); /* undo canvas zoom for spotlight px */
+const sx=r.width/(el.offsetWidth||r.width),sy=r.height/(el.offsetHeight||r.height);
 const st=el.style;st.setProperty('--edge-proximity',(edge*100).toFixed(2));st.setProperty('--cursor-angle',ang.toFixed(2)+'deg');
 st.setProperty('--mouse-x',(x/sx).toFixed(1)+'px');st.setProperty('--mouse-y',(y/sy).toFixed(1)+'px')};
 document.addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;ev=e;if(!raf)raf=requestAnimationFrame(run)},{passive:true})})();
@@ -2183,7 +2124,6 @@ function updateBC(){
   const f = S_ ? S_.trees.find(x=>x.id===cur) : (inSubsView() ? null : V.trees.find(x=>x.id===cur));
   el.textContent = f && f.name ? '/ ' + chain.join(' / ') + ' / ' + f.name : '/ ' + chain.join(' / ');
 }
-/* category / sub-board card */
 function rExtras(el,c){const T=c.trees||[],dp=a=>a.length?1+Math.max(...a.map(n=>dp(n.k))):0,pw=h('span','cpw');
 const has=n=>!!(n.t&&n.t.trim())||n.k.some(has);T.filter(t=>t.tree.some(has)).slice(0,4).forEach((t,i)=>{const p=h('span','cp');p.style.setProperty('--k',i);p.append(h('b','',t.name||'untitled'));const d=Math.min(3,Math.max(1,dp(t.tree)));for(let l=0;l<d;l++){const r=h('i');r.style.marginLeft=l*7+'px';p.append(r)}pw.append(p)});
 const roots=[];T.forEach(t=>t.tree.forEach(n=>{if(n.t)roots.push(n.t.replace(/\s+/g,' ').trim())}));
@@ -2256,7 +2196,6 @@ function newFolder(x,y){
   const f={id:nid(),name:'',x:x-FW/2,y:y-30,...(LS?{loc:LS}:{}),tree:[mk()]};F.push(f);world.append(rFold(f));setCur(f.id);save();rename(f);return f
 }
 
-/* ══ SORT — one global mode shared by every board and sub-board (persisted) ══ */
 const SORT_LABELS={recent:'newest',today:'today',week:'this week',az:'a–z'};
 let sortMode=(()=>{try{const m=localStorage.getItem('dab:sort');return SORT_LABELS[m]?m:'recent'}catch(_){return 'recent'}})();
 const HIDV=new Set();
@@ -2308,7 +2247,6 @@ function applySubSort(){
   S_._hidden=new Set(hidden.map(t=>t.id));
 }
 
-/* keys */
 function key(e,n,t){if(e.isComposing)return;const s=t.selectionStart,k=e.key;
 if((e.metaKey||e.ctrlKey)&&k.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();return}
 if(e.metaKey||e.ctrlKey)return;
@@ -2324,7 +2262,6 @@ else if((k==='ArrowUp'&&s===0)||(k==='ArrowDown'&&t.selectionEnd===t.value.lengt
 else if(k==='Escape')t.blur()}
 [['next','peer'],['branch','child'],['out','out'],['in','in'],['up','mv',-1],['down','mv',1],['delete','del'],['shiny','shine'],['sold','sold'],['pending','hold'],['fold','fold'],['done']].forEach(([l,o,d])=>{const b=h('button','b',l);b.dataset.o=o||'done';b.onpointerdown=b.onmousedown=e=>e.preventDefault();b.onclick=()=>{const t=document.activeElement;if(!t||t.tagName!=='TEXTAREA')return;if(!o){t.blur();return}const n=loc(t.closest('li').dataset.id).n;O[o](n,d??t.selectionStart,d!=null?t.selectionStart:0)};$('tb').append(b)});
 
-/* pan / zoom / drag folders */
 const P=new Map(),last={};let G=null;
 cv.addEventListener('pointerdown',e=>{if(e.target.closest('button')||e.button>0)return;cancelAnimationFrame(fl);P.set(e.pointerId,{x:e.clientX,y:e.clientY});
 if(P.size===2){const[a,b]=[...P.values()];G={t:'pinch',d:Math.hypot(a.x-b.x,a.y-b.y)||1};return}
@@ -2348,7 +2285,6 @@ if(last.k===k&&now-last.t<350&&!g.ta&&(g.f||!g.tgt.closest('.fold'))){last.k=nul
 cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
 cv.addEventListener('wheel',e=>{e.preventDefault();cancelAnimationFrame(fl);const m=e.deltaMode?16:1;if(e.ctrlKey||e.metaKey)zoomAt(e.clientX,e.clientY,cam.s*Math.exp(-clamp(e.deltaY*m,-40,40)*.0075));else{cam.x-=e.deltaX*m;cam.y-=e.deltaY*m;apply()}},{passive:false});
 
-/* line drag-reorder */
 let LD=null;
 function startLineDrag(e,li){
   const id=li.dataset.id,r=loc(id);if(!r)return;
@@ -2403,7 +2339,6 @@ function startLineDrag(e,li){
   document.addEventListener('pointercancel',up);
 }
 
-/* wheel — tiers: places > boards > sub-boards. The wheel lists the siblings of whatever you have open; the ladder (#wt) shows where you are and jumps tiers. */
 let W=null,sT=0;
 const WT=[{k:'p',n:'places'},{k:'b',n:'boards'},{k:'s',n:'sub-boards'}],wt=$('wt'),wk=$('wk');
 const wOk=k=>k==='p'||(k==='b'&&PS)||(k==='s'&&!!V&&!!subsOf());
@@ -2450,7 +2385,6 @@ let sw=null;document.addEventListener('pointerdown',e=>{sw=e.pointerType==='touc
 document.addEventListener('pointermove',e=>{if(sw!=null&&sw-e.clientY>48){sw=null;ow('tap')}});
 document.addEventListener('pointerup',()=>sw=null);
 
-/* FAB */
 const fab=$('fab'),fabMenu=$('fab-menu');
 function setFabOpen(on){fabMenu.classList.toggle('on',on);fab.classList.toggle('open',on);fab.setAttribute('aria-expanded',String(on));fabMenu.setAttribute('aria-hidden',String(!on));if(on)hmenu()}
 fab.onclick=e=>{e.stopPropagation();setFabOpen(!fabMenu.classList.contains('on'))};
@@ -2466,7 +2400,6 @@ fabMenu.onclick=e=>{const b=e.target.closest('button[data-a]');if(!b)return;e.st
 addEventListener('pointerdown',e=>{if(!fabMenu.classList.contains('on'))return;if(e.target.closest('#fab,#fab-menu'))return;setFabOpen(false)},true);
 addEventListener('keydown',e=>{if(e.key==='Escape'&&fabMenu.classList.contains('on'))setFabOpen(false)});
 
-/* help panel */
 const helpEl=$('help');
 function openHelp(){helpEl.classList.add('on');helpEl.setAttribute('aria-hidden','false');const b=helpEl.querySelector('[data-close]');if(b)b.focus()}
 function closeHelp(){helpEl.classList.remove('on');helpEl.setAttribute('aria-hidden','true')}
@@ -2477,7 +2410,6 @@ addEventListener('keydown',e=>{
   else if(e.key==='Escape'&&helpEl.classList.contains('on')){closeHelp()}
 });
 
-/* tour */
 const tourEl=$('tour');
 const TOUR=[
   {t:'Welcome to dab',b:'Every post is a living letter: nested lines you can price, fold, mark sold and rewrite as things change. Every town is a folder you can walk into.'},
@@ -2501,7 +2433,6 @@ tourEl.querySelector('.tour-bg').onclick=closeTour;
 addEventListener('keydown',e=>{if(!tourEl.classList.contains('on'))return;if(e.key==='Escape'){closeTour()}else if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();if(tourStep>=TOUR.length-1)closeTour();else showTour(tourStep+1)}});
 try{tourSeen=!!localStorage.getItem(TOUR_K)}catch(_){}
 
-/* utilities */
 const un=a=>a.map(n=>({text:n.t,color:n.c||null,shiny:!!n.s,collapsed:n.z,children:un(n.k)}));
 function packTree(t){
   return {
@@ -2511,11 +2442,9 @@ function packTree(t){
     collapsed:false, children:un(t.tree)
   };
 }
-/* reset demo - shared by the button, context menu and Cmd/Ctrl+R */
 function resetDemo(msg){
-  if(typeof msg!=='string'){/* hard reset: reload through ?reset, which wipes every dab:* key (content, accounts, messages, stow/pins, prefs) before anything loads */try{location.replace(location.pathname+'?reset'+location.hash);return}catch(_){}}
+  if(typeof msg!=='string'){try{location.replace(location.pathname+'?reset'+location.hash);return}catch(_){}}
   rs=0;const rb=document.querySelector('#acts [data-a=reset]');if(rb)rb.textContent='reset demo';
-  /* drop focus mode without flushing, so the iframe can't write old content back */
   if(typeof FX!=='undefined'&&FX){document.body.classList.remove('fxo');fxEl.classList.remove('on');fxEl.setAttribute('aria-hidden','true');fxEl.style.opacity='';fxEl.style.transform='';try{FX.ifr.remove()}catch(_){}FX=null}
   cw(false);closeMenu();closeHelp();try{closePal()}catch(_){}
   C=seed();PLC=seedPlaces();migrate();LS=null;PS=false;V=null;S_=null;F=[];lastCat=null;rc={x:0,y:0,s:1};cams={};H=[];hi=0;
@@ -2542,7 +2471,6 @@ else if(a==='delcat'){cw(false);delCat()}
 else if(a==='reset'){if(rs){resetDemo()}else{rs=1;b.textContent='tap again to reset';setTimeout(()=>{rs=0;b.textContent='reset demo'},2500)}}});
 $('file').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(s=>{try{const d=JSON.parse(s),L=d.categories||d.folders;if(!L||!L.length)throw 0;C=seedFromExport({categories:L});V=null;S_=null;F=[];cams={};FM={};fmSave();cw(false);chrome();renderAll();autoSpaceF();fit();save();toast('Imported '+C.length+' boards',{kind:'ok'})}catch(_){toast('Could not read that file',{kind:'error'})}}).catch(()=>toast('Could not read that file',{kind:'error'}))};
 
-/* context menu */
 const cm=$('cm'),mod=/Mac|iP(hone|ad)/.test(navigator.platform||'')?'⌘':'Ctrl+';let mb=[],mh=-1;
 const cl=n=>({id:nid(),t:n.t,c:n.c||null,s:!!n.s,z:n.z,k:n.k.map(cl)}),setZ=(a,z)=>a.forEach(n=>{if(n.k.length)n.z=z;setZ(n.k,z)});
 const home=()=>{const t=(!V||inSubsView())&&!lvOn()?gridHomeCam():null;fly(t||{x:innerWidth/2,y:innerHeight/2,s:cam.s})},act=a=>{const b=document.querySelector(`#acts [data-a="${a}"]`);if(b)b.click()};
@@ -2646,7 +2574,6 @@ const x=e.clientX,y=e.clientY,t=e.target;
 lp=setTimeout(()=>{if(G&&G.t!=='pinch'&&!G.moved&&P.size===1){G.t='none';showCtx(x,y,t)}},550)});
 ['pointerup','pointercancel','pointermove'].forEach(n=>cv.addEventListener(n,()=>{if(n!=='pointermove'||(G&&G.moved))clearTimeout(lp)}));
 
-/* zoom gauge */
 const ZMIN=.12,ZMAX=2.5,LR=Math.log(ZMAX/ZMIN),s2v=s=>100*Math.log(clamp(s,ZMIN,ZMAX)/ZMIN)/LR,v2s=v=>ZMIN*Math.exp(clamp(v,0,100)/100*LR);
 const zg=$('zg');zg.insertAdjacentHTML('beforeend','<span class="zv"></span><div class="zl"><span class="zv"></span></div><div class="zt"></div><div class="zo"></div><div class="zm"></div>');
 const[zvA,zvB]=zg.querySelectorAll('.zv'),zl=zg.querySelector('.zl'),zm=zg.querySelector('.zm'),Z={x:s2v(1),v:0,L:s2v(1),raf:0,last:0,held:false,r:null};
@@ -2673,8 +2600,6 @@ addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey||W||e.target.ma
 if(e.key==='='||e.key==='+')zoomTo(cam.s*1.15);else if(e.key==='-')zoomTo(cam.s/1.15);else if(e.key==='0')zoomTo(1)});
 zsync();zpaint();
 
-/* movable HUD widgets — grip on the pills, press-and-hold on + and the zoom gauge.
-   Positions are stored as viewport fractions per profile (desktop / mobile), so they survive resize, rotation and the keyboard. */
 const tb=$('tb'),HK='dab:hud:v2',HID=['sf','sorthud','zg','fab','tb','lh'],HGRIP=['sf','sorthud','tb','lh'],HCEN=new Set(HGRIP),HHOLD=340,HM=6,
 HNAME={sf:'surface switcher',sorthud:'sort bar',zg:'zoom gauge',fab:'create button',tb:'editing toolbar',lh:'letter navigation'};
 let HS={d:{},m:{}};try{const x=JSON.parse(localStorage.getItem(HK));if(x&&x.d&&x.m)HS=x}catch(_){}
@@ -2728,19 +2653,14 @@ if(window.ResizeObserver){const ro=new ResizeObserver(roq(es=>es.forEach(en=>hpl
 addEventListener('focusin',()=>setTimeout(hall,0));addEventListener('resize',hall);if(vv){vv.addEventListener('resize',hall);vv.addEventListener('scroll',hall)}
 coarse.addEventListener&&coarse.addEventListener('change',hall);hall();
 
-/* boot */
 paintTheme();chrome();renderAll();apply();
-/* home camera for folder grids (places / boards / sub-boards). Zero is the grid's top-left. The view is chosen so the pills that fan out above the top row
-   (hover) stay clear of the header and the top HUD, and the bottom row stays clear of the bottom of the screen. */
 function gridHomeCam(){const L=currentPool();if(!L.length)return null;
  let a=1e9,b=1e9,c=-1e9,d=-1e9,pa=1e9,pc=-1e9,up=0;
  L.forEach(f=>{const e=fel(f.id);if(!e)return;const w=e.offsetWidth;a=Math.min(a,f.x);b=Math.min(b,f.y);c=Math.max(c,f.x+w);d=Math.max(d,f.y+e.offsetHeight+14);
-  /* pills fan out above and slightly beyond the card: measure how far, from each pill's --x/--y (slack for rotation) */
   e.querySelectorAll('.cpi').forEach(p=>{const x=parseFloat(p.style.getPropertyValue('--x'))||0,y=parseFloat(p.style.getPropertyValue('--y'))||0,hw=(p.offsetWidth||120)/2+8;
    pa=Math.min(pa,f.x+w/2+x-hw);pc=Math.max(pc,f.x+w/2+x+hw);if(f.y<=b+40)up=Math.max(up,-y+10)})});
  if(a>c)return null;
  const pad=Math.max(0,a-pa),padR=Math.max(0,pc-c),A=a-pad,C=c+padR;
- /* screen px: bottom of header + top HUD, and the right-hand HUD column (create button / zoom gauge) */
  let top=0,side=24;['#hd .l','#hd .r','#sf','#sorthud'].forEach(q=>{const el=document.querySelector(q);if(!el||!el.offsetWidth)return;const r=el.getBoundingClientRect();if(r.bottom>top)top=r.bottom});
  ['#fab','#zg'].forEach(q=>{const el=document.querySelector(q);if(!el||!el.offsetWidth)return;const r=el.getBoundingClientRect();if(r.left>innerWidth/2)side=Math.max(side,innerWidth-r.left+12)});
  const gap=16,bot=24,availH=innerHeight-top-gap-bot,
@@ -2752,7 +2672,6 @@ if(V&&!S_&&!inSubsView()&&applyBoardSort())renderAll();
 const bootSpace=()=>V?autoSpace():autoSpaceF();
 if(needFit){const fv=()=>{bootSpace();(!V&&!coarse.matches)?firstView():fit()};fv();document.fonts&&document.fonts.ready.then(fv)}
 else{if(bootSpace())fit();document.fonts&&document.fonts.ready.then(()=>{if(bootSpace())fit()})}
-/* self-heal: if nothing is on screen after boot, recover the camera first, then fall back to the seed (old save is kept) */
 function healCheck(final){
   try{
     if(lvOn()||FX)return;
@@ -2770,7 +2689,6 @@ else say('tap a board to open · long-press for actions · ? for help');
 if(!tourSeen)setTimeout(()=>openTour(),700);
 document.addEventListener('pointerdown',()=>{hint.style.opacity=0},{once:true});
 
-/* focus mode */
 const fxEl=$('fx');let FX=null;
 const adopt=a=>(Array.isArray(a)?a:[]).map(x=>({id:x.id||nid(),t:String(x.t||''),c:typeof x.c==='string'?x.c:null,s:!!x.s,z:!!x.z,k:adopt(x.k)}));
 const nsSrc=()=>document.getElementById('ns-src').textContent.replace(/<\\\/script/g,'<\/script');
@@ -2845,12 +2763,10 @@ try{const o=undo;undo=function(){snd('slide');return o.apply(this,arguments)}}ca
 try{const o=redo;redo=function(){snd('slide');return o.apply(this,arguments)}}catch(_){}
 
 addEventListener('keydown',e=>{if(FX&&e.key==='Escape'){e.preventDefault();e.stopPropagation();const pm=$('fxp');if(pm&&pm.classList.contains('on')){pm.classList.remove('on');const b=$('fxm');b&&b.focus()}else closeFocus()}},true);
-/* Cmd/Ctrl+R resets the demo (Cmd+Shift+R still does a normal hard reload) */
 addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&!e.altKey&&e.key.toLowerCase()==='r'){e.preventDefault();e.stopPropagation();if(e.repeat)return;const a=document.activeElement;if(a&&a!==document.body&&a.blur)a.blur();resetDemo()}},true);
 addEventListener('message',e=>{if(FX&&e.source===FX.ifr.contentWindow&&e.data&&e.data.fx==='reset')resetDemo()});
 addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.shiftKey&&e.key.toLowerCase()==='f'){e.preventDefault();if(FX)closeFocus();else{const f=fobj(cur);if(V&&f)openFocus(f)}}});
 
-/* places + list */
 function pl0(){return PLC.find(p=>p.id===(LS||'*'))||PLC[0]}
 function openPlace(p){if(PS)return;cams['@p']={...cam};LS=p.id==='*'?null:p.id;PS=true;Object.assign(cam,rc);cur=lastCat;renderAll();autoSpaceF();chrome();fit();swap();save()}
 function closePlace(){if(!PS||V)return;rc={...cam};PS=false;cur=LS||'*';renderAll();const sp=autoSpaceF();chrome();const c=cams['@p'];c&&!sp?(Object.assign(cam,c),apply()):fit();swap()}
@@ -2858,7 +2774,6 @@ function newPlace(x,y){const s=(prompt('New place: name, optionally ", kind" (ci
 function placeMenu(p){if(!p)return[];return[{l:'open',f:()=>openPlace(p)},{l:'rename',f:()=>{const n=(prompt('Rename place',p.name)||'').trim();if(n){p.name=n;renderAll();save()}}},p.id!=='*'&&'-',p.id!=='*'&&{l:'delete place',danger:true,f:()=>{const g=new Set([p.id,...PLC.filter(x=>x.in===p.id).map(x=>x.id)]);C.flatMap(poolOf).forEach(f=>{if(g.has(f.loc))f.loc='*'});PLC=PLC.filter(x=>!g.has(x.id));renderAll();save()}}]}
 function chromeP(){const b=document.body;b.classList.toggle('ps',PS);b.classList.toggle('scoped',PS&&!!LS);$('pl').textContent=LS?pnm(LS)||'place':'everywhere';}
 $('pl').onclick=()=>{if(S_)closeSub();if(V)closeCat();closePlace()};
-/* compact list surface */
 const lstEl=id=>LM?$('lr').querySelector('[data-id="'+id+'"]'):null;
 var lvlK='';
 function lstRender(){const bd=document.body;bd.classList.toggle('lst',LM);if(!LM)return;
@@ -2877,7 +2792,6 @@ function lstRender(){const bd=document.body;bd.classList.toggle('lst',LM);if(!LM
   b.append(r.add?h('span','lx','+'):h('span',r.post?'gp':'gl'),h('span','lt',r.t));if(r.m)b.append(h('span','lm',r.m));if(!r.add&&!r.post)b.append(h('span','lx','›'));b.onclick=r.f;return b}))}
 $('lqi').addEventListener('input',lstRender);$('lqi').addEventListener('keydown',e=>{if(e.key==='Enter'){const b=$('lr').querySelector('.lrw:not(.ad)');if(b)b.click()}});
 
-/* letter view */
 function lvOn(){return LV&&!LM&&!!V&&!inSubsView()}
 function lvSave(){try{localStorage.setItem('dab:view',JSON.stringify({v:LV?'letters':'canvas',i:LI}))}catch(_){}}
 function lvOrder(){return F.filter(f=>inScope(f)&&(S_||!HIDV.has(f.id))).sort((a,b)=>a.x-b.x||a.y-b.y)}
@@ -2933,7 +2847,6 @@ addEventListener('keydown',e=>{if(!lvOn()||W||FX||e.metaKey||e.ctrlKey||e.altKey
   if(e.key==='ArrowLeft'){e.preventDefault();lvGo(lvI-1)}else if(e.key==='ArrowRight'){e.preventDefault();lvGo(lvI+1)}});
 lvRender();
 
-/* ══ command palette (⌘K) ══ */
 const palEl=$('pal'),palI=$('pali'),palL=$('pall');let palR=[],palH=0;
 const tx=a=>{for(const n of a){if(n.t&&n.t.trim())return n.t.trim().slice(0,60);const r=tx(n.k);if(r)return r}return''};
 const fname=f=>(f.name&&f.name.trim())||tx(f.tree)||'untitled';
@@ -2996,7 +2909,6 @@ palI.addEventListener('keydown',e=>{const k=e.key;
   e.stopPropagation()});
 addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&!e.altKey&&(e.key||'').toLowerCase()==='k'){e.preventDefault();e.stopPropagation();palEl.classList.contains('on')?closePal():openPal()}},true);
 
-/* palette scroll indicator */
 (function(){
   const box=palEl.querySelector('.pal-box'),tr=document.createElement('div'),th=document.createElement('i');
   tr.id='pals';tr.setAttribute('aria-hidden','true');tr.append(th);box.append(tr);
@@ -3026,7 +2938,6 @@ addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.shiftKey&&!e.altKey
   tr.addEventListener('pointerup',up);tr.addEventListener('pointercancel',up);tr.addEventListener('lostpointercapture',up);
 })();
 
-/* a11y */
 const DL=[[helpEl,()=>helpEl.classList.contains('on')],[tourEl,()=>tourEl.classList.contains('on')],[palEl,()=>palEl.classList.contains('on')],[$('modal-root'),()=>!!$('modal-root').querySelector('.modal')],[fxEl,()=>!!FX]],TR=new Map();let lastF=null;
 addEventListener('focusin',e=>{if(!DL.some(([el])=>el.contains(e.target)))lastF=e.target},true);
 function trapSync(){DL.forEach(([el,open])=>{const on=open(),t=TR.get(el);
@@ -3089,7 +3000,6 @@ function storeOk(){if(ebEl.classList.contains('on')&&!ebDis)ebEl.classList.remov
 let errT=0;const onErr=()=>{const n=Date.now();if(n-errT<8000)return;errT=n;toast('Something went wrong. Reloading usually fixes it — your work autosaves.',{kind:'error',action:'reload',onAction:()=>location.reload(),duration:8000})};
 addEventListener('error',e=>{if(e&&/ResizeObserver|Script error/i.test(e.message||''))return;onErr()});addEventListener('unhandledrejection',onErr);
 
-/* ── accounts · threads · profile canvas (local demo; swap A for a backend) ── */
 (function(){
 const AK='dab:acct:v1';let A={me:null,users:{},own:{},cm:{},stow:{}};
 try{const d=JSON.parse(localStorage.getItem(AK));if(d&&d.users)A=Object.assign(A,d)}catch(_){}
@@ -3187,9 +3097,6 @@ const rf0=rFold;rFold=function(f){const el=rf0(f);paint(el,f);ndot(el,f);
   return el};
 const nf0=newFolder;newFolder=function(x,y){if(!me()){authDlg(()=>newFolder(x,y));return}const f=nf0.apply(this,arguments);if(f){reg(f);paint(fel(f.id),f)}return f};
 const ln0=lvNew;lvNew=function(){if(!me()){authDlg(()=>lvNew());return}const n=F.length,r=ln0.apply(this,arguments);if(F.length>n)reg(F[F.length-1]);return r};
-/* profile canvas: stowed folders = (board x place) views, each sovereign: own name, position and trimmed post list.
-   Behaves exactly like every other dab canvas — click a folder to open the underlying board (with the location scope set),
-   pan empty space, drag folders to reposition. No separate sidebar; the folder card IS the post. */
 const stowL=()=>{const u=me();return u?(A.stow[u.handle]=A.stow[u.handle]||[]):[]};
 const pool=s=>{const c=C.find(x=>x.id===s.b);return c?poolOf(c).filter(f=>inSc(f,s.p,c)&&!s.hide.includes(f.id)).sort((a,b)=>(b.postedAt||0)-(a.postedAt||0)):[]};
 function stow(){if(!me()){authDlg(stow);return}if(!V){toast('Open a board first',{kind:'error'});return}const L=stowL(),i=L.length;
@@ -3331,7 +3238,6 @@ addEventListener('keydown',e=>{if(!pfOn||e.metaKey||e.ctrlKey||e.altKey||/^(INPU
 const rr0=rr;rr=function(f,id,pos){const w=$('pfw'),el=pfOn&&w&&[...w.children].find(e=>e.dataset.id===f.id);if(!el)return rr0(f,id,pos);const pin=pinL().find(o=>o.id===f.id),n=rFold(f);n.classList.remove('cur');n.style.left=el.style.left;n.style.top=el.style.top;el.replaceWith(n);if(pin)pfPinDrag(n,pin,f);try{if(id)fo(id,pos)}catch(_){}save()};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&pfOn&&!document.querySelector('.dxo'))closePf()});
 const pa0=palActs;palActs=function(){const a=pa0();if(V&&!inSubsView())a.push(['Stow board to my canvas',stow]);a.push(['My profile canvas',()=>{pfView='folders';openPf()}],['My pinned posts',()=>{pfView='pins';openPf()}],[me()?'Account / switch':'Sign in',()=>authDlg()]);return a};
-/* messaging inside focus mode: lives in the parent shell (not the writing iframe), follows whichever post is in focus */
 (function(){const bt=h('button','','messages');bt.id='fxm';bt.type='button';const pn=h('div');pn.id='fxp';pn.setAttribute('role','dialog');pn.setAttribute('aria-label','Messages');fxEl.append(bt,pn);
   const cnt=f=>{const o=A.own[f.id],n=(A.cm[f.id]||[]).length+(o?0:demoThreads(f).length);return n};
   function sync(){if(!FX)return;const n=cnt(FX.f),o=A.own[FX.f.id];bt.textContent=n?n+(n===1?' conversation':' conversations'):'messages'}
@@ -3693,7 +3599,8 @@ html.pull-enabled .pull-drawer{display:flex}
   #menu .gs{width:52px;border-radius:17px}
   #menu .tx{padding:10px 2px}
   .tw{width:20px;height:40px}
-  .tw::before{border-left-width:5.5px;border-top-width:5px;border-bottom-width:5px}
+  .tw::before{border-left-width:5.5px;
+    .tw::before{border-left-width:5.5px;border-top-width:5px;border-bottom-width:5px}
   .spk{opacity:1;width:40px;height:40px}
   .cat-hint .ch-text{display:none}
   .cat-hint{gap:0}
@@ -3931,13 +3838,11 @@ let uid = 0;
 const nid = () => 'n' + (++uid).toString(36) + '-' + Math.random().toString(36).slice(2, 8);
 const mk  = (t = '') => ({ id: nid(), t, c: null, s: false, z: false, k: [] });
 
-/* seed helpers */
 const _HOUR=3600*1000,_DAY=24*_HOUR,_NOW0=Date.now();
 
-/* ══ SEED (same shape as outer; jobs uses subs) ══ */
 const SEED_DATA = {"app":"dab","version":2,"theme":"light","currentCategory":"start here","categories":[
 {"name":"start here","x":0,"y":0,"statements":[{"text":"dab.","x":0,"y":0,"w":300,"collapsed":false,"children":[{"text":"A board for boards. Post what you mean, reply if you're interested. That's the whole thing.","color":"linear-gradient(90deg,#5227FF,#FF9FFC,#B497CF)","shiny":true,"collapsed":false,"children":[]},{"text":"No accounts. No algorithm. No app.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Everything lives in your browser. Export a backup if you want to keep it.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"Rules (all of them)","x":330,"y":0,"w":340,"collapsed":false,"children":[{"text":"1. Be a person.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"2. Post what you mean.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"3. Reply if you're interested.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"4. Don't be a jerk.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"That's the list.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[{"text":"If it feels like more than this, it is.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"The moment it needs a policy, we've already lost.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"How to read this","x":700,"y":0,"w":320,"collapsed":false,"children":[{"text":"Each board is a place. Cards are posts. Lines are the details.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Left-click to open. Right-click for actions.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Reply to any line by branching underneath it.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Nested replies stay with the line they belong to.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"You can go as deep as you need to.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},{"text":"What counts as a reply","x":1050,"y":0,"w":300,"collapsed":false,"children":[{"text":"Anything you'd say in an email, but shorter.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"A price. A question. A yes.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"You don't need to introduce yourself.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}]}]},
-{"name":"for sale","x":300,"y":0,"statements":[{"text":"floor lamp — $40","x":0,"y":0,"w":300,"collapsed":false,"children":[{"text":"Adjustable arm, brass finish. Real brass, or at least it looks like it.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Missing the top screw on the shade. It holds fine.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Slight dent on the base, hidden by the couch.","color":null,"shiny":false,"collapsed":true,"children":[]},{"text":"Works. Both bulbs are new.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Pickup in Park Slope. 4th ave, near the R.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[{"text":"No delivery, no holds, no 'is this still available.'","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"If it's up, it's up.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"Cash or venmo. hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"synth — $280","x":330,"y":0,"w":320,"collapsed":false,"children":[{"text":"https://picsum.photos/seed/dabsynth/900/600.jpg","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Korg Minilogue XD. Bought it in 2022, used it for maybe ten hours.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Nothing wrong with it. I just don't play it.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Comes with the power supply and original box.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"Price is firm-ish. $280 is what I paid half of.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Williamsburg, pick up at my place. I'll let you play it first.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},{"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"bike — $200","x":690,"y":0,"w":300,"collapsed":false,"children":[{"text":"1988 Trek. Steel frame, 54cm.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"I'm 5'9\" and it fits me well.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"New chain, new brake pads, new tires last spring.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Some rust spots on the top tube. Nothing structural.","color":null,"shiny":false,"collapsed":true,"children":[]},{"text":"Rides great. I just have two now.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Pickup in Bushwick. Bring a lock or a friend.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}]},{"text":"standing desk — $150","x":0,"y":400,"w":300,"collapsed":false,"children":[{"text":"Fully Jarvis, bamboo top, 60x30.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Motor works. Presets work. Leveling feet work.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"It's heavy. Bring a friend or a dolly.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Moving out, need it gone by Sunday.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Photos on request. Cash preferred.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}]},{"text":"records — make an offer","x":330,"y":400,"w":300,"collapsed":false,"children":[{"text":"~80 records. Jazz, soul, some rock.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Mostly VG+ or better.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Nothing rare. Nothing trashed.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"I'm moving and don't want to box them again.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Take all of them for $200 or come flip through.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},{"text":"Fort Greene.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},
+{"name":"for sale","x":300,"y":0,"statements":[{"text":"floor lamp — $40","x":0,"y":0,"w":300,"collapsed":false,"children":[{"text":"Adjustable arm, brass finish. Real brass, or at least it looks like it.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Missing the top screw on the shade. It holds fine.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Slight dent on the base, hidden by the couch.","color":null,"shiny":false,"collapsed":true,"children":[]},{"text":"Works. Both bulbs are new.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Pickup in Park Slope. 4th ave, near the R.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[{"text":"No delivery, no holds, no 'is this still available.'","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"If it's up, it's up.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"Cash or venmo. hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"synth — $280","x":330,"y":0,"w":320,"collapsed":false,"children":[{"text":"Korg Minilogue XD. Bought it in 2022, used it for maybe ten hours.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Nothing wrong with it. I just don't play it.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Comes with the power supply and original box.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"Price is firm-ish. $280 is what I paid half of.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Williamsburg, pick up at my place. I'll let you play it first.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},{"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"bike — $200","x":690,"y":0,"w":300,"collapsed":false,"children":[{"text":"1988 Trek. Steel frame, 54cm.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"I'm 5'9\" and it fits me well.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"New chain, new brake pads, new tires last spring.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Some rust spots on the top tube. Nothing structural.","color":null,"shiny":false,"collapsed":true,"children":[]},{"text":"Rides great. I just have two now.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Pickup in Bushwick. Bring a lock or a friend.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}]},{"text":"standing desk — $150","x":0,"y":400,"w":300,"collapsed":false,"children":[{"text":"Fully Jarvis, bamboo top, 60x30.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Motor works. Presets work. Leveling feet work.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"It's heavy. Bring a friend or a dolly.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Moving out, need it gone by Sunday.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Photos on request. Cash preferred.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]}]},{"text":"records — make an offer","x":330,"y":400,"w":300,"collapsed":false,"children":[{"text":"~80 records. Jazz, soul, some rock.","color":null,"shiny":false,"collapsed":false,"children":[{"text":"Mostly VG+ or better.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Nothing rare. Nothing trashed.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"I'm moving and don't want to box them again.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Take all of them for $200 or come flip through.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},{"text":"Fort Greene.","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},
 {"name":"housing","x":600,"y":0,"statements":[{"text":"1BR in Bed-Stuy — $1,850","x":0,"y":0,"w":340,"collapsed":false,"children":[{"text":"Brownstone, third floor walkup. Available Nov 1.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Heat and hot water included. You pay electric + internet.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Laundry in the basement. Free.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"No broker fee. Direct from the owner.","color":"#0091ff","shiny":false,"collapsed":false,"children":[]},{"text":"About the apartment:","color":null,"shiny":false,"collapsed":true,"children":[{"text":"Windows face the backyard. Quiet.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Galley kitchen, new stove last year.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Living room fits a couch + a desk + a small dining table.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Bedroom fits a queen.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"About the block:","color":null,"shiny":false,"collapsed":true,"children":[{"text":"Two blocks from the C at Kingston-Throop.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"The bodega on the corner is very good.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Street parking is hard. Don't count on it.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"12-month lease. 1 month deposit. Credit check, references.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Cat ok. Dog maybe. No smokers.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"room in a house — Ridgewood, $1,100","x":380,"y":0,"w":340,"collapsed":false,"children":[{"text":"2-bedroom house, one room open. Available now.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Two of us already live here:","color":null,"shiny":false,"collapsed":false,"children":[{"text":"One works nights, you'll rarely see him.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"One works from home, she's around but quiet.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"The room: fits a full bed, a desk, a dresser. Window faces the yard.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"The house: shared kitchen, shared bath, yard, grill, laundry.","color":null,"shiny":false,"collapsed":true,"children":[{"text":"We cook. We're not precious about the kitchen but we do clean it.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Sunday dinners happen. You're welcome to join or not.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"Looking for: someone calm, employed, cleans up after themselves.","color":"#0091ff","shiny":false,"collapsed":false,"children":[{"text":"No couples. No pets (allergies).","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"Month-to-month is fine. Prefer 6+.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"sublet — 6 months, Dec–May","x":760,"y":0,"w":340,"collapsed":false,"children":[{"text":"1BR in Bushwick. Furnished.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"$1,600/month, utilities included.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"December 1 through May 31. Dates are firm.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"About the place:","color":null,"shiny":false,"collapsed":true,"children":[{"text":"Jefferson L, two blocks.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Top floor, big windows, very bright.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Furnished: couch, bed, desk, kitchen stuff. All of it works.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"About you:","color":null,"shiny":false,"collapsed":true,"children":[{"text":"You'll be on the sublease as a guest. Standard.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"No parties, no sub-subleasing.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Cat ok, dog no.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"Photos on request. Walkthrough by appointment.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},{"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"looking for: a room, March 1","x":0,"y":420,"w":340,"collapsed":false,"children":[{"text":"I'm a 30-something woman, moving back to the city after two years away.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"Looking for a room in Brooklyn, $1,200-ish.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"About me:","color":null,"shiny":false,"collapsed":false,"children":[{"text":"I work in publishing. Remote 3 days, in-office 2.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"I have a cat. She's 14, she sleeps, she's fine.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"I cook, I clean, I'm quiet.","color":null,"shiny":false,"collapsed":false,"children":[]}]},{"text":"Move-in March 1. Month-to-month or 6+.","color":null,"shiny":false,"collapsed":false,"children":[]},{"text":"References available.","color":"#8e8e93","shiny":false,"collapsed":false,"children":[]},{"text":"hi@dab.cx","color":null,"shiny":false,"collapsed":false,"children":[]}]}]},
 {"name":"jobs","x":900,"y":0,"statements":[],"subs":[
   {"name":"hospitality","x":0,"y":0,"statements":[
@@ -4171,7 +4076,7 @@ const isVid = t => VID.test(t.trim());
 const isUrl = t => URL_RE.test(t.trim());
 const isFrame = t => isUrl(t) && !isImg(t) && !isVid(t);
 const frameIO = new IntersectionObserver(es => es.forEach(e => { if(!e.isIntersecting) return; const f = e.target.querySelector('iframe'); if(f && f.dataset.src){ f.src = f.dataset.src; delete f.dataset.src } frameIO.unobserve(e.target) }), {rootMargin:'400px'});
-const roq=fn=>{let q=[],t=0;return es=>{q.push(...es);if(!t)t=requestAnimationFrame(()=>{t=0;const a=q;q=[];fn(a)})}}; /* run observer work next frame: avoids 'ResizeObserver loop' errors */
+const roq=fn=>{let q=[],t=0;return es=>{q.push(...es);if(!t)t=requestAnimationFrame(()=>{t=0;const a=q;q=[];fn(a)})}};
 const frameRO = new ResizeObserver(roq(es => es.forEach(e => { const b = e.target, w = b.clientWidth, f = b.firstChild; if(!w || !f) return; const fw = Math.round(Math.min(1440, Math.max(900, w*2.5))); f.style.width = fw + 'px'; f.style.height = Math.round(fw*.625) + 'px'; b.style.setProperty('--fs', w/fw); scheduleTreeLines() })));
 document.addEventListener('pointerdown', e => document.querySelectorAll('.fbox.live').forEach(b => { if(!b.contains(e.target)) b.classList.remove('live') }), true);
 
